@@ -1,8 +1,10 @@
 package com.example.pro1121_gr.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.View;
 
@@ -25,6 +27,24 @@ public class SettingActivity extends AppCompatActivity {
             }
         });
 
+        //nút chuyển sang chế độ tối
+        binding.nightSwitch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                int currentMode = getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
+
+
+                if (currentMode == Configuration.UI_MODE_NIGHT_YES) {
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+                } else {
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+                }
+
+                recreate();
+            }
+        });
+
+        //nút chỉnh sửa thông tin cá nhân
         binding.editProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
