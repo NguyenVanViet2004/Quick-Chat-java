@@ -127,6 +127,7 @@ public class ChatActivity extends AppCompatActivity {
         });
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private void sendMessToOther(String message) {
         chatRoomModel.setLastMessageTimestamp(Timestamp.now());
         chatRoomModel.setLastMessageSenderId(firebaseUtil.currentUserId());
@@ -142,6 +143,7 @@ public class ChatActivity extends AppCompatActivity {
         });*/
         firebaseUtil.getChatroomMessageReference(chatRoomID).add(chatMesseageModel);
         binding.TextMESS.setText("");
+        adapter.notifyDataSetChanged();
     }
 
     private void hiddenItem(boolean value) {
