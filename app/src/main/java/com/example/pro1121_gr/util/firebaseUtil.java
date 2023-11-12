@@ -77,9 +77,9 @@ public class firebaseUtil {
 
 
     //Đăng xuất
-//    public static void logout(){
-//        FirebaseAuth.getInstance().signOut();
-//    }
+    public static void logout(){
+        FirebaseAuth.getInstance().signOut();
+    }
 
     public static StorageReference getCurrentProfileImageStorageReference(){
         return FirebaseStorage.getInstance().getReference().child("profile_img")
@@ -102,9 +102,12 @@ public class firebaseUtil {
     public static void setAvatar(Context context, Uri uri, ImageView image) {
         Glide.with(context)
                 .load(uri)
-                .error(R.drawable.img_5)
-                .apply(RequestOptions.circleCropTransform())
-                .into(image);
+                .apply(new RequestOptions()
+                        .override(500, 500) // Điều chỉnh kích thước ảnh tại đây
+                        .fitCenter() // Giữ tỷ lệ và hiển thị trong khung
+                )
+                .into(image); // ImageView để hiển thị ảnh
+
     }
 
     public static void setAVTinChat(Context context,Uri uri, ImageView imageView){

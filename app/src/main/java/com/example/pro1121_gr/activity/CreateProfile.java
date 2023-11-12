@@ -1,11 +1,16 @@
 package com.example.pro1121_gr.activity;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -15,6 +20,7 @@ import com.example.pro1121_gr.R;
 import com.example.pro1121_gr.databinding.ActivityCreateProfileBinding;
 import com.example.pro1121_gr.model.userModel;
 import com.example.pro1121_gr.util.firebaseUtil;
+import com.github.dhaval2404.imagepicker.ImagePicker;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
@@ -24,12 +30,16 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 
+import es.dmoral.toasty.Toasty;
+
 public class CreateProfile extends AppCompatActivity {
 
     private ActivityCreateProfileBinding binding;
     Button btnLoginNextEnter;
     EditText edtAge,fullname;
     String phoneNumber;
+    private ActivityResultLauncher<Intent> imagePickerLauncher;
+    private Uri selectedImageUri;
 
     userModel model;
 
@@ -43,6 +53,7 @@ public class CreateProfile extends AppCompatActivity {
 
         phoneNumber = getIntent().getStringExtra("phone");
         getData();
+        registerImagePicker();
 
 
         binding.edtAge.setOnClickListener(new View.OnClickListener() {
@@ -55,17 +66,58 @@ public class CreateProfile extends AppCompatActivity {
         binding.btnLoginNextEnter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(CreateProfile.this, home.class));
-                setData();
-                finish();
+                if (selectedImageUri != null) {
+                    firebaseUtil.getCurrentProfileImageStorageReference().putFile(selectedImageUri)
+                            .addOnCompleteListener(task -> {
+                                setData();
+                            });
+                } else {
+                    setData();
+                }
+            }
+        });
+
+        binding.imgAvatar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                try {
+                    ImagePicker.Companion.with(CreateProfile.this)
+                            .cropSquare()
+                            .compress(512)
+                            .maxResultSize(512, 512)
+                            .createIntent(intent -> {
+                                imagePickerLauncher.launch(intent);
+                                return null;
+                            });
+                } catch (Exception e) {
+                    Log.e(CreateProfile.class.getSimpleName(), e.getMessage() );
+                }
+
             }
         });
     }
 
-    void setData(){
+    private void registerImagePicker() {
+        // Đăng ký ActivityResultLauncher để chọn hình ảnh
+        imagePickerLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+            if (result.getResultCode() == Activity.RESULT_OK) {
+                // Xử lý kết quả khi người dùng đã chọn hình ảnh thành công
+                Intent data = result.getData();
+                Uri selectedImageUriTemp = (data != null) ? data.getData() : null;
 
-        String userName = fullname.getText().toString();
-        String date =  edtAge.getText().toString();
+                if (data != null && selectedImageUriTemp != null) {
+                    selectedImageUri = selectedImageUriTemp;
+                    firebaseUtil.setAvatar(CreateProfile.this, selectedImageUri, binding.imgAvatar);
+                }
+            }
+        });
+    }
+
+
+    void setData(){
+        String userName = binding.fullName.getText().toString();
+        String date =  binding.edtAge.getText().toString();
+
         if(userName.isEmpty() || userName.length() < 3){
             fullname.setError(" Username toi thieu phai co 3 ki tu!");
             return;
@@ -74,14 +126,14 @@ public class CreateProfile extends AppCompatActivity {
             edtAge.setError("Ngày tháng năm sinh không được bỏ trống !");
             return;
         }
+
         setInProgress(true);
 
         if(model!=null){
             model.setUsername(userName);
             model.setDate(date);
         }else{
-            model = new userModel(phoneNumber,userName, Timestamp.now(),date);
-
+            model = new userModel(phoneNumber,userName, Timestamp.now(),date, firebaseUtil.currentUserId());
         }
         firebaseUtil.currentUserDetails().set(model).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
@@ -90,6 +142,10 @@ public class CreateProfile extends AppCompatActivity {
                 if(task.isSuccessful()){
                     Intent intent = new Intent(CreateProfile.this, home.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(intent);
+                    finish();
+                }else{
+                    Toasty.error(CreateProfile.this,"Đã có lỗi xảy ra! Vui lòng thử lại sau.", Toasty.LENGTH_LONG, true).show();
                 }
             }
         });
@@ -104,15 +160,14 @@ public class CreateProfile extends AppCompatActivity {
                 if(task.isSuccessful()){
                     model  = task.getResult().toObject(userModel.class);
                     if(model!=null){
-                        fullname.setText(model.getUsername());
-                        edtAge.setText(model.getDate());
+                        startActivity(new Intent(CreateProfile.this, home.class));
+                        finish();
                     }
                 }
             }
         });
 
     }
-
 
     private  void showDatePickerDialog() {
         Calendar calendar = Calendar.getInstance();

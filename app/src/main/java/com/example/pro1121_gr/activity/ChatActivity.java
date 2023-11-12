@@ -177,26 +177,21 @@ public class ChatActivity extends AppCompatActivity {
                         Uri uri = task.getResult();
                         uriOther = uri;
                         firebaseUtil.setAvatar(ChatActivity.this, uri, binding.avatarChat);
-                        setChatLayout();
                     }
                 }
             });
-
-            firebaseUtil.getChatRoomReference(chatRoomID).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                @Override
-                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                    if (task.isSuccessful()) {
-                        chatRoomModel = task.getResult().toObject(chatRoomModel.class);
-                        if (chatRoomModel == null) {
-                            chatRoomModel = new chatRoomModel();
-                            chatRoomModel.setChatroomId(chatRoomID);
-                            chatRoomModel.setUserIds(Arrays.asList(firebaseUtil.currentUserId(), userModel.getUserId()));
-                            chatRoomModel.setLastMessageTimestamp(Timestamp.now());
-                            chatRoomModel.setLastMessageSenderId("");
-                        }
-                        firebaseUtil.getChatRoomReference(chatRoomID).set(chatRoomID);
-                    }
+            setChatLayout();
+            firebaseUtil.getChatRoomReference(chatRoomID).get().addOnCompleteListener(task ->  {
+                chatRoomModel = task.getResult().toObject(chatRoomModel.class);
+                if (chatRoomModel == null) {
+                    chatRoomModel = new chatRoomModel();
+                    chatRoomModel.setChatroomId(chatRoomID);
+                    chatRoomModel.setUserIds(Arrays.asList(firebaseUtil.currentUserId(), userModel.getUserId()));
+                    chatRoomModel.setLastMessageTimestamp(Timestamp.now());
+                    chatRoomModel.setLastMessageSenderId("");
                 }
+                firebaseUtil.getChatRoomReference(chatRoomID).set(chatRoomModel);
+
             });
         } catch (Exception e) {
             Log.e("getDataChatRoom", e.toString() );

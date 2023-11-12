@@ -20,7 +20,7 @@ public class userModel {
         this.phone = phone;
         this.username = username;
         this.createdTimestamp = createdTimestamp;
-//        this.date = date;
+        this.date = date;
         this.userId = userId;
     }
 
