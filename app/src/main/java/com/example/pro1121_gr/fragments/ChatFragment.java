@@ -9,7 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.pro1121_gr.R;
+import com.example.pro1121_gr.activity.MyApplication;
 import com.example.pro1121_gr.activity.SearchActivity;
 import com.example.pro1121_gr.databinding.FragmentChatBinding;
 
@@ -31,6 +31,10 @@ public class ChatFragment extends Fragment {
                 startActivity(new Intent(getContext(), SearchActivity.class).setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY));
             }
         });
+
+        MyApplication.applyNightMode();
+
+
 
         return binding.getRoot();
     }

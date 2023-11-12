@@ -63,9 +63,11 @@ public class firebaseUtil {
         return new SimpleDateFormat("HH:MM").format(timestamp.toDate());
     }
 
-    public static void logout(){
-        FirebaseAuth.getInstance().signOut();
-    }
+
+    //Đăng xuất
+//    public static void logout(){
+//        FirebaseAuth.getInstance().signOut();
+//    }
 
     public static StorageReference getCurrentProfilePicStorageRef(){
         return FirebaseStorage.getInstance().getReference().child("profile_img")
