@@ -91,23 +91,30 @@ public class firebaseUtil {
                 .child(otherUserId);
     }
 
-    public static void loadImageInChat(Context context, String message, ImageView image){
+    /*public static void loadImageInChat(Context context, String message, ImageView image){
         Glide.with(context)
                 .load(message)
                 .override(500, 500) // Điều chỉnh kích thước ảnh tại đây
                 .centerCrop() // Đường dẫn URL của ảnh đã tải lên
+                .into(image); // ImageView để hiển thị ảnh
+    }*/
+
+    public static void loadImageInChat(Context context, String message, ImageView image) {
+        Glide.with(context)
+                .load(message)
+                .apply(new RequestOptions()
+                        .override(500, 500) // Điều chỉnh kích thước ảnh tại đây
+                        .fitCenter() // Giữ tỷ lệ và hiển thị trong khung
+                )
                 .into(image); // ImageView để hiển thị ảnh
     }
 
     public static void setAvatar(Context context, Uri uri, ImageView image) {
         Glide.with(context)
                 .load(uri)
-                .apply(new RequestOptions()
-                        .override(500, 500) // Điều chỉnh kích thước ảnh tại đây
-                        .fitCenter() // Giữ tỷ lệ và hiển thị trong khung
-                )
-                .into(image); // ImageView để hiển thị ảnh
-
+                .error(R.drawable.img_5) // Đặt hình ảnh mặc định khi có lỗi
+                .apply(RequestOptions.circleCropTransform())
+                .into(image);
     }
 
     public static void setAVTinChat(Context context,Uri uri, ImageView imageView){
