@@ -2,6 +2,8 @@ package com.example.pro1121_gr.activity;
 
 import android.annotation.SuppressLint;
 import android.net.Uri;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -125,6 +127,10 @@ public class ChatActivity extends AppCompatActivity {
                 sendMessToOther(binding.TextMESS.getText().toString().trim());
             }
         });
+        // Bật chế độ tối nếu được kích hoạt
+        MyApplication.applyNightMode();
+
+
     }
 
     @SuppressLint("NotifyDataSetChanged")

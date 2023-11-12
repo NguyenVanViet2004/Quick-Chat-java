@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.pro1121_gr.R;
+import com.example.pro1121_gr.activity.MyApplication;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -55,6 +56,9 @@ public class SettingFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
+        // Bật chế độ tối nếu được kích hoạt
+        MyApplication.applyNightMode();
     }
 
     @Override

@@ -20,7 +20,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
-            android:id="@+id/backFragment_mess"
+            android:id="@+id/backEdit"
             android:layout_width="@dimen/_24sdp"
             android:layout_height="@dimen/_24sdp"
             android:layout_marginLeft="@dimen/_15sdp"
@@ -54,23 +54,24 @@
         app:layout_constraintTop_toBottomOf="@id/line1"
         app:layout_constraintBottom_toTopOf="@id/fullName"/>
 
+
     <EditText
         android:id="@+id/fullName"
         android:layout_width="match_parent"
         android:layout_height="@dimen/_40sdp"
         android:layout_marginHorizontal="@dimen/_20sdp"
-        android:layout_marginTop="52dp"
+        android:layout_marginTop="48dp"
         android:background="@drawable/radius_item"
         android:drawableRight="@drawable/baseline_drive_file_rename_outline_24"
         android:gravity="center_vertical"
-        android:hint="họ và tên"
+        android:hint="Họ và tên"
+        android:textColorHint="@color/black"
         android:maxLength="50"
         android:paddingHorizontal="@dimen/_20sdp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.49"
+        app:layout_constraintHorizontal_bias="0.509"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/item_avatar" />
-
 
     <EditText
         android:id="@+id/birthday"
@@ -81,7 +82,8 @@
         android:background="@drawable/radius_item"
         android:drawableRight="@drawable/baseline_calendar_month_24"
         android:gravity="center_vertical"
-        android:hint="ngày-tháng-năm sinh"
+        android:hint="Ngày - Tháng - Năm sinh"
+        android:textColorHint="@color/black"
         android:inputType="date"
         android:maxLength="50"
         android:paddingHorizontal="@dimen/_20sdp"
@@ -89,6 +91,7 @@
         app:layout_constraintHorizontal_bias="0.509"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/fullName"
+
         tools:ignore="HardcodedText" />
 
     <com.hbb20.CountryCodePicker
@@ -117,7 +120,8 @@
         android:layout_marginLeft="@dimen/_5sdp"
         android:layout_marginRight="@dimen/_20sdp"
         android:background="@drawable/radius_item"
-        android:hint="số điện thoại"
+        android:hint="Số điện thoại"
+        android:textColorHint="@color/black"
         android:inputType="phone"
         android:padding="@dimen/_10sdp"
         app:layout_constraintBottom_toBottomOf="parent"

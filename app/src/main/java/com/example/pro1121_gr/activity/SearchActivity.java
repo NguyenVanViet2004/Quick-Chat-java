@@ -1,6 +1,7 @@
 package com.example.pro1121_gr.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 
 import android.os.Bundle;
 import android.view.View;
@@ -24,5 +25,7 @@ public class SearchActivity extends AppCompatActivity {
                 onBackPressed();
             }
         });
+
+        MyApplication.applyNightMode();
     }
 }

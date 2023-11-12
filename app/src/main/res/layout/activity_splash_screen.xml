@@ -35,9 +35,5 @@
         android:layout_height="@dimen/_100sdp"
         android:scaleType="fitXY"
         android:src="@drawable/splash_icon2"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.motion.widget.MotionLayout>
