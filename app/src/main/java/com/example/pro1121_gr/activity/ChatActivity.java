@@ -143,10 +143,10 @@ public class ChatActivity extends AppCompatActivity {
 
         chatMesseageModel chatMesseageModel = new chatMesseageModel(message,firebaseUtil.currentUserId(),Timestamp.now());
 
-        firebaseUtil.getChatroomMessageReference(chatRoomID).add(chatMesseageModel).addOnCompleteListener( task -> {
+        /*firebaseUtil.getChatroomMessageReference(chatRoomID).add(chatMesseageModel).addOnCompleteListener( task -> {
             if (task.isSuccessful()){
             }
-        });
+        });*/
         firebaseUtil.getChatroomMessageReference(chatRoomID).add(chatMesseageModel);
         binding.TextMESS.setText("");
         adapter.notifyDataSetChanged();
