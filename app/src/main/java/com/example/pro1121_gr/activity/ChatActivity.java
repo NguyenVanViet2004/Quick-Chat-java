@@ -1,9 +1,8 @@
 package com.example.pro1121_gr.activity;
 
+
 import android.annotation.SuppressLint;
 import android.net.Uri;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.app.AppCompatDelegate;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -28,14 +27,13 @@ import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.Query;
 
-
 import java.util.Arrays;
-import java.util.Objects;
 
 public class ChatActivity extends AppCompatActivity {
+
+    private static final String TAG = ChatActivity.class.getSimpleName();
 
     private userModel userModel;
     String chatRoomID;
@@ -143,10 +141,6 @@ public class ChatActivity extends AppCompatActivity {
 
         chatMesseageModel chatMesseageModel = new chatMesseageModel(message,firebaseUtil.currentUserId(),Timestamp.now());
 
-        /*firebaseUtil.getChatroomMessageReference(chatRoomID).add(chatMesseageModel).addOnCompleteListener( task -> {
-            if (task.isSuccessful()){
-            }
-        });*/
         firebaseUtil.getChatroomMessageReference(chatRoomID).add(chatMesseageModel);
         binding.TextMESS.setText("");
         adapter.notifyDataSetChanged();
@@ -167,7 +161,7 @@ public class ChatActivity extends AppCompatActivity {
             // Lấy đối tượng userModel
             userModel = StaticFunction.getUserModelFromIntent(getIntent());
 
-            chatRoomID = firebaseUtil.getChatroomId(firebaseUtil.currentUserId().toString(), userModel.getUserId());
+            chatRoomID = firebaseUtil.getChatroomId(firebaseUtil.currentUserId(), userModel.getUserId());
 
             // Lấy avatar
             firebaseUtil.getCurrentOtherProfileImageStorageReference(userModel.getUserId()).getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
@@ -177,10 +171,10 @@ public class ChatActivity extends AppCompatActivity {
                         Uri uri = task.getResult();
                         uriOther = uri;
                         firebaseUtil.setAvatar(ChatActivity.this, uri, binding.avatarChat);
+                        setChatLayout();
                     }
                 }
             });
-            setChatLayout();
             firebaseUtil.getChatRoomReference(chatRoomID).get().addOnCompleteListener(task ->  {
                 chatRoomModel = task.getResult().toObject(chatRoomModel.class);
                 if (chatRoomModel == null) {
@@ -191,8 +185,9 @@ public class ChatActivity extends AppCompatActivity {
                     chatRoomModel.setLastMessageSenderId("");
                 }
                 firebaseUtil.getChatRoomReference(chatRoomID).set(chatRoomModel);
-
+                setChatLayout();
             });
+
         } catch (Exception e) {
             Log.e("getDataChatRoom", e.toString() );
         }
@@ -200,33 +195,34 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     private void setChatLayout() {
-        try {
-            Query query = firebaseUtil.getChatroomMessageReference(chatRoomID)
-                    .orderBy("timestamp", Query.Direction.DESCENDING);
+        //try {
+        Query query = firebaseUtil.getChatroomMessageReference(chatRoomID)
+                .orderBy("timestamp", Query.Direction.DESCENDING);
 
-            FirestoreRecyclerOptions<chatMesseageModel> options = new FirestoreRecyclerOptions.Builder<chatMesseageModel>()
-                    .setQuery(query, chatMesseageModel.class)
-                    .build();
+        FirestoreRecyclerOptions<chatMesseageModel> options = new FirestoreRecyclerOptions.Builder<chatMesseageModel>()
+                .setQuery(query, chatMesseageModel.class)
+                .build();
 
-            adapter = new chatAdapter(options, getApplicationContext(), uriOther);
-            LinearLayoutManager manager = new LinearLayoutManager(this);
-            manager.setReverseLayout(true);
-            binding.rcvMess.setLayoutManager(manager);
-            binding.rcvMess.setAdapter(adapter);
-            adapter.startListening();
+        adapter = new chatAdapter(options, getApplicationContext(), uriOther.toString());
+        Log.e(TAG, "onComplete: " + uriOther.toString());
+        LinearLayoutManager manager = new LinearLayoutManager(this);
+        manager.setReverseLayout(true);
+        binding.rcvMess.setLayoutManager(manager);
+        binding.rcvMess.setAdapter(adapter);
+        adapter.startListening();
 
-            // Cuộn màn hình xuống tin nhắn mới nhất khi gửi
-            adapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
-                @Override
-                public void onItemRangeInserted(int positionStart, int itemCount) {
-                    super.onItemRangeInserted(positionStart, itemCount);
-                    binding.rcvMess.smoothScrollToPosition(0);
-                }
-            });
+        // Cuộn màn hình xuống tin nhắn mới nhất khi gửi
+        adapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
+            @Override
+            public void onItemRangeInserted(int positionStart, int itemCount) {
+                super.onItemRangeInserted(positionStart, itemCount);
+                binding.rcvMess.smoothScrollToPosition(0);
+            }
+        });
 
-        } catch (Exception e) {
-            Log.e("SearchUser.kt", Objects.requireNonNull(e.getMessage()));
-        }
+        /*} catch (Exception e) {
+            Log.e(TAG, "setChatLayout : "+e.getMessage());
+        }*/
     }
 
 }
