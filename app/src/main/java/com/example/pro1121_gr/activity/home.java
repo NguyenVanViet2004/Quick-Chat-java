@@ -2,8 +2,10 @@ package com.example.pro1121_gr.activity;
 
 import android.app.Dialog;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
@@ -22,6 +24,7 @@ import com.example.pro1121_gr.databinding.ActivityHomeBinding;
 import com.example.pro1121_gr.fragments.ChatFragment;
 import com.example.pro1121_gr.function.ReplaceFragment;
 import com.example.pro1121_gr.function.RequestPermission;
+import com.example.pro1121_gr.util.NetworkChangeReceiver;
 import com.qamar.curvedbottomnaviagtion.CurvedBottomNavigation;
 
 import kotlin.Unit;
@@ -30,6 +33,7 @@ import kotlin.jvm.functions.Function1;
 public class home extends AppCompatActivity {
 
     private ActivityHomeBinding binding;
+    private NetworkChangeReceiver networkChangeReceiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +53,11 @@ public class home extends AppCompatActivity {
                 new ChatFragment(),
                 false
         );
+
+        // Khởi tạo và đăng ký BroadcastReceiver
+        networkChangeReceiver = new NetworkChangeReceiver();
+        IntentFilter intentFilter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+        registerReceiver(networkChangeReceiver, intentFilter);
 
         RequestPermission.requestReadImgGalleryCamera(this);
 
@@ -107,6 +116,14 @@ public class home extends AppCompatActivity {
             window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
             window.setWindowAnimations(R.style.DialogAnimation);
             window.setGravity(Gravity.BOTTOM);
+        }
+    }
+
+    protected void onDestroy() {
+        // Hủy đăng ký BroadcastReceiver khi hoạt động bị hủy
+        super.onDestroy();
+        if (networkChangeReceiver != null) {
+            unregisterReceiver(networkChangeReceiver);
         }
     }
 }

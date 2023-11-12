@@ -22,7 +22,6 @@ import com.hbb20.CountryCodePicker;
 import es.dmoral.toasty.Toasty;
 
 public class LoginActivity extends AppCompatActivity {
-    private NetworkChangeReceiver networkChangeReceiver;
     private ActivityLoginBinding binding;
     //    CountryCodePicker countryCodePicker;
     EditText edt_login;
@@ -34,10 +33,6 @@ public class LoginActivity extends AppCompatActivity {
         binding = ActivityLoginBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        // Khởi tạo và đăng ký BroadcastReceiver
-        networkChangeReceiver = new NetworkChangeReceiver();
-        IntentFilter intentFilter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
-        registerReceiver(networkChangeReceiver, intentFilter);
         edt_login = findViewById(R.id.edt_login);
 
         binding.countryCodePicker.registerCarrierNumberEditText(binding.edtLogin);
@@ -56,14 +51,6 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-    @Override
-    protected void onDestroy() {
-        // Hủy đăng ký BroadcastReceiver khi hoạt động bị hủy
-        super.onDestroy();
-        if (networkChangeReceiver != null) {
-            unregisterReceiver(networkChangeReceiver);
-        }
-    }
     private Boolean isValid(){
         if ( !binding.countryCodePicker.isValidFullNumber() || binding.countryCodePicker.getFullNumberWithPlus().length() < 10) return false;
         return true;

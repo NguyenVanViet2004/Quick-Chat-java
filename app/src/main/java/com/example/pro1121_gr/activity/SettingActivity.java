@@ -73,7 +73,7 @@ public class SettingActivity extends AppCompatActivity {
     }
     // Phương thức logout
     public static void logout(){
-        FirebaseAuth.getInstance().signOut();
+        firebaseUtil.logout();
         // Thêm hành động chuyển hướng đến màn hình đăng nhập sau khi đăng xuất .
         Intent intent = new Intent(MyApplication.getInstance(), LoginActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP); // Xóa các activity trên đỉnh ngăn xếp

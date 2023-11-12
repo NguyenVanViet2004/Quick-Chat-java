@@ -51,10 +51,11 @@ public class ChatFragment extends Fragment {
 
     private void setLayoutChat() {
         Query query = firebaseUtil.allChatroomCollectionReference()
-                .whereArrayContains("userIDS", firebaseUtil.currentUserId())
-                .orderBy("lastMessageSenderID", Query.Direction.DESCENDING);
+                .whereArrayContains("userIds", firebaseUtil.currentUserId())
+                .orderBy("lastMessageSenderId", Query.Direction.DESCENDING);
 
-        FirestoreRecyclerOptions<chatRoomModel> options = new FirestoreRecyclerOptions.Builder<chatRoomModel>().setQuery(query, chatRoomModel.class).build();
+        FirestoreRecyclerOptions<chatRoomModel> options =
+                new FirestoreRecyclerOptions.Builder<chatRoomModel>().setQuery(query, chatRoomModel.class).build();
 
         adapter = new chatListAdapter(options,getContext());
 
