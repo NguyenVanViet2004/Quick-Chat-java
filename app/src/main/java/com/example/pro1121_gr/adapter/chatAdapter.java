@@ -25,10 +25,10 @@ import com.google.android.gms.tasks.Task;
 public class chatAdapter extends FirestoreRecyclerAdapter<chatMesseageModel, chatAdapter.ChatModelViewHolder> {
 
     private Context context;
-    private Uri uriOther;
+    private String uriOther;
     private static String TAG = chatAdapter.ChatModelViewHolder.class.toString();
 
-    public chatAdapter(@NonNull FirestoreRecyclerOptions<chatMesseageModel> options, Context context, Uri uriOther) {
+    public chatAdapter(@NonNull FirestoreRecyclerOptions<chatMesseageModel> options, Context context, String uriOther) {
         super(options);
         this.context = context;
         this.uriOther = uriOther;
@@ -75,7 +75,8 @@ public class chatAdapter extends FirestoreRecyclerAdapter<chatMesseageModel, cha
                     Uri uri = null;
                     if (task.isSuccessful()) {
                         uri = task.getResult();
-                        firebaseUtil.setAvatar(context, uriOther, holder.myAVT);
+                        Log.e(TAG, "check link: " + uriOther + "\n" + uri );
+                        firebaseUtil.setAvatar(context, Uri.parse(uriOther), holder.otherAVT);
                     } else {
                         Log.e(TAG, "Download URL not successful");
                     }
