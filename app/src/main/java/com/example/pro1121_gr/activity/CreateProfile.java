@@ -44,6 +44,7 @@ public class CreateProfile extends AppCompatActivity {
         phoneNumber = getIntent().getStringExtra("phone");
         getData();
 
+
         binding.edtAge.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

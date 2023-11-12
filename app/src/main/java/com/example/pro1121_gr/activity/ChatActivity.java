@@ -1,6 +1,7 @@
 package com.example.pro1121_gr.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 
 import android.os.Bundle;
 
@@ -15,5 +16,10 @@ public class ChatActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = ActivityChatBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+        // Bật chế độ tối nếu được kích hoạt
+        MyApplication.applyNightMode();
+
+
     }
 }

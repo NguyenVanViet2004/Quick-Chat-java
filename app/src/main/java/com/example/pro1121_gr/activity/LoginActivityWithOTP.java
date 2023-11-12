@@ -49,6 +49,9 @@ public class LoginActivityWithOTP extends AppCompatActivity {
         binding = ActivityLoginWithOtpBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+        // Bật chế độ tối nếu được kích hoạt
+        MyApplication.applyNightMode();
+
 
         EditText otpInput = findViewById(R.id.edt_loginOTP);
 //        Button btnLoginNextOTP = findViewById(R.id.btn_loginNextOTP);

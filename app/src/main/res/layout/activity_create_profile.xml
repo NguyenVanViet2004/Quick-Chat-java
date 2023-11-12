@@ -94,7 +94,8 @@
         android:layout_width="@dimen/_280sdp"
         android:layout_height="@dimen/_40sdp"
         android:background="@drawable/radius_item"
-        android:hint="họ và tên"
+        android:hint="Họ và tên"
+        android:textColorHint="@color/black"
         android:inputType="text"
         android:maxLength="50"
         android:padding="@dimen/_10sdp"
@@ -113,15 +114,16 @@
         android:layout_height="@dimen/_40sdp"
         android:background="@drawable/radius_item"
         android:drawableRight="@drawable/baseline_calendar_month_24"
-        android:hint="ngày-tháng-năm sinh"
+        android:hint="Ngày - Tháng - Năm sinh"
+        android:textColorHint="@color/black"
         android:inputType="date"
         android:padding="@dimen/_10sdp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintHorizontal_bias="0.489"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/fullName"
-        app:layout_constraintVertical_bias="0.064" />
+        app:layout_constraintVertical_bias="0.06" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btn_loginNextEnter"
