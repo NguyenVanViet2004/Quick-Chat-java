@@ -3,19 +3,26 @@ package com.example.pro1121_gr.activity;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.view.View;
+
 import android.widget.Button;
 import android.widget.EditText;
+
 import android.widget.Toast;
 
 import com.example.pro1121_gr.R;
 import com.example.pro1121_gr.databinding.ActivityLoginBinding;
+import com.example.pro1121_gr.util.NetworkChangeReceiver;
 import com.example.pro1121_gr.util.AndroidUlti;
 import com.hbb20.CountryCodePicker;
 
-public class LoginActivity extends AppCompatActivity {
+import es.dmoral.toasty.Toasty;
 
+public class LoginActivity extends AppCompatActivity {
+    private NetworkChangeReceiver networkChangeReceiver;
     private ActivityLoginBinding binding;
     //    CountryCodePicker countryCodePicker;
     EditText edt_login;
@@ -27,6 +34,10 @@ public class LoginActivity extends AppCompatActivity {
         binding = ActivityLoginBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+        // Khởi tạo và đăng ký BroadcastReceiver
+        networkChangeReceiver = new NetworkChangeReceiver();
+        IntentFilter intentFilter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+        registerReceiver(networkChangeReceiver, intentFilter);
         edt_login = findViewById(R.id.edt_login);
 
         binding.countryCodePicker.registerCarrierNumberEditText(binding.edtLogin);
@@ -44,6 +55,13 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    protected void onDestroy() {
+        // Hủy đăng ký BroadcastReceiver khi hoạt động bị hủy
+        super.onDestroy();
+        if (networkChangeReceiver != null) {
+            unregisterReceiver(networkChangeReceiver);
+        }
     private Boolean isValid(){
         if ( !binding.countryCodePicker.isValidFullNumber() || binding.countryCodePicker.getFullNumberWithPlus().length() < 10) return false;
         return true;
