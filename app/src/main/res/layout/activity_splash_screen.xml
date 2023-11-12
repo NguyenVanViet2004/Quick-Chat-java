@@ -34,6 +34,6 @@
         android:layout_width="@dimen/_100sdp"
         android:layout_height="@dimen/_100sdp"
         android:scaleType="fitXY"
-        android:src="@drawable/splash_icon2"
+        android:src="@drawable/splash_icon2"/>
 
 </androidx.constraintlayout.motion.widget.MotionLayout>

@@ -45,11 +45,12 @@ public class LoginActivity extends AppCompatActivity {
         binding.btnLoginNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (isValid()){
+                if (isValid()) {
                     Intent intent = new Intent(LoginActivity.this, LoginActivityWithOTP.class);
                     intent.putExtra("phone", binding.countryCodePicker.getFullNumberWithPlus());
                     startActivity(intent);
-                }else Toast.makeText(LoginActivity.this, "Số điện thoại không hợp lệ!", Toast.LENGTH_SHORT).show();
+                } else
+                    Toast.makeText(LoginActivity.this, "Số điện thoại không hợp lệ!", Toast.LENGTH_SHORT).show();
 
             }
         });
@@ -62,6 +63,7 @@ public class LoginActivity extends AppCompatActivity {
         if (networkChangeReceiver != null) {
             unregisterReceiver(networkChangeReceiver);
         }
+    }
     private Boolean isValid(){
         if ( !binding.countryCodePicker.isValidFullNumber() || binding.countryCodePicker.getFullNumberWithPlus().length() < 10) return false;
         return true;
