@@ -79,6 +79,8 @@ dependencies {
 
     implementation ("org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.3.61")
     implementation ("com.etebarian:meow-bottom-navigation:1.2.0")
+    // toasty library
+    implementation ("com.github.GrenderG:Toasty:1.5.2")
 
 
 }

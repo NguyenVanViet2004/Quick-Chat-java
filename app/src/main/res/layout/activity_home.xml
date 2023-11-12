@@ -4,8 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
     android:orientation="vertical"
+    style="@style/SCREEN"
     tools:context=".activity.home">
 
     <FrameLayout
@@ -25,7 +25,7 @@
         app:cbn_iconColor="@color/white"
         app:cbn_height="@dimen/_60sdp"
         app:cbn_icon_size="@dimen/_24sdp"
-        app:cbn_curve_radius="@dimen/_60sdp"
+        app:cbn_curve_radius="@dimen/_30sdp"
         app:cbn_selected_icon_size="@dimen/_40sdp"
         app:cbn_selectedIconColor="@color/white"
         app:cbn_titleColor="@color/white"

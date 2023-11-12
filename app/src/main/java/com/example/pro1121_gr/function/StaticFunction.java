@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.pro1121_gr.model.userModel;
+import com.google.firebase.Timestamp;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -23,7 +24,7 @@ public class StaticFunction {
     }
 
     public static userModel getUserModelFromIntent(Intent intent){
-        userModel userModel = new userModel();
+       userModel userModel = new userModel();
         userModel.setUsername(intent.getStringExtra("username"));
         userModel.setPhone(intent.getStringExtra("phone"));
         userModel.setUserId(intent.getStringExtra("userId"));

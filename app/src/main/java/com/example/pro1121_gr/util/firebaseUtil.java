@@ -1,5 +1,17 @@
 package com.example.pro1121_gr.util;
 
+import android.content.Context;
+import android.net.Uri;
+import android.util.Log;
+import android.widget.ImageView;
+
+import androidx.annotation.NonNull;
+
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
+import com.example.pro1121_gr.R;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
@@ -31,12 +43,12 @@ public class firebaseUtil {
         return FirebaseFirestore.getInstance().collection("users");
     }
 
-    public static DocumentReference getChatroomReference(String chatroomId){
+    public static DocumentReference getChatRoomReference(String chatroomId){
         return FirebaseFirestore.getInstance().collection("chatRooms").document(chatroomId);
     }
 
     public static CollectionReference getChatroomMessageReference(String chatroomId){
-        return getChatroomReference(chatroomId).collection("chats");
+        return getChatRoomReference(chatroomId).collection("chats");
     }
 
     public static String getChatroomId(String userId1,String userId2){
@@ -63,17 +75,52 @@ public class firebaseUtil {
         return new SimpleDateFormat("HH:MM").format(timestamp.toDate());
     }
 
-    public static void logout(){
-        FirebaseAuth.getInstance().signOut();
-    }
 
-    public static StorageReference getCurrentProfilePicStorageRef(){
+    //Đăng xuất
+//    public static void logout(){
+//        FirebaseAuth.getInstance().signOut();
+//    }
+
+    public static StorageReference getCurrentProfileImageStorageReference(){
         return FirebaseStorage.getInstance().getReference().child("profile_img")
                 .child(firebaseUtil.currentUserId());
     }
 
-    public static StorageReference  getOtherProfilePicStorageRef(String otherUserId){
+    public static StorageReference  getCurrentOtherProfileImageStorageReference(String otherUserId){
         return FirebaseStorage.getInstance().getReference().child("profile_img")
                 .child(otherUserId);
     }
+
+    public static void loadImageInChat(Context context, String message, ImageView image){
+        Glide.with(context)
+                .load(message)
+                .override(500, 500) // Điều chỉnh kích thước ảnh tại đây
+                .centerCrop() // Đường dẫn URL của ảnh đã tải lên
+                .into(image); // ImageView để hiển thị ảnh
+    }
+
+    public static void setAvatar(Context context, Uri uri, ImageView image) {
+        Glide.with(context)
+                .load(uri)
+                .error(R.drawable.img_5)
+                .apply(RequestOptions.circleCropTransform())
+                .into(image);
+    }
+
+    public static void setAVTinChat(Context context,Uri uri, ImageView imageView){
+        firebaseUtil.getCurrentProfileImageStorageReference().getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
+            @Override
+            public void onComplete(@NonNull Task<Uri> task) {
+                Uri uri = null;
+                if (task.isSuccessful()) {
+                    uri = task.getResult();
+                    firebaseUtil.setAvatar(context, uri, imageView);
+                } else {
+                    Log.e("set avatar", "Download URL not successful");
+                }
+            }
+        });
+    }
+
+
 }

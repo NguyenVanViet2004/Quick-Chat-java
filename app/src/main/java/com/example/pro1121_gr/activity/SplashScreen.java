@@ -8,6 +8,7 @@ import android.os.Handler;
 
 import com.example.pro1121_gr.R;
 import com.example.pro1121_gr.databinding.ActivitySplashScreenBinding;
+import com.example.pro1121_gr.util.firebaseUtil;
 
 public class SplashScreen extends AppCompatActivity {
 
@@ -19,9 +20,22 @@ public class SplashScreen extends AppCompatActivity {
         binding = ActivitySplashScreenBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+        MyApplication.applyNightMode();
+
         new Handler().postDelayed(() ->{
-            startActivity(new Intent(this, LoginActivity.class));
-            finish();
+            if (isLogin()){
+                startActivity(new Intent(this, home.class)); finish();
+            }else {
+                startActivity(new Intent(this, LoginActivity.class));
+                finish();
+            }
+
         }, 3000);
     }
+
+    private Boolean isLogin(){
+        if (firebaseUtil.isLoggedIn()) return true;
+        return false;
+    }
+
 }
