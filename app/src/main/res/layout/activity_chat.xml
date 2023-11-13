@@ -35,7 +35,7 @@
             android:id="@+id/avatar_chat"
             android:layout_width="@dimen/_35sdp"
             android:layout_height="@dimen/_35sdp"
-            android:layout_marginLeft="@dimen/_15sdp"
+            android:layout_marginLeft="@dimen/_5sdp"
             android:layout_weight="0"
             android:scaleType="fitXY"
             android:src="@drawable/img_5" />
