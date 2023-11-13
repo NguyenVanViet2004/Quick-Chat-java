@@ -38,7 +38,7 @@ public class ChatActivity extends AppCompatActivity {
     private userModel userModel;
     String chatRoomID;
 
-    private Uri uriOther;
+    private String uriOther;
     private chatRoomModel chatRoomModel;
 
     private chatAdapter adapter;
@@ -67,6 +67,7 @@ public class ChatActivity extends AppCompatActivity {
         });
 
         getDataChatRoom();
+
 
         binding.usernameMess.setText(userModel.getUsername());
 
@@ -143,7 +144,7 @@ public class ChatActivity extends AppCompatActivity {
 
         firebaseUtil.getChatroomMessageReference(chatRoomID).add(chatMesseageModel);
         binding.TextMESS.setText("");
-        adapter.notifyDataSetChanged();
+        //adapter.notifyDataSetChanged();
     }
 
     private void hiddenItem(boolean value) {
@@ -169,7 +170,8 @@ public class ChatActivity extends AppCompatActivity {
                 public void onComplete(@NonNull Task<Uri> task) {
                     if (task.isSuccessful()) {
                         Uri uri = task.getResult();
-                        uriOther = uri;
+                        uriOther = uri.toString();
+                        Log.e(TAG, "getdata: "+ uriOther );
                         firebaseUtil.setAvatar(ChatActivity.this, uri, binding.avatarChat);
                         setChatLayout();
                     }
@@ -185,7 +187,6 @@ public class ChatActivity extends AppCompatActivity {
                     chatRoomModel.setLastMessageSenderId("");
                 }
                 firebaseUtil.getChatRoomReference(chatRoomID).set(chatRoomModel);
-                setChatLayout();
             });
 
         } catch (Exception e) {
