@@ -105,7 +105,7 @@ public class LoginActivityWithOTP extends AppCompatActivity {
 
                             @Override
                             public void onVerificationFailed(@NonNull FirebaseException e) {
-                                Toasty.error(LoginActivityWithOTP.this, "OTP verification failed!", Toasty.LENGTH_LONG, true).show();
+                                Toasty.error(LoginActivityWithOTP.this, "OTP verification failed!", Toast.LENGTH_SHORT, true).show();
                                 setInProgress(false);
 
                             }
@@ -116,7 +116,7 @@ public class LoginActivityWithOTP extends AppCompatActivity {
                                 super.onCodeSent(s, forceResendingToken);
                                 verificationCode = s;
                                 reResendingToken = forceResendingToken;
-                                Toasty.success(LoginActivityWithOTP.this, "OTP verification successfully!", Toasty.LENGTH_LONG, true).show();
+                                Toasty.success(LoginActivityWithOTP.this, "OTP verification successfully!", Toast.LENGTH_SHORT, true).show();
                                 setInProgress(false);
 
                             }
@@ -141,7 +141,8 @@ public class LoginActivityWithOTP extends AppCompatActivity {
                     intent.putExtra("phone",phoneNumber);
                     startActivity(intent);
                 }else {
-                    Toasty.error(LoginActivityWithOTP.this, "OTP verification failed!", Toasty.LENGTH_LONG, true).show();
+                    Toasty.error(LoginActivityWithOTP.this, "OTP verification failed!", Toast.LENGTH_SHORT, true).show();
+
                 }
             }
         });
