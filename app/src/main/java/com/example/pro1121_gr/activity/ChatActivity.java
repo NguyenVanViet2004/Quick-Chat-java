@@ -177,6 +177,7 @@ public class ChatActivity extends AppCompatActivity {
                         Uri uri = task.getResult();
                         uriOther = uri;
                         firebaseUtil.setAvatar(ChatActivity.this, uri, binding.avatarChat);
+                        setChatLayout();
                     }
                 }
             });

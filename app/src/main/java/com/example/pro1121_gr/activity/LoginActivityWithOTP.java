@@ -33,6 +33,8 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
 
+import es.dmoral.toasty.Toasty;
+
 public class LoginActivityWithOTP extends AppCompatActivity {
 
     private ActivityLoginWithOtpBinding binding;
@@ -103,7 +105,7 @@ public class LoginActivityWithOTP extends AppCompatActivity {
 
                             @Override
                             public void onVerificationFailed(@NonNull FirebaseException e) {
-                                AndroidUlti.showToast(getApplicationContext(),"OTP verification failed!");
+                                Toasty.error(LoginActivityWithOTP.this, "OTP verification failed!", Toast.LENGTH_SHORT, true).show();
                                 setInProgress(false);
 
                             }
@@ -114,7 +116,8 @@ public class LoginActivityWithOTP extends AppCompatActivity {
                                 super.onCodeSent(s, forceResendingToken);
                                 verificationCode = s;
                                 reResendingToken = forceResendingToken;
-                                AndroidUlti.showToast(getApplicationContext(),"OTP verification successfully!");
+                                Toasty.success(LoginActivityWithOTP.this, "OTP verification successfully!", Toast.LENGTH_SHORT, true).show();
+
                                 setInProgress(false);
 
                             }
@@ -139,7 +142,7 @@ public class LoginActivityWithOTP extends AppCompatActivity {
                     intent.putExtra("phone",phoneNumber);
                     startActivity(intent);
                 }else {
-                    AndroidUlti.showToast(getApplicationContext(),"OTP verification failed!");
+                    Toasty.error(LoginActivityWithOTP.this, "OTP verification failed!", Toast.LENGTH_SHORT, true).show();
 
                 }
             }
