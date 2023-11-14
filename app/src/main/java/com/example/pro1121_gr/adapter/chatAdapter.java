@@ -75,8 +75,7 @@ public class chatAdapter extends FirestoreRecyclerAdapter<chatMesseageModel, cha
                     Uri uri = null;
                     if (task.isSuccessful()) {
                         uri = task.getResult();
-                        Log.e(TAG, "check link: " + uriOther + "\n" + uri );
-                        firebaseUtil.setAvatar(context, Uri.parse(uriOther), holder.otherAVT);
+                        firebaseUtil.setAvatar(context, uriOther, holder.otherAVT);
                     } else {
                         Log.e(TAG, "Download URL not successful");
                     }

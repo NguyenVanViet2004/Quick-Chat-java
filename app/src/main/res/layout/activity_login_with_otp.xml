@@ -81,7 +81,7 @@
         android:text="vui lòng nhập mã OTP của bạn"
         android:textAllCaps="true"
         android:textColor="@color/lavender"
-        android:textSize="@dimen/_20sdp"
+        android:textSize="@dimen/_18sdp"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@id/edt_loginOTP"
         app:layout_constraintHorizontal_bias="0.64"

@@ -56,8 +56,6 @@ public class LoginActivityWithOTP extends AppCompatActivity {
 
 
         EditText otpInput = findViewById(R.id.edt_loginOTP);
-//        Button btnLoginNextOTP = findViewById(R.id.btn_loginNextOTP);
-//        TextView resendOTP = findViewById(R.id.resendOTP);
 
         phoneNumber = getIntent().getStringExtra("phone");
         binding.titleLoginOTP.setText("VUI LÒNG NHẬP MÃ OTP ĐÃ ĐƯỢC GỬI ĐẾN : " + phoneNumber);
@@ -70,17 +68,10 @@ public class LoginActivityWithOTP extends AppCompatActivity {
         binding.btnLoginNextOTP.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                Intent intent = new Intent(LoginActivityWithOTP.this, CreateProfile.class);
-//                intent.putExtra("phone", phoneNumber);
-//                intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-//
                  String enteredOTP = otpInput.getText().toString();
                  PhoneAuthCredential credential= PhoneAuthProvider.getCredential(verificationCode,enteredOTP);
                  signIn(credential);
                  setInProgress(true);
-
-//                startActivity(intent);
-//                finish();
             }
         });
 

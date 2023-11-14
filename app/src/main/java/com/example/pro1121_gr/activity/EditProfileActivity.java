@@ -1,29 +1,182 @@
 package com.example.pro1121_gr.activity;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
+import android.app.DatePickerDialog;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.DatePicker;
 
 import com.example.pro1121_gr.R;
 import com.example.pro1121_gr.databinding.ActivityEditProfileBinding;
 import com.example.pro1121_gr.databinding.ActivityHomeBinding;
+import com.example.pro1121_gr.function.StaticFunction;
+import com.example.pro1121_gr.model.userModel;
+import com.example.pro1121_gr.util.firebaseUtil;
+import com.github.dhaval2404.imagepicker.ImagePicker;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentSnapshot;
+
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.Calendar;
+
+import es.dmoral.toasty.Toasty;
+import kotlin.Unit;
+import kotlin.jvm.functions.Function1;
 
 public class EditProfileActivity extends AppCompatActivity {
     private ActivityEditProfileBinding binding;
+    private ActivityResultLauncher<Intent> imagePickerLauncher;
+    private Uri selectedImageUri;
+    private userModel userModel;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_profile);
         binding = ActivityEditProfileBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-        
-        
+
+        registerImagePicker();
+        initView();
+        checkInformation();
+    }
+
+
+    private void initView() {
+        editProfile();
         binding.backEdit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                onBackPressed();
+                startActivity(new Intent(EditProfileActivity.this, home.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+                finish();
             }
         });
+
+        binding.itemAvatar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ImagePicker.with(EditProfileActivity.this).cropSquare().compress(512).maxResultSize(512,512)
+                        .createIntent(new Function1<Intent, Unit>() {
+                            @Override
+                            public Unit invoke(Intent intent) {
+                                imagePickerLauncher.launch(intent);
+                                return Unit.INSTANCE;
+                            }
+                        });
+            }
+        });
+
+        binding.birthday.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showDatePickerDialog();
+            }
+        });
+
+        binding.update.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (selectedImageUri != null) {
+                    firebaseUtil.getCurrentProfileImageStorageReference().putFile(selectedImageUri).addOnCompleteListener(task ->{
+                        if (editProfile()) setInformation();
+                    });
+                }else {
+                    if (editProfile()) setInformation();
+                    else Toasty.error(EditProfileActivity.this, "Cập nhật thông tin thất bại!", Toasty.LENGTH_LONG, true).show();
+                }
+            }
+        });
+    }
+
+    private void setInformation(){
+        userModel.setUsername(binding.fullName.getText().toString().trim());
+        userModel.setPhone(binding.phoneNumber.getText().toString().trim());
+        userModel.setDate(binding.birthday.getText().toString().trim());
+        firebaseUtil.currentUserDetails().set(userModel).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if (task.isSuccessful()) Toasty.success(EditProfileActivity.this, "Cập nhật thông tin thành công!", Toasty.LENGTH_LONG,true).show();
+                else Toasty.error(EditProfileActivity.this, "Cập nhật thông tin thất bại!", Toasty.LENGTH_LONG, true).show();
+            }
+        });
+    }
+
+    private boolean editProfile(){
+        StaticFunction.isEmpty(binding.fullName,0);
+        StaticFunction.isEmpty(binding.birthday,1);
+        StaticFunction.isEmpty(binding.phoneNumber,2);
+
+        if (!StaticFunction.isValidPhoneNumber(binding.phoneNumber.getText().toString())) return false;
+        else if(!StaticFunction.isValidDateFormat(binding.birthday.getText().toString())) return false;
+        else if (binding.fullName.length() < 5) return false;
+
+        return true;
+    }
+
+    private void checkInformation(){
+        firebaseUtil.getCurrentProfileImageStorageReference().getDownloadUrl().addOnCompleteListener(this, new OnCompleteListener<Uri>() {
+            @Override
+            public void onComplete(@NonNull Task<Uri> task) {
+                if (task.isSuccessful()) firebaseUtil.setAvatar(EditProfileActivity.this,task.getResult(), binding.itemAvatar);
+                else Toasty.error(EditProfileActivity.this, "Đã xảy ra lỗi!", Toasty.LENGTH_LONG, true).show();
+            }
+        });
+
+        firebaseUtil.currentUserDetails().get().addOnCompleteListener(EditProfileActivity.this, new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()){
+                    userModel = task.getResult().toObject(userModel.class);
+                    binding.fullName.setText(userModel.getUsername());
+                    binding.birthday.setText(userModel.getDate());
+                    binding.phoneNumber.setText(userModel.getPhone());
+                }
+            }
+        });
+    }
+
+    private void registerImagePicker() {
+        // Đăng ký ActivityResultLauncher để chọn hình ảnh
+        imagePickerLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+            if (result.getResultCode() == Activity.RESULT_OK) {
+                // Xử lý kết quả khi người dùng đã chọn hình ảnh thành công
+                Intent data = result.getData();
+                Uri selectedImageUriTemp = (data != null) ? data.getData() : null;
+
+                if (data != null && selectedImageUriTemp != null) {
+                    selectedImageUri = selectedImageUriTemp;
+                    firebaseUtil.setAvatar(EditProfileActivity.this, selectedImageUri, binding.itemAvatar);
+                }
+            }
+        });
+    }
+
+
+    private  void showDatePickerDialog() {
+        Calendar calendar = Calendar.getInstance();
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH);
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+
+        DatePickerDialog datePickerDialog = new DatePickerDialog(this,new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
+                LocalDate selectedDate = LocalDate.of(year, month + 1, day);
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+                String formattedDate = selectedDate.format(formatter);
+                binding.birthday.setText(formattedDate);
+            }
+        },
+                year, month, day
+        );
+        datePickerDialog.show();
     }
 }
