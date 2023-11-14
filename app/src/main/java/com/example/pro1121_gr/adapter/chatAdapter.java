@@ -25,10 +25,10 @@ import com.google.android.gms.tasks.Task;
 public class chatAdapter extends FirestoreRecyclerAdapter<chatMesseageModel, chatAdapter.ChatModelViewHolder> {
 
     private Context context;
-    private Uri uriOther;
+    private String uriOther;
     private static String TAG = chatAdapter.ChatModelViewHolder.class.toString();
 
-    public chatAdapter(@NonNull FirestoreRecyclerOptions<chatMesseageModel> options, Context context, Uri uriOther) {
+    public chatAdapter(@NonNull FirestoreRecyclerOptions<chatMesseageModel> options, Context context, String uriOther) {
         super(options);
         this.context = context;
         this.uriOther = uriOther;

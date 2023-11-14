@@ -108,7 +108,6 @@ public class LoginActivityWithOTP extends AppCompatActivity {
                                 verificationCode = s;
                                 reResendingToken = forceResendingToken;
                                 Toasty.success(LoginActivityWithOTP.this, "OTP verification successfully!", Toast.LENGTH_SHORT, true).show();
-
                                 setInProgress(false);
 
                             }
@@ -122,7 +121,6 @@ public class LoginActivityWithOTP extends AppCompatActivity {
     }
     void signIn(PhoneAuthCredential phoneAuthCredential){
 //        //dang nhap va chuyen sang man hinh tiep theo
-//
         setInProgress(true);
         mAuth.signInWithCredential(phoneAuthCredential).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
@@ -130,6 +128,7 @@ public class LoginActivityWithOTP extends AppCompatActivity {
                 setInProgress(false);
                 if(task.isSuccessful()){
                     Intent intent = new Intent(LoginActivityWithOTP.this,CreateProfile.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
                     intent.putExtra("phone",phoneNumber);
                     startActivity(intent);
                 }else {
@@ -153,6 +152,7 @@ public class LoginActivityWithOTP extends AppCompatActivity {
         binding.resendOTP.setEnabled(false);
         Timer timer = new Timer();
         timer.scheduleAtFixedRate(new TimerTask() {
+            @SuppressLint("SetTextI18n")
             @Override
             public void run() {
                 timeoutSeconds--;
