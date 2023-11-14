@@ -22,6 +22,7 @@ import com.example.pro1121_gr.model.userModel;
 import com.example.pro1121_gr.util.firebaseUtil;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 public class chatListAdapter extends FirestoreRecyclerAdapter<chatRoomModel,chatListAdapter.chatListAdapterViewHolder> {
 

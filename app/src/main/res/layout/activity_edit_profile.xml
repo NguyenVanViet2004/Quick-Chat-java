@@ -123,6 +123,8 @@
         android:hint="Số điện thoại"
         android:textColorHint="@color/black"
         android:inputType="phone"
+        android:maxLines="1"
+        android:maxLength="10"
         android:padding="@dimen/_10sdp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintHorizontal_weight="1"

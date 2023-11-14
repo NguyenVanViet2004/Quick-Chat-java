@@ -2,8 +2,6 @@ package com.example.pro1121_gr.activity;
 
 import android.annotation.SuppressLint;
 import android.net.Uri;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.app.AppCompatDelegate;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -28,14 +26,26 @@ import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.Query;
+import com.google.firebase.messaging.FirebaseMessaging;
 
+import org.json.JSONObject;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.Objects;
 
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
+
 public class ChatActivity extends AppCompatActivity {
+
+    private final String TAG = ChatActivity.class.getSimpleName();
 
     private userModel userModel;
     String chatRoomID;
@@ -59,6 +69,7 @@ public class ChatActivity extends AppCompatActivity {
 
         //get UserModel
         userModel = StaticFunction.getUserModelFromIntent(getIntent());
+        Log.e(TAG, "onCreate: " + userModel.getFMCToken());
         chatRoomID = firebaseUtil.getChatroomId(firebaseUtil.currentUserId(), userModel.getUserId());
 
         binding.backFragmentMess.setOnClickListener(new View.OnClickListener() {
@@ -148,15 +159,61 @@ public class ChatActivity extends AppCompatActivity {
             }
         });*/
         firebaseUtil.getChatroomMessageReference(chatRoomID).add(chatMesseageModel);
+        sentotification(message);
         binding.TextMESS.setText("");
         adapter.notifyDataSetChanged();
     }
 
+    private void sentotification(String message) {
+        firebaseUtil.currentUserDetails().get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                userModel userModel1 = task.getResult().toObject(userModel.class);
+                try {
+                    JSONObject jsonObject = new JSONObject();
+                    JSONObject notification = new JSONObject();
+                    notification.put("title", userModel1.getUsername());
+                    notification.put("body", message);
+                    JSONObject data = new JSONObject();
+                    data.put("userId", userModel1.getUserId());
+                    jsonObject.put("notification", notification);
+                    jsonObject.put("data", data);
+                    jsonObject.put("to", userModel.getFMCToken());
+                    callAPI(jsonObject);
+                    Log.e(TAG, "my token222: " + userModel.getFMCToken() );
+
+                } catch (Exception e) {
+                    Log.e(ChatActivity.class.getSimpleName(), "notification: " + e.getMessage());
+                }
+            }
+        });
+    }
+
+
+    private void callAPI(JSONObject jsonObject) {
+        MediaType JSON = MediaType.get("application/json; charset=utf-8");
+        OkHttpClient client = new OkHttpClient();
+        String url = "https://fcm.googleapis.com/fcm/send";
+        RequestBody body = RequestBody.create(jsonObject.toString(), JSON);
+        Request request = new Request.Builder().url(url).post(body).header("Authorization", "Bearer AAAAzn2wU_4:APA91bGbYkKRd6E_tfTinPa_aBOnjjYLU39FJFubqWUUGOzV9uOEffB0gz_auOKjeJCqW7trohwb2aTSMFPcVVlTKD4NivbaubTDaKsHaWH3UMAom6pac6bMLfOA7ZhBQ1T1z1Tj1_vJ")
+                .build();
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                Log.e(ChatActivity.class.getSimpleName(), "onFailure: " + e.getMessage());
+            }
+
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                Log.e(ChatActivity.class.getSimpleName(), "onResponse: " + response);
+            }
+        });
+    }
+
     private void hiddenItem(boolean value) {
-        if (value){
+        if (value) {
             binding.imageMess.setVisibility(View.GONE);
             binding.cameraMess.setVisibility(View.GONE);
-        }else {
+        } else {
             binding.imageMess.setVisibility(View.VISIBLE);
             binding.cameraMess.setVisibility(View.VISIBLE);
         }
@@ -181,7 +238,6 @@ public class ChatActivity extends AppCompatActivity {
                     }
                 }
             });
-            setChatLayout();
             firebaseUtil.getChatRoomReference(chatRoomID).get().addOnCompleteListener(task ->  {
                 chatRoomModel = task.getResult().toObject(chatRoomModel.class);
                 if (chatRoomModel == null) {
