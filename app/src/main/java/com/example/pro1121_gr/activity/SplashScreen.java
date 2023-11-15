@@ -8,6 +8,7 @@ import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 
 import com.example.pro1121_gr.R;
 import com.example.pro1121_gr.databinding.ActivitySplashScreenBinding;
@@ -25,6 +26,8 @@ public class SplashScreen extends AppCompatActivity {
 
     private NetworkChangeReceiver networkChangeReceiver;
 
+    private final String TAG = SplashScreen.class.getSimpleName();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,10 +44,12 @@ public class SplashScreen extends AppCompatActivity {
 
         if (firebaseUtil.isLoggedIn() && getIntent().getExtras() != null){
             String userID = getIntent().getExtras().getString("userId");
+            Log.e(TAG, "userID: " + userID );
             if (userID != null) {
                 firebaseUtil.allUserCollectionReference().document(userID).get().addOnCompleteListener(task -> {
                     if (task.isSuccessful()){
                         userModel model = task.getResult().toObject(userModel.class);
+                        Log.e(TAG, "model : " + model.getFMCToken() );
 
                         Intent mainIntent = new Intent(this, home.class);
                         mainIntent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
@@ -57,23 +62,25 @@ public class SplashScreen extends AppCompatActivity {
                         finish();
                     }
                 });
-            }
-        }else {
-            new Handler().postDelayed(() ->{
-                if (isLogin()){
-                    startActivity(new Intent(this, home.class)); finish();
-                }else {
-                    startActivity(new Intent(this, LoginActivity.class));
-                    finish();
-                }
-
-            }, 2000);
-        }
+            }else gotoHome();
+        }else gotoHome();
     }
 
     private Boolean isLogin(){
         if (firebaseUtil.isLoggedIn()) return true;
         return false;
+    }
+
+    private void gotoHome(){
+        new Handler().postDelayed(() ->{
+            if (isLogin()){
+                startActivity(new Intent(this, home.class)); finish();
+            }else {
+                startActivity(new Intent(this, LoginActivity.class));
+                finish();
+            }
+
+        }, 2000);
     }
 
     @Override
