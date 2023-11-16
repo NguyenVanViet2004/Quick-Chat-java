@@ -4,26 +4,40 @@ package com.example.pro1121_gr.activity;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Intent;
+import android.content.IntentSender;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.location.Address;
+import android.location.Geocoder;
+import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.pro1121_gr.R;
 import com.example.pro1121_gr.adapter.chatAdapter;
 import com.example.pro1121_gr.databinding.ActivityChatBinding;
+import com.example.pro1121_gr.databinding.BottomNavigationInChatBinding;
 import com.example.pro1121_gr.function.RequestPermission;
 import com.example.pro1121_gr.function.StaticFunction;
 import com.example.pro1121_gr.model.chatMesseageModel;
@@ -31,9 +45,15 @@ import com.example.pro1121_gr.model.chatRoomModel;
 import com.example.pro1121_gr.model.userModel;
 import com.example.pro1121_gr.util.firebaseUtil;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.common.api.ResolvableApiException;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.LocationSettingsRequest;
+import com.google.android.gms.location.LocationSettingsResponse;
+import com.google.android.gms.location.LocationSettingsStatusCodes;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.Query;
@@ -46,7 +66,10 @@ import org.json.JSONObject;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.List;
+import java.util.Locale;
 
+import es.dmoral.toasty.Toasty;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.MediaType;
@@ -67,8 +90,11 @@ public class ChatActivity extends AppCompatActivity {
     private chatAdapter adapter;
     private ActivityChatBinding binding;
     private Uri selectImageUri;
-    private final int REQUEST_IMAGE_PICK = 100;
-    private final int REQUEST_IMAGE_CAPTURE = 1000;
+    private LocationRequest locationRequest;
+    private FusedLocationProviderClient fusedLocationProviderClient;
+    private static final int REQUEST_IMAGE_PICK = 100;
+    private static final int REQUEST_IMAGE_CAPTURE = 1000;
+    private static final int LOCATION_PERMISSION_REQUEST_CODE = 200;
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -78,6 +104,7 @@ public class ChatActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
         // Bật chế độ tối nếu được kích hoạt
         MyApplication.applyNightMode();
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
         //get UserModel
         userModel = StaticFunction.getUserModelFromIntent(getIntent());
         chatRoomID = firebaseUtil.getChatroomId(firebaseUtil.currentUserId(), userModel.getUserId());
@@ -101,10 +128,10 @@ public class ChatActivity extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                if (!charSequence.toString().isEmpty()){
+                if (!charSequence.toString().isEmpty()) {
                     binding.sendMess.setVisibility(View.VISIBLE);
                     binding.like.setVisibility(View.GONE);
-                }else{
+                } else {
                     binding.sendMess.setVisibility(View.GONE);
                     binding.like.setVisibility(View.VISIBLE);
                 }
@@ -118,7 +145,7 @@ public class ChatActivity extends AppCompatActivity {
         binding.TextMESS.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
-                if (motionEvent.getAction() == MotionEvent.ACTION_DOWN){
+                if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
                     hiddenItem(true);
                 }
                 return false;
@@ -130,7 +157,7 @@ public class ChatActivity extends AppCompatActivity {
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
                     hiddenItem(false);
-                    if (binding.TextMESS.getText().toString().isEmpty()){
+                    if (binding.TextMESS.getText().toString().isEmpty()) {
                         binding.sendMess.setVisibility(View.GONE);
                         binding.like.setVisibility(View.VISIBLE);
                     }
@@ -178,6 +205,47 @@ public class ChatActivity extends AppCompatActivity {
             }
         });
 
+        binding.call.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // Tạo một Intent với hành động ACTION_DIAL
+                Intent intent = new Intent(Intent.ACTION_DIAL);
+
+                // Đặt dữ liệu Uri cho số điện thoại cần gọi
+                intent.setData(Uri.parse("tel:" + userModel.getPhone()));
+
+                // Kiểm tra xem ứng dụng Gọi điện thoại có sẵn trên thiết bị hay chưa
+                if (intent.resolveActivity(getPackageManager()) != null) {
+                    // Nếu có, mở ứng dụng Gọi điện thoại
+                    startActivity(intent);
+                } else {
+                    Toasty.warning(ChatActivity.this, "Không tìm thấy ứng dụng phù hợp", Toasty.LENGTH_SHORT, true).show();
+                }
+            }
+        });
+
+        binding.videoCall.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // Số điện thoại người dùng muốn gọi
+                String phoneNumber = userModel.getPhone();
+                try {
+                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("tel:" + phoneNumber));
+                    intent.putExtra("videocall", true);
+
+                    // Gọi ứng dụng Gọi điện thoại hoặc xử lý trường hợp không tìm thấy
+                    startActivity(intent);
+                } catch (Exception e) {
+                    Log.e("call click in chatActivity", e.getMessage());
+                }
+            }
+        });
+
+
+        binding.optionInMess.setOnClickListener(view -> {
+            showBottomDialog();
+        });
+
     }
 
     @Override
@@ -193,12 +261,14 @@ public class ChatActivity extends AppCompatActivity {
             } else RequestPermission.showPermissionRationaleDialog(ChatActivity.this);
         } else if (requestCode == REQUEST_IMAGE_CAPTURE) {
             if (RequestPermission.checkPermission(ChatActivity.this, Manifest.permission.CAMERA)) {
-                // Quyền yêu cầu
                 Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                 if (intent.resolveActivity(getPackageManager()) != null) {
                     startActivityForResult(intent, REQUEST_IMAGE_CAPTURE);
                 }
-                // Người dùng từ chối cấp quyền
+            } else RequestPermission.showPermissionRationaleDialog(ChatActivity.this);
+        } else if (requestCode == LOCATION_PERMISSION_REQUEST_CODE) {
+            if (RequestPermission.checkPermission(ChatActivity.this, Manifest.permission.ACCESS_FINE_LOCATION)) {
+                // Người dùng từ chối cấp quyền vị trí
             } else RequestPermission.showPermissionRationaleDialog(ChatActivity.this);
         }
     }
@@ -271,7 +341,7 @@ public class ChatActivity extends AppCompatActivity {
                     jsonObject.put("data", data);
                     jsonObject.put("to", userModel.getFMCToken());
                     callAPI(jsonObject);
-                    Log.e(TAG, "my token222: " + userModel.getFMCToken() );
+                    Log.e(TAG, "my token222: " + userModel.getFMCToken());
 
                 } catch (Exception e) {
                     Log.e(ChatActivity.class.getSimpleName(), "notification: " + e.getMessage());
@@ -303,9 +373,11 @@ public class ChatActivity extends AppCompatActivity {
 
     private void hiddenItem(boolean value) {
         if (value) {
+            binding.optionInMess.setVisibility(View.VISIBLE);
             binding.imageMess.setVisibility(View.GONE);
             binding.cameraMess.setVisibility(View.GONE);
         } else {
+            binding.optionInMess.setVisibility(View.GONE);
             binding.imageMess.setVisibility(View.VISIBLE);
             binding.cameraMess.setVisibility(View.VISIBLE);
         }
@@ -325,13 +397,13 @@ public class ChatActivity extends AppCompatActivity {
                     if (task.isSuccessful()) {
                         Uri uri = task.getResult();
                         uriOther = uri.toString();
-                        Log.e(TAG, "getdata: "+ uriOther );
+                        Log.e(TAG, "getdata: " + uriOther);
                         firebaseUtil.setAvatar(ChatActivity.this, uri, binding.avatarChat);
                         setChatLayout();
                     }
                 }
             });
-            firebaseUtil.getChatRoomReference(chatRoomID).get().addOnCompleteListener(task ->  {
+            firebaseUtil.getChatRoomReference(chatRoomID).get().addOnCompleteListener(task -> {
                 chatRoomModel = task.getResult().toObject(chatRoomModel.class);
                 if (chatRoomModel == null) {
                     chatRoomModel = new chatRoomModel();
@@ -344,7 +416,7 @@ public class ChatActivity extends AppCompatActivity {
             });
 
         } catch (Exception e) {
-            Log.e("getDataChatRoom", e.toString() );
+            Log.e("getDataChatRoom", e.toString());
         }
 
     }
@@ -379,6 +451,109 @@ public class ChatActivity extends AppCompatActivity {
             Log.e(TAG, "setChatLayout : "+e.getMessage());
         }*/
     }
+
+    private void showBottomDialog() {
+        BottomNavigationInChatBinding binding = BottomNavigationInChatBinding.inflate(getLayoutInflater());
+        Dialog dialog = new Dialog(this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(binding.getRoot());
+
+        binding.GPS.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // Xử lý khi nhấn nút GPS
+                if (RequestPermission.checkPermission(ChatActivity.this, Manifest.permission.ACCESS_FINE_LOCATION)) {
+                    // Quyền đã được cấp
+                    checkGPS();
+                    dialog.dismiss();
+                } else
+                    RequestPermission.requestLocationPermission(ChatActivity.this, LOCATION_PERMISSION_REQUEST_CODE);
+            }
+        });
+
+        binding.cancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+            }
+        });
+
+        dialog.show();
+        Window window = dialog.getWindow();
+        if (window != null) {
+            window.setLayout(
+                    ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.WRAP_CONTENT
+            );
+            window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            window.setWindowAnimations(R.style.DialogAnimation);
+            window.setGravity(Gravity.BOTTOM);
+        }
+
+    }
+
+    private void checkGPS() {
+        locationRequest = LocationRequest.create();
+        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        locationRequest.setInterval(5000);
+        locationRequest.setFastestInterval(2000);
+
+        LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder().addLocationRequest(locationRequest);
+        builder.setAlwaysShow(true);
+        Task<LocationSettingsResponse> result = LocationServices.getSettingsClient(this.getApplicationContext())
+                .checkLocationSettings(builder.build());
+        result.addOnCompleteListener(task -> {
+            try {
+                // gps on
+                LocationSettingsResponse apiException = task.getResult(ApiException.class);
+                getUserLocation();
+            } catch (ApiException e) {
+                // gps off
+                if (e.getStatusCode() == LocationSettingsStatusCodes.RESOLUTION_REQUIRED) {
+                    // Hiển thị cửa sổ đề xuất bật GPS
+                    try {
+                        ResolvableApiException resolvableApiException = (ResolvableApiException) e;
+                        resolvableApiException.startResolutionForResult(ChatActivity.this, 123);
+                    } catch (IntentSender.SendIntentException sendIntentException) {
+                        Log.e(TAG, "checkGPS: " + sendIntentException.getMessage());
+                    }
+                } else {
+                    // GPS đã bị tắt hoặc có lỗi khác
+                }
+            }
+        });
+    }
+
+    private void getUserLocation() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // Kiểm tra và yêu cầu quyền truy cập vị trí nếu cần
+            RequestPermission.requestLocationPermission(ChatActivity.this, LOCATION_PERMISSION_REQUEST_CODE);
+            return;
+        }
+
+        fusedLocationProviderClient.getLastLocation().addOnCompleteListener(task -> {
+            if (task.isSuccessful() && task.getResult() != null) {
+                try {
+                    Geocoder geocoder = new Geocoder(ChatActivity.this, Locale.getDefault());
+                    List<Address> addresses = geocoder.getFromLocation(task.getResult().getLatitude(), task.getResult().getLongitude(), 1);
+                    if (addresses != null && addresses.size() > 0) {
+                        String addressString = addresses.get(0).getAddressLine(0);
+                        sendMessToOther(addressString);
+                    } else {
+                        Log.e(TAG, "getUserLocation: Addresses is null or empty");
+                    }
+                } catch (IOException e) {
+                    Log.e(TAG, "getUserLocation: IOException - " + e.getMessage());
+                }
+            } else {
+                Log.e(TAG, "getUserLocation: Unable to get location - " + task.getException());
+            }
+        });
+    }
+
+
+
 
     @Override
     protected void onStart() {

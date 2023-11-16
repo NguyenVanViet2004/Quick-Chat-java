@@ -44,6 +44,10 @@ public class RequestPermission {
         requestPermission(activity, Manifest.permission.READ_CONTACTS, requestCode);
     }
 
+    public static void requestLocationPermission(Activity activity, int requestCode) {
+        requestPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION, requestCode);
+    }
+
     private static void requestPermission(Activity activity, String permission, int requestCode) {
         if (!checkPermission(activity, permission)) {
             ActivityCompat.requestPermissions(activity, new String[]{permission}, requestCode);

@@ -53,6 +53,7 @@ public class chatListAdapter extends FirestoreRecyclerAdapter<chatRoomModel,chat
 
                     if (lastMessageSendByMe) holder.lastMessageText.setText("Bạn : " + model.getLastMessage());
                     else holder.lastMessageText.setText(model.getLastMessage());
+                    if (StaticFunction.isURL(model.getLastMessage().trim().toString())) holder.lastMessageText.setText("[Image]");
 
                     holder.lastMessageTime.setText(firebaseUtil.timestampToString(model.getLastMessageTimestamp()));
 
