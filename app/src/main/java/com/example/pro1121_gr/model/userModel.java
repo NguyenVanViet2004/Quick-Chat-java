@@ -10,6 +10,8 @@ public class userModel {
     private String date;
     private String userId;
 
+    private String FCMtoken;
+
     public userModel() {
     }
 
@@ -20,8 +22,17 @@ public class userModel {
         this.phone = phone;
         this.username = username;
         this.createdTimestamp = createdTimestamp;
-//        this.date = date;
+        this.date = date;
         this.userId = userId;
+    }
+
+    public userModel(String phone, String username, Timestamp createdTimestamp, String date, String userId, String FCMtoken) {
+        this.phone = phone;
+        this.username = username;
+        this.createdTimestamp = createdTimestamp;
+        this.date = date;
+        this.userId = userId;
+        this.FCMtoken = FCMtoken;
     }
 
     public String getPhone() {
@@ -62,5 +73,13 @@ public class userModel {
 
     public void setUserId(String userId) {
         this.userId = userId;
+    }
+
+    public String getFMCToken() {
+        return FCMtoken;
+    }
+
+    public void setFMCToken(String FMCToken) {
+        this.FCMtoken = FMCToken;
     }
 }

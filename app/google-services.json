@@ -1,13 +1,13 @@
 {
   "project_info": {
-    "project_number": "410169396665",
-    "project_id": "du-an-1-quick-chat",
-    "storage_bucket": "du-an-1-quick-chat.appspot.com"
+    "project_number": "886871970814",
+    "project_id": "du-an-1-197e4",
+    "storage_bucket": "du-an-1-197e4.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:410169396665:android:23c53882645b1a77db3a68",
+        "mobilesdk_app_id": "1:886871970814:android:dda88cfd808c8fc1cee6af",
         "android_client_info": {
           "package_name": "com.example.pro1121_gr"
         }
@@ -15,7 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyAwSu8-4Di0efYxT4hXmAIBmiRDd6Mcyks"
+          "current_key": "AIzaSyDh-6OKwLnnxyji8npsiSaiyAwxW64OTSw"
         }
       ],
       "services": {

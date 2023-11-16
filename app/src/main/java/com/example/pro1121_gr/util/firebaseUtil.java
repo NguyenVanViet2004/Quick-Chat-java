@@ -1,5 +1,6 @@
 package com.example.pro1121_gr.util;
 
+import android.app.Activity;
 import android.content.Context;
 import android.net.Uri;
 import android.util.Log;
@@ -10,6 +11,7 @@ import androidx.annotation.NonNull;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.pro1121_gr.R;
+import com.example.pro1121_gr.function.LoadingDialog;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
@@ -17,6 +19,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
@@ -77,9 +80,9 @@ public class firebaseUtil {
 
 
     //Đăng xuất
-//    public static void logout(){
-//        FirebaseAuth.getInstance().signOut();
-//    }
+    public static void logout(){
+        FirebaseAuth.getInstance().signOut();
+    }
 
     public static StorageReference getCurrentProfileImageStorageReference(){
         return FirebaseStorage.getInstance().getReference().child("profile_img")
@@ -91,18 +94,28 @@ public class firebaseUtil {
                 .child(otherUserId);
     }
 
-    public static void loadImageInChat(Context context, String message, ImageView image){
+    /*public static void loadImageInChat(Context context, String message, ImageView image){
         Glide.with(context)
                 .load(message)
                 .override(500, 500) // Điều chỉnh kích thước ảnh tại đây
                 .centerCrop() // Đường dẫn URL của ảnh đã tải lên
+                .into(image); // ImageView để hiển thị ảnh
+    }*/
+
+    public static void loadImageInChat(Context context, String message, ImageView image) {
+        Glide.with(context)
+                .load(message)
+                .apply(new RequestOptions()
+                        .override(500, 500) // Điều chỉnh kích thước ảnh tại đây
+                        .fitCenter() // Giữ tỷ lệ và hiển thị trong khung
+                )
                 .into(image); // ImageView để hiển thị ảnh
     }
 
     public static void setAvatar(Context context, Uri uri, ImageView image) {
         Glide.with(context)
                 .load(uri)
-                .error(R.drawable.img_5)
+                .error(R.drawable.img_5) // Đặt hình ảnh mặc định khi có lỗi
                 .apply(RequestOptions.circleCropTransform())
                 .into(image);
     }

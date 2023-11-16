@@ -14,4 +14,6 @@
     <color name="colorPrimaryNight">#1E1E1E</color>
     <color name="blue">#0391FD</color>
     <color name="dark_blue">#0F71D3</color>
+    <color name="red">#cc0000</color>
+    <color name="green">#50c878</color>
 </resources>

@@ -35,7 +35,7 @@
             android:id="@+id/avatar_chat"
             android:layout_width="@dimen/_35sdp"
             android:layout_height="@dimen/_35sdp"
-            android:layout_marginLeft="@dimen/_15sdp"
+            android:layout_marginLeft="@dimen/_5sdp"
             android:layout_weight="0"
             android:scaleType="fitXY"
             android:src="@drawable/img_5" />
@@ -88,6 +88,15 @@
         android:layout_alignParentBottom="true"
         android:gravity="center_vertical"
         android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/optionInMess"
+            android:layout_width="@dimen/_24sdp"
+            android:layout_height="@dimen/_24sdp"
+            android:layout_marginLeft="@dimen/_15sdp"
+            android:scaleType="fitXY"
+            android:src="@drawable/option_in_chat_message"
+            android:visibility="gone" />
 
         <ImageView
             android:id="@+id/cameraMess"

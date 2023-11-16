@@ -78,6 +78,7 @@
         app:layout_constraintVertical_bias="0.935" />
 
     <com.hbb20.CountryCodePicker
+        style="@style/TEXT"
         android:id="@+id/countryCodePicker"
         android:layout_width="wrap_content"
         android:layout_height="@dimen/_40sdp"
@@ -96,6 +97,7 @@
         app:layout_constraintVertical_bias="0.499" />
 
     <EditText
+        style="@style/TEXT"
         android:id="@+id/edt_login"
         android:layout_width="0dp"
         android:layout_height="@dimen/_40sdp"

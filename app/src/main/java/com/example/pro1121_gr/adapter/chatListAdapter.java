@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +22,7 @@ import com.example.pro1121_gr.model.userModel;
 import com.example.pro1121_gr.util.firebaseUtil;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 public class chatListAdapter extends FirestoreRecyclerAdapter<chatRoomModel,chatListAdapter.chatListAdapterViewHolder> {
 
@@ -40,26 +42,31 @@ public class chatListAdapter extends FirestoreRecyclerAdapter<chatRoomModel,chat
 
                 userModel otherUserModel = task.getResult().toObject(userModel.class);
 
-                firebaseUtil.getCurrentOtherProfileImageStorageReference(otherUserModel.getUserId()).getDownloadUrl().addOnCompleteListener(task1 -> {
-                    if (task1.isSuccessful()){
-                        Uri uri = task1.getResult();
-                        firebaseUtil.setAvatar(context,uri,holder.avatar);
-                    }
-                });
-                holder.usernameText.setText(otherUserModel.getUsername());
+                try {
+                    firebaseUtil.getCurrentOtherProfileImageStorageReference(otherUserModel.getUserId()).getDownloadUrl().addOnCompleteListener(task1 -> {
+                        if (task1.isSuccessful()){
+                            Uri uri = task1.getResult();
+                            firebaseUtil.setAvatar(context,uri,holder.avatar);
+                        }
+                    });
+                    holder.usernameText.setText(otherUserModel.getUsername());
 
-                if (lastMessageSendByMe) holder.lastMessageText.setText("Bạn : " + model.getLastMessage());
-                else holder.lastMessageText.setText(model.getLastMessage());
+                    if (lastMessageSendByMe) holder.lastMessageText.setText("Bạn : " + model.getLastMessage());
+                    else holder.lastMessageText.setText(model.getLastMessage());
+                    if (StaticFunction.isURL(model.getLastMessage().trim().toString())) holder.lastMessageText.setText("[Image]");
 
-                holder.lastMessageTime.setText(firebaseUtil.timestampToString(model.getLastMessageTimestamp()));
+                    holder.lastMessageTime.setText(firebaseUtil.timestampToString(model.getLastMessageTimestamp()));
 
-                holder.itemView.setOnClickListener(v -> {
-                    //navigate to chat activity
-                    Intent intent = new Intent(context, ChatActivity.class);
-                    StaticFunction.passUserModelAsIntent(intent,otherUserModel);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    context.startActivity(intent);
-                });
+                    holder.itemView.setOnClickListener(v -> {
+                        //navigate to chat activity
+                        Intent intent = new Intent(context, ChatActivity.class);
+                        StaticFunction.passUserModelAsIntent(intent,otherUserModel);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        context.startActivity(intent);
+                    });
+                }catch (Exception e){
+                    Log.e(chatListAdapter.class.getSimpleName(), e.getMessage() );
+                }
             }
         });
     }

@@ -1,5 +1,6 @@
 package com.example.pro1121_gr.adapter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.net.Uri;
 import android.util.Log;
@@ -14,6 +15,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.pro1121_gr.R;
+import com.example.pro1121_gr.function.LoadingDialog;
 import com.example.pro1121_gr.function.StaticFunction;
 import com.example.pro1121_gr.model.chatMesseageModel;
 import com.example.pro1121_gr.util.firebaseUtil;
@@ -25,10 +27,10 @@ import com.google.android.gms.tasks.Task;
 public class chatAdapter extends FirestoreRecyclerAdapter<chatMesseageModel, chatAdapter.ChatModelViewHolder> {
 
     private Context context;
-    private Uri uriOther;
+    private String uriOther;
     private static String TAG = chatAdapter.ChatModelViewHolder.class.toString();
 
-    public chatAdapter(@NonNull FirestoreRecyclerOptions<chatMesseageModel> options, Context context, Uri uriOther) {
+    public chatAdapter(@NonNull FirestoreRecyclerOptions<chatMesseageModel> options, Context context, String uriOther) {
         super(options);
         this.context = context;
         this.uriOther = uriOther;
@@ -75,7 +77,7 @@ public class chatAdapter extends FirestoreRecyclerAdapter<chatMesseageModel, cha
                     Uri uri = null;
                     if (task.isSuccessful()) {
                         uri = task.getResult();
-                        firebaseUtil.setAvatar(context, uriOther, holder.myAVT);
+                        firebaseUtil.setAvatar(context, Uri.parse(uriOther), holder.otherAVT);
                     } else {
                         Log.e(TAG, "Download URL not successful");
                     }

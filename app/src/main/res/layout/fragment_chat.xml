@@ -29,15 +29,6 @@
             android:textStyle="bold"
             android:layout_weight="1"
             android:paddingHorizontal="@dimen/_20sdp"/>
-        <ImageView
-            android:layout_width="@dimen/_24sdp"
-            android:layout_height="@dimen/_24sdp"
-            android:scaleType="fitXY"
-            android:src="@drawable/ic_pen"
-            android:layout_marginRight="@dimen/_15sdp"
-            android:layout_weight="0"
-            app:tint="@color/white" />
-
     </LinearLayout>
 
 

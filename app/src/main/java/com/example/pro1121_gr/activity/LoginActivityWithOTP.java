@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import com.example.pro1121_gr.R;
 import com.example.pro1121_gr.databinding.ActivityLoginWithOtpBinding;
+import com.example.pro1121_gr.function.LoadingDialog;
 import com.example.pro1121_gr.util.AndroidUlti;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -33,9 +34,12 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
 
+import es.dmoral.toasty.Toasty;
+
 public class LoginActivityWithOTP extends AppCompatActivity {
 
     private ActivityLoginWithOtpBinding binding;
+    private LoadingDialog loadingDialog;
     private String phoneNumber;
     Long timeoutSeconds = 60L;
     String verificationCode;
@@ -52,33 +56,28 @@ public class LoginActivityWithOTP extends AppCompatActivity {
         // Bật chế độ tối nếu được kích hoạt
         MyApplication.applyNightMode();
 
+        // Khởi tạo LoadingDialog
+        loadingDialog = LoadingDialog.getInstance(this);
+
 
         EditText otpInput = findViewById(R.id.edt_loginOTP);
-//        Button btnLoginNextOTP = findViewById(R.id.btn_loginNextOTP);
-//        TextView resendOTP = findViewById(R.id.resendOTP);
 
         phoneNumber = getIntent().getStringExtra("phone");
         binding.titleLoginOTP.setText("VUI LÒNG NHẬP MÃ OTP ĐÃ ĐƯỢC GỬI ĐẾN : " + phoneNumber);
 
         FirebaseFirestore.getInstance().collection("phoneNumber");
         Toast.makeText(getApplicationContext(), phoneNumber, Toast.LENGTH_SHORT).show();
+        binding.btnLoginNextOTP.setEnabled(false);
 
-
+        loadingDialog.startLoading();
         sendOTP(phoneNumber,false);
         binding.btnLoginNextOTP.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                Intent intent = new Intent(LoginActivityWithOTP.this, CreateProfile.class);
-//                intent.putExtra("phone", phoneNumber);
-//                intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-//
                  String enteredOTP = otpInput.getText().toString();
                  PhoneAuthCredential credential= PhoneAuthProvider.getCredential(verificationCode,enteredOTP);
                  signIn(credential);
-                 setInProgress(true);
-
-//                startActivity(intent);
-//                finish();
+                 loadingDialog.startLoading();
             }
         });
 
@@ -98,24 +97,23 @@ public class LoginActivityWithOTP extends AppCompatActivity {
                             @Override
                             public void onVerificationCompleted(@NonNull PhoneAuthCredential phoneAuthCredential) {
                                 signIn(phoneAuthCredential);
-                                setInProgress(false);
                             }
 
                             @Override
                             public void onVerificationFailed(@NonNull FirebaseException e) {
-                                AndroidUlti.showToast(getApplicationContext(),"OTP verification failed!");
-                                setInProgress(false);
-
+                                loadingDialog.isDismiss();
+                                Toasty.error(LoginActivityWithOTP.this, "OTP verification failed!", Toast.LENGTH_SHORT, true).show();
                             }
 
 
                             @Override
                             public void onCodeSent(@NonNull String s, @NonNull PhoneAuthProvider.ForceResendingToken forceResendingToken) {
                                 super.onCodeSent(s, forceResendingToken);
+                                loadingDialog.isDismiss();
+                                binding.btnLoginNextOTP.setEnabled(true);
                                 verificationCode = s;
                                 reResendingToken = forceResendingToken;
-                                AndroidUlti.showToast(getApplicationContext(),"OTP verification successfully!");
-                                setInProgress(false);
+                                Toasty.success(LoginActivityWithOTP.this, "OTP verification successfully!", Toast.LENGTH_SHORT, true).show();
 
                             }
                         });
@@ -127,38 +125,28 @@ public class LoginActivityWithOTP extends AppCompatActivity {
         }
     }
     void signIn(PhoneAuthCredential phoneAuthCredential){
-//        //dang nhap va chuyen sang man hinh tiep theo
-//
-        setInProgress(true);
         mAuth.signInWithCredential(phoneAuthCredential).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
-                setInProgress(false);
+                loadingDialog.isDismiss();
                 if(task.isSuccessful()){
                     Intent intent = new Intent(LoginActivityWithOTP.this,CreateProfile.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
                     intent.putExtra("phone",phoneNumber);
                     startActivity(intent);
                 }else {
-                    AndroidUlti.showToast(getApplicationContext(),"OTP verification failed!");
-
+                    Toasty.error(LoginActivityWithOTP.this, "OTP verification failed!", Toast.LENGTH_SHORT, true).show();
                 }
             }
         });
     }
-    void setInProgress(boolean inProgress){
-        if(inProgress){
-            binding.btnLoginNextOTP.setVisibility(View.GONE);
-        }else{
-            binding.btnLoginNextOTP.setVisibility(View.VISIBLE);
-        }
-    }
-
 
     //thời gian đếm ngược mã OTP
     void startResendTimer(){
         binding.resendOTP.setEnabled(false);
         Timer timer = new Timer();
         timer.scheduleAtFixedRate(new TimerTask() {
+            @SuppressLint("SetTextI18n")
             @Override
             public void run() {
                 timeoutSeconds--;

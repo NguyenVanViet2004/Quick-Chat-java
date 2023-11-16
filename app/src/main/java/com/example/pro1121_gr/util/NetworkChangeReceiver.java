@@ -1,13 +1,19 @@
 package com.example.pro1121_gr.util;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.net.ConnectivityManager;
 import android.net.Network;
 import android.net.NetworkInfo;
 import android.os.Build;
+import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.example.pro1121_gr.R;
@@ -17,6 +23,7 @@ import es.dmoral.toasty.Toasty;
 public class NetworkChangeReceiver extends BroadcastReceiver {
 
     private boolean isFirstLogin = true;
+    private Dialog isDialog;
     @Override
     public void onReceive(Context context, Intent intent) {
 
@@ -33,6 +40,7 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
                 }
             } else {
                 // Kết nối mạng không ổn định hoặc không có kết nối mạng
+                showWarning((Activity) context);
                 Toasty.error(context, R.string.error_network, Toast.LENGTH_SHORT, true).show();
             }
         }
@@ -53,5 +61,23 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
             }
         }
         return false;
+    }
+
+    private void showWarning(Activity activity){
+        android.view.LayoutInflater inflater = activity.getLayoutInflater();
+        android.view.View dialogView = inflater.inflate(R.layout.waring_dialog, null);
+
+        // set dialog
+        Dialog builder = new Dialog(activity);
+        builder.setContentView(dialogView);
+        builder.setCancelable(false);
+        builder.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        builder.show();
+        isDialog = builder;
+
+        Button button = dialogView.findViewById(R.id.warningClose);
+        button.setOnClickListener(view -> {
+            builder.dismiss();
+        });
     }
 }

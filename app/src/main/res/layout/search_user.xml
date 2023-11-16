@@ -4,8 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="@dimen/_5sdp"
     android:background="@drawable/radius_item"
+    android:id="@+id/layout"
+    android:layout_marginBottom="@dimen/_5sdp"
     android:padding="@dimen/_10sdp">
 
     <ImageView
@@ -25,55 +26,32 @@
         android:layout_width="0sp"
         android:layout_height="@dimen/_60sdp"
         android:layout_marginLeft="@dimen/_10sdp"
-        android:gravity="center_vertical"
         android:orientation="vertical"
         android:padding="@dimen/_5sdp"
+        android:gravity="center_vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toRightOf="@id/item_avatar"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+        <TextView
+            android:id="@+id/item_username"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/_10sdp"
+            android:layout_marginBottom="@dimen/_5sdp"
             android:layout_weight="1"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
-            <TextView
-                style="@style/TEXT"
-                android:id="@+id/item_username"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:maxLines="2"
-                android:textStyle="bold"
-                android:text="Loading"
-                android:textSize="@dimen/_13sdp"
-                tools:ignore="Suspicious0dp" />
-
-            <TextView
-                style="@style/TEXT"
-                android:id="@+id/timeSend"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="0"
-                android:maxLines="2"
-                android:text="Loading"
-                android:textSize="@dimen/_13sdp"
-                tools:ignore="Suspicious0dp" />
-        </LinearLayout>
-
+            android:maxLines="2"
+            android:text="user name"
+            android:textSize="@dimen/_15sdp"
+            android:textStyle="bold"
+            tools:ignore="Suspicious0dp" />
 
         <TextView
-            style="@style/TEXT"
-            android:id="@+id/last_chat"
+            android:id="@+id/item_phonenumber"
             android:layout_width="wrap_content"
             android:layout_height="@dimen/_10sdp"
             android:layout_weight="1"
-            android:maxLines="1"
-            android:textSize="@dimen/_13sdp"
-            android:text="Loading"
-            android:ellipsize="end"
+            android:text="+000000000000"
             tools:ignore="Suspicious0dp" />
 
     </LinearLayout>
