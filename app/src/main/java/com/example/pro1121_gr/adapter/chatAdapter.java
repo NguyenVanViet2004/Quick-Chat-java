@@ -1,5 +1,6 @@
 package com.example.pro1121_gr.adapter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.net.Uri;
 import android.util.Log;
@@ -14,6 +15,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.pro1121_gr.R;
+import com.example.pro1121_gr.function.LoadingDialog;
 import com.example.pro1121_gr.function.StaticFunction;
 import com.example.pro1121_gr.model.chatMesseageModel;
 import com.example.pro1121_gr.util.firebaseUtil;
