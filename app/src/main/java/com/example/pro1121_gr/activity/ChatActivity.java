@@ -1,9 +1,14 @@
 package com.example.pro1121_gr.activity;
 
 
+import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -12,12 +17,14 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.pro1121_gr.adapter.chatAdapter;
 import com.example.pro1121_gr.databinding.ActivityChatBinding;
+import com.example.pro1121_gr.function.RequestPermission;
 import com.example.pro1121_gr.function.StaticFunction;
 import com.example.pro1121_gr.model.chatMesseageModel;
 import com.example.pro1121_gr.model.chatRoomModel;
@@ -25,13 +32,18 @@ import com.example.pro1121_gr.model.userModel;
 import com.example.pro1121_gr.util.firebaseUtil;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.Query;
-import com.google.firebase.messaging.FirebaseMessaging;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import org.json.JSONObject;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
 
@@ -50,14 +62,11 @@ public class ChatActivity extends AppCompatActivity {
 
     private userModel userModel;
     String chatRoomID;
-
     private String uriOther;
     private chatRoomModel chatRoomModel;
-
     private chatAdapter adapter;
-
     private ActivityChatBinding binding;
-
+    private Uri selectImageUri;
     private final int REQUEST_IMAGE_PICK = 100;
     private final int REQUEST_IMAGE_CAPTURE = 1000;
 
@@ -67,10 +76,10 @@ public class ChatActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = ActivityChatBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-
+        // Bật chế độ tối nếu được kích hoạt
+        MyApplication.applyNightMode();
         //get UserModel
         userModel = StaticFunction.getUserModelFromIntent(getIntent());
-        Log.e(TAG, "onCreate: " + userModel.getFMCToken());
         chatRoomID = firebaseUtil.getChatroomId(firebaseUtil.currentUserId(), userModel.getUserId());
 
         binding.backFragmentMess.setOnClickListener(new View.OnClickListener() {
@@ -140,10 +149,96 @@ public class ChatActivity extends AppCompatActivity {
                 sendMessToOther(binding.TextMESS.getText().toString().trim());
             }
         });
-        // Bật chế độ tối nếu được kích hoạt
-        MyApplication.applyNightMode();
 
+        binding.imageMess.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (RequestPermission.checkPermission(ChatActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE)) {
+                    // Quyền đã được cấp
+                    Intent intent = new Intent(Intent.ACTION_PICK);
+                    intent.setType("image/*");
+                    startActivityForResult(intent, REQUEST_IMAGE_PICK);
+                } else
+                    RequestPermission.requestReadExternalStoragePermission(ChatActivity.this, REQUEST_IMAGE_PICK);
 
+            }
+        });
+
+        binding.cameraMess.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (RequestPermission.checkPermission(ChatActivity.this, Manifest.permission.CAMERA)) {
+                    // Quyền đã được cấp
+                    Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                    if (intent.resolveActivity(getPackageManager()) != null) {
+                        startActivityForResult(intent, REQUEST_IMAGE_CAPTURE);
+                    }
+                } else
+                    RequestPermission.requestCameraPermission(ChatActivity.this, REQUEST_IMAGE_CAPTURE);
+            }
+        });
+
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == REQUEST_IMAGE_PICK) {
+            if (RequestPermission.checkPermission(ChatActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE)) {
+                // Quyền yêu cầu
+                Intent intent = new Intent(Intent.ACTION_PICK);
+                intent.setType("image/*");
+                startActivityForResult(intent, REQUEST_IMAGE_PICK);
+                // Người dùng từ chối cấp quyền
+            } else RequestPermission.showPermissionRationaleDialog(ChatActivity.this);
+        } else if (requestCode == REQUEST_IMAGE_CAPTURE) {
+            if (RequestPermission.checkPermission(ChatActivity.this, Manifest.permission.CAMERA)) {
+                // Quyền yêu cầu
+                Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                if (intent.resolveActivity(getPackageManager()) != null) {
+                    startActivityForResult(intent, REQUEST_IMAGE_CAPTURE);
+                }
+                // Người dùng từ chối cấp quyền
+            } else RequestPermission.showPermissionRationaleDialog(ChatActivity.this);
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        StorageReference storageReference = storage.getReference();
+        StorageReference imageRef = storageReference.child("chat_images/" + System.currentTimeMillis() + ".jpg");
+        // xử lý gửi ảnh
+        if (requestCode == REQUEST_IMAGE_PICK && resultCode == Activity.RESULT_OK) {
+            if (data != null) {
+                selectImageUri = data.getData();
+                UploadTask uploadTask = imageRef.putFile(selectImageUri);
+                uploadTask.addOnSuccessListener(taskSnapshot -> {
+                    // Lấy URL của ảnh sau khi tải lên thành công
+                    imageRef.getDownloadUrl().addOnSuccessListener(uri -> {
+                        sendMessToOther(uri.toString());
+                        setChatLayout();
+                    });
+                });
+            }
+        } else if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == Activity.RESULT_OK) {
+            Bitmap imageBitmap = (Bitmap) data.getExtras().get("data");
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            imageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+            byte[] imageData = baos.toByteArray();
+
+            UploadTask uploadTask = imageRef.putBytes(imageData);
+            uploadTask.addOnSuccessListener(taskSnapshot -> {
+                // Lấy URL của ảnh sau khi tải lên thành công
+                imageRef.getDownloadUrl().addOnSuccessListener(uri -> {
+                    String imageUrl = uri.toString();
+                    sendMessToOther(imageUrl);
+                    setChatLayout();
+                });
+            }).addOnFailureListener(exception -> StaticFunction.showWarning(ChatActivity.this, "Đã xảy ra lỗi trong quá trình xử lý ảnh!"));
+        }
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -154,12 +249,11 @@ public class ChatActivity extends AppCompatActivity {
 
         firebaseUtil.getChatRoomReference(chatRoomID).set(chatRoomModel);
 
-        chatMesseageModel chatMesseageModel = new chatMesseageModel(message,firebaseUtil.currentUserId(),Timestamp.now());
+        chatMesseageModel chatMesseageModel = new chatMesseageModel(message, firebaseUtil.currentUserId(), Timestamp.now());
 
         firebaseUtil.getChatroomMessageReference(chatRoomID).add(chatMesseageModel);
         sentotification(message);
         binding.TextMESS.setText("");
-        //adapter.notifyDataSetChanged();
     }
 
     private void sentotification(String message) {
@@ -286,4 +380,21 @@ public class ChatActivity extends AppCompatActivity {
         }*/
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if (adapter != null) adapter.startListening();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (adapter != null) adapter.stopListening();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (adapter != null) adapter.notifyDataSetChanged();
+    }
 }

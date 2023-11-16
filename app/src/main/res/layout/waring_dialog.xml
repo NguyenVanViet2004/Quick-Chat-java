@@ -8,8 +8,8 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/layoutDialog"
-        android:layout_width="@dimen/_300sdp"
-        android:layout_height="@dimen/_120sdp"
+        android:layout_width="@dimen/_250sdp"
+        android:layout_height="@dimen/_100sdp"
         android:background="@drawable/custom_bkg"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -20,14 +20,15 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="1dp"
-            android:background="@drawable/red_bkg"
+            android:background="@drawable/waring_bkg"
             android:padding="@dimen/_12sdp"
-            android:text="Error"
-            android:textSize="@dimen/_15sdp"
+            android:text="Warning"
             android:textColor="@color/white"
             android:textStyle="bold"
+            android:textSize="@dimen/_15sdp"
             app:layout_constraintBaseline_toTopOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -35,14 +36,15 @@
             android:id="@+id/errorDesc"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/_35sdp"
+            android:layout_marginBottom="32dp"
             android:gravity="center_horizontal"
-            android:text="Opps! Something went wrong!"
-            android:textColor="@color/black"
-            android:textSize="@dimen/_16sdp"
+            android:text="Cảnh báo kết nối mạng yếu!"
+            android:textStyle="bold"
+            android:textSize="@dimen/_15sdp"
             app:layout_constraintBaseline_toBottomOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent" />
 
         <ImageView
@@ -52,7 +54,7 @@
             android:layout_marginTop="@dimen/_10sdp"
             android:layout_marginEnd="16dp"
             android:layout_marginBottom="@dimen/_4sdp"
-            android:src="@drawable/baseline_error_24"
+            android:src="@drawable/baseline_warning_24"
             app:layout_constraintBaseline_toBottomOf="@id/errorTitle"
             app:layout_constraintBottom_toBottomOf="@+id/errorTitle"
             app:layout_constraintEnd_toEndOf="parent"
@@ -63,17 +65,16 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <Button
-        android:id="@+id/errorClose"
+        android:id="@+id/warningClose"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:backgroundTint="@color/red"
-        android:text="Close"
+        android:backgroundTint="#FFC107"
+        android:text="Đóng"
         android:textSize="@dimen/_15sdp"
         app:layout_constraintBottom_toBottomOf="@+id/layoutDialog"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/layoutDialog"
-
         />
 
 

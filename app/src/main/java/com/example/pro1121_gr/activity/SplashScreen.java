@@ -24,8 +24,6 @@ public class SplashScreen extends AppCompatActivity {
 
     private ActivitySplashScreenBinding binding;
 
-    private NetworkChangeReceiver networkChangeReceiver;
-
     private final String TAG = SplashScreen.class.getSimpleName();
 
 
@@ -37,10 +35,6 @@ public class SplashScreen extends AppCompatActivity {
 
         MyApplication.applyNightMode();
 
-        // Khởi tạo và đăng ký BroadcastReceiver
-        networkChangeReceiver = new NetworkChangeReceiver();
-        IntentFilter intentFilter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
-        registerReceiver(networkChangeReceiver, intentFilter);
 
         if (firebaseUtil.isLoggedIn() && getIntent().getExtras() != null){
             String userID = getIntent().getExtras().getString("userId");
@@ -81,15 +75,6 @@ public class SplashScreen extends AppCompatActivity {
             }
 
         }, 2000);
-    }
-
-    @Override
-    protected void onDestroy() {
-        // Hủy đăng ký BroadcastReceiver khi hoạt động bị hủy
-        super.onDestroy();
-        if (networkChangeReceiver != null) {
-            unregisterReceiver(networkChangeReceiver);
-        }
     }
 
 }

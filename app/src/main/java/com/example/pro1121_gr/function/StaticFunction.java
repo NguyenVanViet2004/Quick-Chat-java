@@ -2,19 +2,25 @@ package com.example.pro1121_gr.function;
 
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.example.pro1121_gr.R;
 import com.example.pro1121_gr.activity.CreateProfile;
 import com.example.pro1121_gr.model.userModel;
 import com.example.pro1121_gr.util.firebaseUtil;
@@ -107,6 +113,44 @@ public class StaticFunction {
         // Kiểm tra xem số điện thoại có đúng định dạng không
         // 10 hoặc 11 chữ số (trong trường hợp số điện thoại quốc tế)
         return cleanPhoneNumber.matches("\\d{10,11}");
+    }
+
+    public static void showError(Activity activity){
+        android.view.LayoutInflater inflater = activity.getLayoutInflater();
+        android.view.View dialogView = inflater.inflate(R.layout.error_dialog, null);
+
+        // set dialog
+        Dialog builder = new Dialog(activity);
+        builder.setContentView(dialogView);
+        builder.setCancelable(false);
+        builder.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        builder.show();
+
+        Button button = dialogView.findViewById(R.id.errorClose);
+        button.setOnClickListener(view -> {
+            builder.dismiss();
+        });
+    }
+
+
+    public static void showWarning(Activity activity, String message){
+        android.view.LayoutInflater inflater = activity.getLayoutInflater();
+        android.view.View dialogView = inflater.inflate(R.layout.waring_dialog, null);
+
+        // set dialog
+        Dialog builder = new Dialog(activity);
+        builder.setContentView(dialogView);
+        builder.setCancelable(false);
+        builder.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        builder.show();
+
+        TextView textView = dialogView.findViewById(R.id.errorDesc);
+        Button button = dialogView.findViewById(R.id.warningClose);
+
+        textView.setText(message);
+        button.setOnClickListener(view -> {
+            builder.dismiss();
+        });
     }
 
 
