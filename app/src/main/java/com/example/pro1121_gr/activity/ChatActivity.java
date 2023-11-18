@@ -112,7 +112,8 @@ public class ChatActivity extends AppCompatActivity {
         binding.backFragmentMess.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                onBackPressed();
+                startActivity(new Intent(ChatActivity.this, home.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+                finish();
             }
         });
 
@@ -244,6 +245,13 @@ public class ChatActivity extends AppCompatActivity {
 
         binding.optionInMess.setOnClickListener(view -> {
             showBottomDialog();
+        });
+
+        binding.like.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                sendMessToOther("https://firebasestorage.googleapis.com/v0/b/du-an-1-197e4.appspot.com/o/like_icon%2Flike_icon.png?alt=media&token=63213f37-2681-412d-b096-177b20373976");
+            }
         });
 
     }

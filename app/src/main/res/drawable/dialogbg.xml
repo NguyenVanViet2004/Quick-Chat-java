@@ -4,16 +4,17 @@
 
 
     <corners
-        android:topLeftRadius="40dp"
-        android:topRightRadius="40dp" />
+        android:topLeftRadius="@dimen/_40sdp"
+        android:topRightRadius="@dimen/_40sdp" />
     <padding
-        android:left="10dp"
-        android:right="10dp"
-        android:top="10dp"
-        android:bottom="10dp"/>
+        android:left="@dimen/_10sdp"
+        android:right="@dimen/_10sdp"
+        android:top="@dimen/_10sdp"
+        android:bottom="@dimen/_10sdp"/>
 
     <stroke
         android:width="2dp"
-        android:color="@color/lavender"/>
+        android:color="@color/lavender" />
+    <solid android:color="@color/white" />
 
 </shape>
