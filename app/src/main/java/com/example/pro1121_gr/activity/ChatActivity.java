@@ -10,6 +10,7 @@ import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.location.Address;
 import android.location.Geocoder;
@@ -36,10 +37,14 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.pro1121_gr.R;
 import com.example.pro1121_gr.adapter.chatAdapter;
+import com.example.pro1121_gr.custom_textview.utils;
 import com.example.pro1121_gr.databinding.ActivityChatBinding;
 import com.example.pro1121_gr.databinding.BottomNavigationInChatBinding;
+import com.example.pro1121_gr.databinding.ChatMessageLayoutBinding;
+import com.example.pro1121_gr.databinding.SelectFontBinding;
 import com.example.pro1121_gr.function.RequestPermission;
 import com.example.pro1121_gr.function.StaticFunction;
+import com.example.pro1121_gr.model.CustomTypefaceInfo;
 import com.example.pro1121_gr.model.chatMesseageModel;
 import com.example.pro1121_gr.model.chatRoomModel;
 import com.example.pro1121_gr.model.userModel;
@@ -96,6 +101,8 @@ public class ChatActivity extends AppCompatActivity {
     private static final int REQUEST_IMAGE_CAPTURE = 1000;
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 200;
 
+    private String customTypeFace = "RobotoLightTextView";
+
     @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,6 +115,7 @@ public class ChatActivity extends AppCompatActivity {
         //get UserModel
         userModel = StaticFunction.getUserModelFromIntent(getIntent());
         chatRoomID = firebaseUtil.getChatroomId(firebaseUtil.currentUserId(), userModel.getUserId());
+
 
         binding.backFragmentMess.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -254,6 +262,7 @@ public class ChatActivity extends AppCompatActivity {
             }
         });
 
+
     }
 
     @Override
@@ -327,7 +336,8 @@ public class ChatActivity extends AppCompatActivity {
 
         firebaseUtil.getChatRoomReference(chatRoomID).set(chatRoomModel);
 
-        chatMesseageModel chatMesseageModel = new chatMesseageModel(message, firebaseUtil.currentUserId(), Timestamp.now());
+        chatMesseageModel chatMesseageModel =
+                new chatMesseageModel(message, firebaseUtil.currentUserId(), Timestamp.now(), new CustomTypefaceInfo(customTypeFace));
 
         firebaseUtil.getChatroomMessageReference(chatRoomID).add(chatMesseageModel);
         sentotification(message);
@@ -479,6 +489,14 @@ public class ChatActivity extends AppCompatActivity {
             }
         });
 
+        binding.Fonts.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+                showFont();
+            }
+        });
+
         binding.cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -499,6 +517,66 @@ public class ChatActivity extends AppCompatActivity {
         }
 
     }
+
+    private void showFont(){
+        SelectFontBinding selectFontBinding = SelectFontBinding.inflate(getLayoutInflater());
+        Dialog dialog = new Dialog(this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(selectFontBinding.getRoot());
+
+        selectFontBinding.blackjack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                customTypeFace = "BlackjackTextview";
+                dialog.dismiss();
+            }
+        });
+
+        selectFontBinding.allura.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                customTypeFace = "AlluraTextView";
+                dialog.dismiss();
+            }
+        });
+
+        selectFontBinding.robotoBold.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                customTypeFace = "RobotoBoldTextView";
+                dialog.dismiss();
+            }
+        });
+
+        selectFontBinding.robotoItalic.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                customTypeFace = "RobotoItalicTextView";
+                dialog.dismiss();
+            }
+        });
+
+        selectFontBinding.robotoLight.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                customTypeFace = "RobotoLightTextView";
+                dialog.dismiss();
+            }
+        });
+
+
+        dialog.show();
+        Window window = dialog.getWindow();
+        if (window != null) {
+            window.setLayout(
+                    ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.WRAP_CONTENT
+            );
+            window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            window.setGravity(Gravity.BOTTOM);
+        }
+    }
+
 
     private void checkGPS() {
         locationRequest = LocationRequest.create();
