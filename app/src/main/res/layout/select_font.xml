@@ -3,6 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/dialogbg"
+
     android:orientation="vertical">
 
     <ImageView
@@ -53,6 +54,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Blackjack"
+            android:background="@drawable/onclickitem"
             android:textSize="@dimen/_17ssp" />
 
         <com.example.pro1121_gr.custom_textview.AlluraTextView
@@ -61,6 +63,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Allura"
+            android:background="@drawable/onclickitem"
             android:textSize="@dimen/_17ssp"
             android:layout_marginTop="@dimen/_10sdp"/>
 
@@ -70,6 +73,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Roboto bold"
+            android:background="@drawable/onclickitem"
             android:textSize="@dimen/_17ssp"
             android:layout_marginTop="@dimen/_10sdp"/>
 
@@ -79,6 +83,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Roboto italic"
+            android:background="@drawable/onclickitem"
             android:textSize="@dimen/_17ssp"
             android:layout_marginTop="@dimen/_10sdp"/>
 
@@ -88,6 +93,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Roboto light"
+            android:background="@drawable/onclickitem"
             android:textSize="@dimen/_17ssp"
             android:layout_marginTop="@dimen/_10sdp"/>
     </LinearLayout>
