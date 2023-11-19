@@ -86,8 +86,6 @@ import okhttp3.Response;
 public class ChatActivity extends AppCompatActivity {
 
     private final String TAG = ChatActivity.class.getSimpleName();
-
-
     private userModel userModel;
     String chatRoomID;
     private String uriOther;
@@ -109,24 +107,25 @@ public class ChatActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = ActivityChatBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+        initView();
+    }
+
+    private void initView(){
         // Bật chế độ tối nếu được kích hoạt
         MyApplication.applyNightMode();
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
         //get UserModel
         userModel = StaticFunction.getUserModelFromIntent(getIntent());
         chatRoomID = firebaseUtil.getChatroomId(firebaseUtil.currentUserId(), userModel.getUserId());
-
-
-        binding.backFragmentMess.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(ChatActivity.this, home.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
-                finish();
-            }
-        });
-
+        setUpCLickEvents();
         getDataChatRoom();
+    }
 
+    private void setUpCLickEvents(){
+        binding.backFragmentMess.setOnClickListener((View.OnClickListener) view -> {
+            startActivity(new Intent(ChatActivity.this, home.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+            finish();
+        });
 
         binding.usernameMess.setText(userModel.getUsername());
 
@@ -151,102 +150,81 @@ public class ChatActivity extends AppCompatActivity {
             }
         });
 
-        binding.TextMESS.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
-                    hiddenItem(true);
-                }
-                return false;
+        binding.TextMESS.setOnTouchListener((View.OnTouchListener) (view, motionEvent) -> {
+            if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
+                hiddenItem(true);
             }
+            return false;
         });
 
-        binding.rcvMess.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
-                    hiddenItem(false);
-                    if (binding.TextMESS.getText().toString().isEmpty()) {
-                        binding.sendMess.setVisibility(View.GONE);
-                        binding.like.setVisibility(View.VISIBLE);
-                    }
-                    binding.TextMESS.clearFocus();
-                    InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
-                    inputMethodManager.hideSoftInputFromWindow(binding.TextMESS.getWindowToken(), 0); // Ẩn bàn phím ảo (nếu đang hiển thị)
-                }
-                return false;
-            }
-        });
-
-        binding.sendMess.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        binding.rcvMess.setOnTouchListener((View.OnTouchListener) (view, motionEvent) -> {
+            if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
                 hiddenItem(false);
-                sendMessToOther(binding.TextMESS.getText().toString().trim());
+                if (binding.TextMESS.getText().toString().isEmpty()) {
+                    binding.sendMess.setVisibility(View.GONE);
+                    binding.like.setVisibility(View.VISIBLE);
+                }
+                binding.TextMESS.clearFocus();
+                InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+                inputMethodManager.hideSoftInputFromWindow(binding.TextMESS.getWindowToken(), 0); // Ẩn bàn phím ảo (nếu đang hiển thị)
             }
+            return false;
         });
 
-        binding.imageMess.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (RequestPermission.checkPermission(ChatActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE)) {
-                    // Quyền đã được cấp
-                    Intent intent = new Intent(Intent.ACTION_PICK);
-                    intent.setType("image/*");
-                    startActivityForResult(intent, REQUEST_IMAGE_PICK);
-                } else
-                    RequestPermission.requestReadExternalStoragePermission(ChatActivity.this, REQUEST_IMAGE_PICK);
-
-            }
+        binding.sendMess.setOnClickListener((View.OnClickListener) view -> {
+            hiddenItem(false);
+            sendMessToOther(binding.TextMESS.getText().toString().trim());
         });
 
-        binding.cameraMess.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (RequestPermission.checkPermission(ChatActivity.this, Manifest.permission.CAMERA)) {
-                    // Quyền đã được cấp
-                    Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                    if (intent.resolveActivity(getPackageManager()) != null) {
-                        startActivityForResult(intent, REQUEST_IMAGE_CAPTURE);
-                    }
-                } else
-                    RequestPermission.requestCameraPermission(ChatActivity.this, REQUEST_IMAGE_CAPTURE);
-            }
+        binding.imageMess.setOnClickListener((View.OnClickListener) view -> {
+            if (RequestPermission.checkPermission(ChatActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE)) {
+                // Quyền đã được cấp
+                Intent intent = new Intent(Intent.ACTION_PICK);
+                intent.setType("image/*");
+                startActivityForResult(intent, REQUEST_IMAGE_PICK);
+            } else
+                RequestPermission.requestReadExternalStoragePermission(ChatActivity.this, REQUEST_IMAGE_PICK);
+
         });
 
-        binding.call.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // Tạo một Intent với hành động ACTION_DIAL
-                Intent intent = new Intent(Intent.ACTION_DIAL);
-
-                // Đặt dữ liệu Uri cho số điện thoại cần gọi
-                intent.setData(Uri.parse("tel:" + userModel.getPhone()));
-
-                // Kiểm tra xem ứng dụng Gọi điện thoại có sẵn trên thiết bị hay chưa
+        binding.cameraMess.setOnClickListener((View.OnClickListener) view -> {
+            if (RequestPermission.checkPermission(ChatActivity.this, Manifest.permission.CAMERA)) {
+                // Quyền đã được cấp
+                Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                 if (intent.resolveActivity(getPackageManager()) != null) {
-                    // Nếu có, mở ứng dụng Gọi điện thoại
-                    startActivity(intent);
-                } else {
-                    Toasty.warning(ChatActivity.this, "Không tìm thấy ứng dụng phù hợp", Toasty.LENGTH_SHORT, true).show();
+                    startActivityForResult(intent, REQUEST_IMAGE_CAPTURE);
                 }
+            } else
+                RequestPermission.requestCameraPermission(ChatActivity.this, REQUEST_IMAGE_CAPTURE);
+        });
+
+        binding.call.setOnClickListener((View.OnClickListener) view -> {
+            // Tạo một Intent với hành động ACTION_DIAL
+            Intent intent = new Intent(Intent.ACTION_DIAL);
+
+            // Đặt dữ liệu Uri cho số điện thoại cần gọi
+            intent.setData(Uri.parse("tel:" + userModel.getPhone()));
+
+            // Kiểm tra xem ứng dụng Gọi điện thoại có sẵn trên thiết bị hay chưa
+            if (intent.resolveActivity(getPackageManager()) != null) {
+                // Nếu có, mở ứng dụng Gọi điện thoại
+                startActivity(intent);
+            } else {
+                Toasty.warning(ChatActivity.this, "Không tìm thấy ứng dụng phù hợp", Toasty.LENGTH_SHORT, true).show();
             }
         });
 
-        binding.videoCall.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // Số điện thoại người dùng muốn gọi
-                String phoneNumber = userModel.getPhone();
-                try {
-                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("tel:" + phoneNumber));
-                    intent.putExtra("videocall", true);
+        binding.videoCall.setOnClickListener((View.OnClickListener) view -> {
+            // Số điện thoại người dùng muốn gọi
+            String phoneNumber = userModel.getPhone();
+            try {
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("tel:" + phoneNumber));
+                intent.putExtra("videocall", true);
 
-                    // Gọi ứng dụng Gọi điện thoại hoặc xử lý trường hợp không tìm thấy
-                    startActivity(intent);
-                } catch (Exception e) {
-                    Log.e("call click in chatActivity", e.getMessage());
-                }
+                // Gọi ứng dụng Gọi điện thoại hoặc xử lý trường hợp không tìm thấy
+                startActivity(intent);
+            } catch (Exception e) {
+                Log.e("call click in chatActivity", e.getMessage());
             }
         });
 
@@ -255,13 +233,7 @@ public class ChatActivity extends AppCompatActivity {
             showBottomDialog();
         });
 
-        binding.like.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                sendMessToOther("https://firebasestorage.googleapis.com/v0/b/du-an-1-197e4.appspot.com/o/like_icon%2Flike_icon.png?alt=media&token=63213f37-2681-412d-b096-177b20373976");
-            }
-        });
-
+        binding.like.setOnClickListener((View.OnClickListener) view -> sendMessToOther("https://firebasestorage.googleapis.com/v0/b/du-an-1-197e4.appspot.com/o/like_icon%2Flike_icon.png?alt=media&token=63213f37-2681-412d-b096-177b20373976"));
 
     }
 
@@ -524,45 +496,32 @@ public class ChatActivity extends AppCompatActivity {
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(selectFontBinding.getRoot());
 
-        selectFontBinding.blackjack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                customTypeFace = "BlackjackTextview";
-                dialog.dismiss();
-            }
+        selectFontBinding.blackjack.setOnClickListener(view -> {
+            customTypeFace = "BlackjackTextview";
+            dialog.dismiss();
         });
 
-        selectFontBinding.allura.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                customTypeFace = "AlluraTextView";
-                dialog.dismiss();
-            }
+        selectFontBinding.allura.setOnClickListener(view -> {
+            customTypeFace = "AlluraTextView";
+            dialog.dismiss();
         });
 
-        selectFontBinding.robotoBold.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                customTypeFace = "RobotoBoldTextView";
-                dialog.dismiss();
-            }
+        selectFontBinding.robotoBold.setOnClickListener(view -> {
+            customTypeFace = "RobotoBoldTextView";
+            dialog.dismiss();
         });
 
-        selectFontBinding.robotoItalic.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                customTypeFace = "RobotoItalicTextView";
-                dialog.dismiss();
-            }
+        selectFontBinding.robotoItalic.setOnClickListener(view -> {
+            customTypeFace = "RobotoItalicTextView";
+            dialog.dismiss();
         });
 
-        selectFontBinding.robotoLight.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                customTypeFace = "RobotoLightTextView";
-                dialog.dismiss();
-            }
+        selectFontBinding.robotoLight.setOnClickListener(view -> {
+            customTypeFace = "RobotoLightTextView";
+            dialog.dismiss();
         });
+
+        selectFontBinding.cancelButton.setOnClickListener(view -> dialog.dismiss());
 
 
         dialog.show();
