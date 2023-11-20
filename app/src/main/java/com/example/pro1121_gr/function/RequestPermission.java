@@ -44,6 +44,11 @@ public class RequestPermission {
     public static void requestLocationPermission(Activity activity, int requestCode) {
         requestPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION, requestCode);
     }
+    // yêu cầu cấp quyền sử dụng mic
+    public static void requestRecordAudio(Activity activity, int requestCode){
+        requestPermission(activity, Manifest.permission.RECORD_AUDIO, requestCode);
+    }
+
     // hàm yêu cầu quyền
     private static void requestPermission(Activity activity, String permission, int requestCode) {
         if (!checkPermission(activity, permission)) {
@@ -64,7 +69,7 @@ public class RequestPermission {
     }
 
 
-    private static void openAppSettings(Activity activity) {
+    public static void openAppSettings(Activity activity) {
         Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
         Uri uri = Uri.fromParts("package", activity.getPackageName(), null);
         intent.setData(uri);
