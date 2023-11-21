@@ -57,7 +57,7 @@ public class LoginActivityWithOTP extends AppCompatActivity {
         MyApplication.applyNightMode();
 
         // Khởi tạo LoadingDialog
-        loadingDialog = LoadingDialog.getInstance(this);
+        loadingDialog = LoadingDialog.getInstance(LoginActivityWithOTP.this);
 
 
         EditText otpInput = findViewById(R.id.edt_loginOTP);

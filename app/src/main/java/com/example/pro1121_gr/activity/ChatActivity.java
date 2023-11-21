@@ -10,11 +10,9 @@ import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.location.Address;
 import android.location.Geocoder;
-import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -37,13 +35,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.pro1121_gr.R;
 import com.example.pro1121_gr.adapter.chatAdapter;
-import com.example.pro1121_gr.custom_textview.utils;
 import com.example.pro1121_gr.databinding.ActivityChatBinding;
 import com.example.pro1121_gr.databinding.BottomNavigationInChatBinding;
-import com.example.pro1121_gr.databinding.ChatMessageLayoutBinding;
 import com.example.pro1121_gr.databinding.SelectFontBinding;
 import com.example.pro1121_gr.function.RequestPermission;
 import com.example.pro1121_gr.function.StaticFunction;
+import com.example.pro1121_gr.function.VoiceRecordingUtil;
 import com.example.pro1121_gr.model.CustomTypefaceInfo;
 import com.example.pro1121_gr.model.chatMesseageModel;
 import com.example.pro1121_gr.model.chatRoomModel;
@@ -95,9 +92,8 @@ public class ChatActivity extends AppCompatActivity {
     private Uri selectImageUri;
     private LocationRequest locationRequest;
     private FusedLocationProviderClient fusedLocationProviderClient;
-    private static final int REQUEST_IMAGE_PICK = 100;
-    private static final int REQUEST_IMAGE_CAPTURE = 1000;
-    private static final int LOCATION_PERMISSION_REQUEST_CODE = 200;
+    private static final int REQUEST_IMAGE_PICK = 100, REQUEST_IMAGE_CAPTURE = 1000,
+            LOCATION_PERMISSION_REQUEST_CODE = 200, REQUEST_CODE_SPEECH_INPUT = 1;
 
     private String customTypeFace = "RobotoLightTextView";
 
@@ -121,13 +117,14 @@ public class ChatActivity extends AppCompatActivity {
         getDataChatRoom();
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     private void setUpCLickEvents(){
         binding.backFragmentMess.setOnClickListener((View.OnClickListener) view -> {
             startActivity(new Intent(ChatActivity.this, home.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
             finish();
         });
 
-        binding.usernameMess.setText(userModel.getUsername());
+        binding.usernameMess.setText(userModel.getUsername().trim());
 
         binding.TextMESS.addTextChangedListener(new TextWatcher() {
             @Override
@@ -297,6 +294,16 @@ public class ChatActivity extends AppCompatActivity {
                     setChatLayout();
                 });
             }).addOnFailureListener(exception -> StaticFunction.showWarning(ChatActivity.this, "Đã xảy ra lỗi trong quá trình xử lý ảnh!"));
+        } else if (requestCode == REQUEST_CODE_SPEECH_INPUT) {
+            VoiceRecordingUtil.processVoiceInput(requestCode, resultCode, data, new VoiceRecordingUtil.VoiceInputListener() {
+                @Override
+                public void onVoiceInput(String text) {
+                    if (!text.isEmpty()) {
+                        sendNotification(text);
+                        sendMessToOther(text);
+                    }
+                }
+            });
         }
     }
 
@@ -312,11 +319,15 @@ public class ChatActivity extends AppCompatActivity {
                 new chatMesseageModel(message, firebaseUtil.currentUserId(), Timestamp.now(), new CustomTypefaceInfo(customTypeFace));
 
         firebaseUtil.getChatroomMessageReference(chatRoomID).add(chatMesseageModel);
-        sentotification(message);
+        /*firebaseUtil.getChatroomMessageReference(chatRoomID).add(chatMesseageModel).addOnSuccessListener(documentReference -> {
+            String messageId = documentReference.getId();
+        });*/
+        if (StaticFunction.isURL(message)) sendNotification("[Link]");
+        else sendNotification(message);
         binding.TextMESS.setText("");
     }
 
-    private void sentotification(String message) {
+    private void sendNotification(String message) {
         firebaseUtil.currentUserDetails().get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 userModel userModel1 = task.getResult().toObject(userModel.class);
@@ -331,7 +342,6 @@ public class ChatActivity extends AppCompatActivity {
                     jsonObject.put("data", data);
                     jsonObject.put("to", userModel.getFMCToken());
                     callAPI(jsonObject);
-                    Log.e(TAG, "my token222: " + userModel.getFMCToken());
 
                 } catch (Exception e) {
                     Log.e(ChatActivity.class.getSimpleName(), "notification: " + e.getMessage());
@@ -412,34 +422,34 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     private void setChatLayout() {
-        //try {
-        Query query = firebaseUtil.getChatroomMessageReference(chatRoomID)
-                .orderBy("timestamp", Query.Direction.DESCENDING);
+        try {
+            Query query = firebaseUtil.getChatroomMessageReference(chatRoomID)
+                    .orderBy("timestamp", Query.Direction.DESCENDING);
 
-        FirestoreRecyclerOptions<chatMesseageModel> options = new FirestoreRecyclerOptions.Builder<chatMesseageModel>()
-                .setQuery(query, chatMesseageModel.class)
-                .build();
+            FirestoreRecyclerOptions<chatMesseageModel> options = new FirestoreRecyclerOptions.Builder<chatMesseageModel>()
+                    .setQuery(query, chatMesseageModel.class)
+                    .build();
 
-        adapter = new chatAdapter(options, getApplicationContext(), uriOther.toString());
-        Log.e(TAG, "onComplete: " + uriOther.toString());
-        LinearLayoutManager manager = new LinearLayoutManager(this);
-        manager.setReverseLayout(true);
-        binding.rcvMess.setLayoutManager(manager);
-        binding.rcvMess.setAdapter(adapter);
-        adapter.startListening();
+            adapter = new chatAdapter(options, getApplicationContext(), uriOther.toString(), chatRoomID);
+            Log.e(TAG, "onComplete: " + uriOther.toString());
+            LinearLayoutManager manager = new LinearLayoutManager(this);
+            manager.setReverseLayout(true);
+            binding.rcvMess.setLayoutManager(manager);
+            binding.rcvMess.setAdapter(adapter);
+            adapter.startListening();
 
-        // Cuộn màn hình xuống tin nhắn mới nhất khi gửi
-        adapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
-            @Override
-            public void onItemRangeInserted(int positionStart, int itemCount) {
-                super.onItemRangeInserted(positionStart, itemCount);
-                binding.rcvMess.smoothScrollToPosition(0);
-            }
-        });
+            // Cuộn màn hình xuống tin nhắn mới nhất khi gửi
+            adapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
+                @Override
+                public void onItemRangeInserted(int positionStart, int itemCount) {
+                    super.onItemRangeInserted(positionStart, itemCount);
+                    binding.rcvMess.smoothScrollToPosition(0);
+                }
+            });
 
-        /*} catch (Exception e) {
-            Log.e(TAG, "setChatLayout : "+e.getMessage());
-        }*/
+        } catch (Exception e) {
+            Log.e(TAG, "setChatLayout : " + e.getMessage());
+        }
     }
 
     private void showBottomDialog() {
@@ -448,33 +458,31 @@ public class ChatActivity extends AppCompatActivity {
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(binding.getRoot());
 
-        binding.GPS.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // Xử lý khi nhấn nút GPS
-                if (RequestPermission.checkPermission(ChatActivity.this, Manifest.permission.ACCESS_FINE_LOCATION)) {
-                    // Quyền đã được cấp
-                    checkGPS();
-                    dialog.dismiss();
-                } else
-                    RequestPermission.requestLocationPermission(ChatActivity.this, LOCATION_PERMISSION_REQUEST_CODE);
+        binding.GPS.setOnClickListener(view -> {
+            // Xử lý khi nhấn nút GPS
+            if (RequestPermission.checkPermission(ChatActivity.this, Manifest.permission.ACCESS_FINE_LOCATION)) {
+                // Quyền đã được cấp
+                checkGPS();
+                dialog.dismiss();
+            } else
+                RequestPermission.requestLocationPermission(ChatActivity.this, LOCATION_PERMISSION_REQUEST_CODE);
+        });
+
+        binding.Fonts.setOnClickListener(view -> {
+            dialog.dismiss();
+            showFont();
+        });
+
+        binding.Voice.setOnClickListener(view -> {
+            if (RequestPermission.checkPermission(ChatActivity.this, Manifest.permission.RECORD_AUDIO)) {
+                VoiceRecordingUtil.startVoiceRecognitionActivity(ChatActivity.this);
+                dialog.dismiss();
+            } else {
+                RequestPermission.requestRecordAudio(ChatActivity.this, REQUEST_CODE_SPEECH_INPUT);
             }
         });
 
-        binding.Fonts.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dialog.dismiss();
-                showFont();
-            }
-        });
-
-        binding.cancelButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dialog.dismiss();
-            }
-        });
+        binding.cancelButton.setOnClickListener(view -> dialog.dismiss());
 
         dialog.show();
         Window window = dialog.getWindow();

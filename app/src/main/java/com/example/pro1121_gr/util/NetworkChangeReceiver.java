@@ -1,5 +1,7 @@
 package com.example.pro1121_gr.util;
 
+import static android.provider.ContactsContract.Directory.PACKAGE_NAME;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
@@ -11,12 +13,15 @@ import android.graphics.drawable.ColorDrawable;
 import android.net.ConnectivityManager;
 import android.net.Network;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.Build;
+import android.provider.Settings;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
 import com.example.pro1121_gr.R;
+import com.example.pro1121_gr.function.RequestPermission;
 
 import es.dmoral.toasty.Toasty;
 
@@ -40,7 +45,7 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
                 }
             } else {
                 // Kết nối mạng không ổn định hoặc không có kết nối mạng
-                showWarning((Activity) context);
+                showError((Activity) context);
                 Toasty.error(context, R.string.error_network, Toast.LENGTH_SHORT, true).show();
             }
         }
@@ -63,9 +68,9 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
         return false;
     }
 
-    private void showWarning(Activity activity){
+    private void showError(Activity activity){
         android.view.LayoutInflater inflater = activity.getLayoutInflater();
-        android.view.View dialogView = inflater.inflate(R.layout.waring_dialog, null);
+        android.view.View dialogView = inflater.inflate(R.layout.error_dialog, null);
 
         // set dialog
         Dialog builder = new Dialog(activity);
@@ -75,9 +80,17 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
         builder.show();
         isDialog = builder;
 
-        Button button = dialogView.findViewById(R.id.warningClose);
+        Button button = dialogView.findViewById(R.id.errorClose);
         button.setOnClickListener(view -> {
             builder.dismiss();
+            activity.finish();
+        });
+
+        Button setting = dialogView.findViewById(R.id.errorGoToSetting);
+        setting.setOnClickListener(view -> {
+            Intent intent = new Intent(Settings.ACTION_WIFI_SETTINGS);
+            activity.startActivity(intent);
+            activity.finish();
         });
     }
 }

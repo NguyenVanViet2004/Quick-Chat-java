@@ -1,6 +1,5 @@
 package com.example.pro1121_gr.adapter;
 
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.net.Uri;
@@ -16,39 +15,37 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.pro1121_gr.R;
-import com.example.pro1121_gr.custom_textview.AlluraTextView;
-import com.example.pro1121_gr.custom_textview.BlackjackTextview;
 import com.example.pro1121_gr.custom_textview.utils;
-import com.example.pro1121_gr.databinding.ChatMessageLayoutBinding;
-import com.example.pro1121_gr.function.LoadingDialog;
 import com.example.pro1121_gr.function.StaticFunction;
 import com.example.pro1121_gr.model.CustomTypefaceInfo;
 import com.example.pro1121_gr.model.chatMesseageModel;
 import com.example.pro1121_gr.util.firebaseUtil;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
+
+import es.dmoral.toasty.Toasty;
 
 public class chatAdapter extends FirestoreRecyclerAdapter<chatMesseageModel, chatAdapter.ChatModelViewHolder> {
 
     private Context context;
-    private String uriOther;
+    private String uriOther, chatRoomID;
     private static String TAG = chatAdapter.ChatModelViewHolder.class.toString();
 
 
-    public chatAdapter(@NonNull FirestoreRecyclerOptions<chatMesseageModel> options, Context context, String uriOther) {
+    public chatAdapter(@NonNull FirestoreRecyclerOptions<chatMesseageModel> options, Context context, String uriOther, String ChatRoomId) {
         super(options);
         this.context = context;
         this.uriOther = uriOther;
+        this.chatRoomID = ChatRoomId;
     }
 
     @Override
     protected void onBindViewHolder(@NonNull ChatModelViewHolder holder, int position, @NonNull chatMesseageModel model) {
-
-        if(model.getSenderId().equals(firebaseUtil.currentUserId()) ) setChatLeftLayout(holder, model);
+        String documentId = getSnapshots().getSnapshot(position).getId();
+        if (model.getSenderId().equals(firebaseUtil.currentUserId()))
+            setChatLeftLayout(holder, model, documentId);
             // xử lý giao diện chat của đối phương
-        else setChatRightLayout(holder,model);
+        else setChatRightLayout(holder, model);
     }
 
     @NonNull
@@ -76,10 +73,11 @@ public class chatAdapter extends FirestoreRecyclerAdapter<chatMesseageModel, cha
             myAVT = itemView.findViewById(R.id.item_avatar2);
             mySendImg = itemView.findViewById(R.id.mySendImg);
             otherSendImg = itemView.findViewById(R.id.otherSendImg);
+
         }
     }
 
-    private void setChatLeftLayout(ChatModelViewHolder holder,chatMesseageModel model){
+    private void setChatLeftLayout(ChatModelViewHolder holder, chatMesseageModel model, String documentId) {
         firebaseUtil.getCurrentProfileImageStorageReference().getDownloadUrl().addOnCompleteListener(task -> {
             Uri uri = null;
             if (task.isSuccessful()) {
@@ -102,15 +100,28 @@ public class chatAdapter extends FirestoreRecyclerAdapter<chatMesseageModel, cha
             holder.mySendImg.setVisibility(View.GONE);
             holder.myAVT.setVisibility(View.VISIBLE);
         }
-        if (model.getTypeface() != null){
+        if (model.getTypeface() != null) {
             utils.setFontForTextView(holder.rightChatTextview, getTypeface(model.getTypeface().getTypefaceName()));
         } else model.setTypeface(new CustomTypefaceInfo("RobotoLightTextView"));
         holder.leftChatLayout.setVisibility(View.GONE);
         holder.otherAVT.setVisibility(View.GONE);
         holder.rightChatLayout.setVisibility(View.VISIBLE);
+
+        holder.rightChatTextview.setOnLongClickListener(view -> {
+            firebaseUtil.getChatRoomReference(chatRoomID)
+                    .collection("chats")
+                    .document(documentId)
+                    .update("message", "Tin nhắn đã bị thu hồi!").addOnSuccessListener(aVoid -> {
+                        Toasty.success(context, "Thu hồi tin nhắn thành công!", Toasty.LENGTH_LONG, true).show();
+                    }).addOnFailureListener(e -> {
+                        Log.e(TAG, "onLongClick: " + e.getMessage());
+                        Toasty.error(context, "Thu hồi tin nhắn thất bại!", Toasty.LENGTH_LONG, true).show();
+                    });
+            return false;
+        });
     }
 
-    private void setChatRightLayout(ChatModelViewHolder holder, chatMesseageModel model){
+    private void setChatRightLayout(ChatModelViewHolder holder, chatMesseageModel model) {
         firebaseUtil.getCurrentProfileImageStorageReference().getDownloadUrl().addOnCompleteListener(task -> {
             Uri uri = null;
             if (task.isSuccessful()) {

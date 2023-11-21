@@ -14,7 +14,7 @@
         android:background="@color/lavender"
         android:gravity="center_vertical"
         android:orientation="horizontal"
-        app:layout_constraintBottom_toTopOf="@id/item_avatar"
+        app:layout_constraintBottom_toTopOf="@id/swipeRefreshLayout"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -42,95 +42,115 @@
     </LinearLayout>
 
 
-    <ImageView
-        android:id="@+id/item_avatar"
-        android:layout_width="@dimen/_120sdp"
-        android:layout_height="@dimen/_120sdp"
-        android:layout_marginTop="48dp"
-        android:scaleType="fitXY"
-        android:src="@drawable/img_5"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipeRefreshLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@id/line1"
-        app:layout_constraintBottom_toTopOf="@id/fullName"/>
-
-    <EditText
-        android:id="@+id/fullName"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/_40sdp"
-        android:layout_marginHorizontal="@dimen/_20sdp"
-        android:layout_marginTop="@dimen/_45sdp"
-        android:background="@drawable/radius_item"
-        android:drawableRight="@drawable/baseline_drive_file_rename_outline_24"
-        android:gravity="center_vertical"
-        android:hint="Họ và tên"
-        android:textColorHint="@color/black"
-        android:maxLength="50"
-        android:paddingHorizontal="@dimen/_20sdp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.509"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/item_avatar" />
-
-    <EditText
-        android:id="@+id/birthday"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/_40sdp"
-        android:layout_marginHorizontal="@dimen/_20sdp"
-        android:layout_marginTop="@dimen/_7sdp"
-        android:background="@drawable/radius_item"
-        android:drawableRight="@drawable/baseline_calendar_month_24"
-        android:gravity="center_vertical"
-        android:hint="Ngày - Tháng - Năm sinh"
-        android:textColorHint="@color/black"
-        android:inputType="date"
-        android:maxLength="50"
-        android:paddingHorizontal="@dimen/_20sdp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.509"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/fullName"
-
-        tools:ignore="HardcodedText" />
-
-    <com.hbb20.CountryCodePicker
-        android:id="@+id/countryCodePicker"
-        android:layout_width="wrap_content"
-        android:layout_height="@dimen/_40sdp"
-        android:layout_marginLeft="@dimen/_20sdp"
-        android:background="@drawable/radius_item"
-        android:gravity="center_vertical"
-        app:ccp_showNameCode="false"
-        app:ccp_countryPreference="VN"
-        app:ccp_defaultNameCode="VN"
-        app:ccp_defaultLanguage="VIETNAMESE"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_bias="0.262"
-        app:layout_constraintHorizontal_weight="0"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toLeftOf="@id/phoneNumber"
-        app:layout_constraintTop_toBottomOf="@id/birthday"
-        app:layout_constraintVertical_bias="0.032" />
-
-    <EditText
-        android:id="@+id/phoneNumber"
-        android:layout_width="0dp"
-        android:layout_height="@dimen/_40sdp"
-        android:layout_marginLeft="@dimen/_5sdp"
-        android:layout_marginRight="@dimen/_20sdp"
-        android:background="@drawable/radius_item"
-        android:hint="Số điện thoại"
-        android:textColorHint="@color/black"
-        android:inputType="phone"
-        android:maxLines="1"
-        android:maxLength="10"
-        android:padding="@dimen/_10sdp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_weight="1"
-        app:layout_constraintLeft_toRightOf="@id/countryCodePicker"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/birthday"
-        app:layout_constraintVertical_bias="0.032" />
+        app:layout_constraintLeft_toLeftOf="parent">
+
+        <!-- Nội dung cần làm mới nằm ở đây -->
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/item_avatar"
+                android:layout_width="@dimen/_120sdp"
+                android:layout_height="@dimen/_120sdp"
+                android:layout_marginBottom="@dimen/_300sdp"
+                android:layout_marginTop="@dimen/_40sdp"
+                android:scaleType="fitXY"
+                android:src="@drawable/img_5"
+                app:layout_constraintBottom_toTopOf="@id/fullName"
+                app:layout_constraintHorizontal_bias="0.498"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <EditText
+                android:id="@+id/fullName"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_40sdp"
+                android:layout_marginHorizontal="@dimen/_20sdp"
+                android:layout_marginTop="@dimen/_45sdp"
+                android:background="@drawable/radius_item"
+                android:drawableRight="@drawable/baseline_drive_file_rename_outline_24"
+                android:gravity="center_vertical"
+                android:hint="Họ và tên"
+                android:textColorHint="@color/black"
+                android:maxLength="50"
+                android:paddingHorizontal="@dimen/_20sdp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.509"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/item_avatar" />
+
+            <EditText
+                android:id="@+id/birthday"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_40sdp"
+                android:layout_marginHorizontal="@dimen/_20sdp"
+                android:layout_marginTop="@dimen/_7sdp"
+                android:background="@drawable/radius_item"
+                android:drawableRight="@drawable/baseline_calendar_month_24"
+                android:gravity="center_vertical"
+                android:hint="Ngày - Tháng - Năm sinh"
+                android:textColorHint="@color/black"
+                android:inputType="date"
+                android:maxLength="50"
+                android:paddingHorizontal="@dimen/_20sdp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.509"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/fullName"
+
+                tools:ignore="HardcodedText" />
+
+            <com.hbb20.CountryCodePicker
+                android:id="@+id/countryCodePicker"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/_40sdp"
+                android:layout_marginLeft="@dimen/_20sdp"
+                android:background="@drawable/radius_item"
+                android:gravity="center_vertical"
+                app:ccp_showNameCode="false"
+                app:ccp_countryPreference="VN"
+                app:ccp_defaultNameCode="VN"
+                app:ccp_defaultLanguage="VIETNAMESE"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintHorizontal_bias="0.262"
+                app:layout_constraintHorizontal_weight="0"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toLeftOf="@id/phoneNumber"
+                app:layout_constraintTop_toBottomOf="@id/birthday"
+                app:layout_constraintVertical_bias="0.032" />
+
+            <EditText
+                android:id="@+id/phoneNumber"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/_40sdp"
+                android:layout_marginLeft="@dimen/_5sdp"
+                android:layout_marginRight="@dimen/_20sdp"
+                android:background="@drawable/radius_item"
+                android:hint="Số điện thoại"
+                android:textColorHint="@color/black"
+                android:inputType="phone"
+                android:maxLines="1"
+                android:maxLength="10"
+                android:padding="@dimen/_10sdp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintHorizontal_weight="1"
+                app:layout_constraintLeft_toRightOf="@id/countryCodePicker"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/birthday"
+                app:layout_constraintVertical_bias="0.032" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/update"
