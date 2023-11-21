@@ -22,7 +22,6 @@ import com.example.pro1121_gr.model.chatMesseageModel;
 import com.example.pro1121_gr.util.firebaseUtil;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
-import com.google.firebase.firestore.FirebaseFirestore;
 
 import es.dmoral.toasty.Toasty;
 
@@ -74,6 +73,7 @@ public class chatAdapter extends FirestoreRecyclerAdapter<chatMesseageModel, cha
             myAVT = itemView.findViewById(R.id.item_avatar2);
             mySendImg = itemView.findViewById(R.id.mySendImg);
             otherSendImg = itemView.findViewById(R.id.otherSendImg);
+
         }
     }
 
@@ -107,26 +107,21 @@ public class chatAdapter extends FirestoreRecyclerAdapter<chatMesseageModel, cha
         holder.otherAVT.setVisibility(View.GONE);
         holder.rightChatLayout.setVisibility(View.VISIBLE);
 
-        holder.rightChatTextview.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View view) {
-                // can update them
-                firebaseUtil.getChatRoomReference(chatRoomID)
-                        .collection("chats")
-                        .document(documentId)
-                        .update("message", "Tin nhắn đã bị thu hồi!").addOnSuccessListener(aVoid -> {
-                            Toasty.success(context, "Thu hồi tin nhắn thành công!", Toasty.LENGTH_LONG, true).show();
-                        }).addOnFailureListener(e -> {
-                            Log.e(TAG, "onLongClick: " + e.getMessage() );
-                            Toasty.error(context, "Thu hồi tin nhắn thất bại!", Toasty.LENGTH_LONG, true).show();
-                        });
-
-                return false;
-            }
+        holder.rightChatTextview.setOnLongClickListener(view -> {
+            firebaseUtil.getChatRoomReference(chatRoomID)
+                    .collection("chats")
+                    .document(documentId)
+                    .update("message", "Tin nhắn đã bị thu hồi!").addOnSuccessListener(aVoid -> {
+                        Toasty.success(context, "Thu hồi tin nhắn thành công!", Toasty.LENGTH_LONG, true).show();
+                    }).addOnFailureListener(e -> {
+                        Log.e(TAG, "onLongClick: " + e.getMessage());
+                        Toasty.error(context, "Thu hồi tin nhắn thất bại!", Toasty.LENGTH_LONG, true).show();
+                    });
+            return false;
         });
     }
 
-    private void setChatRightLayout(ChatModelViewHolder holder, chatMesseageModel model){
+    private void setChatRightLayout(ChatModelViewHolder holder, chatMesseageModel model) {
         firebaseUtil.getCurrentProfileImageStorageReference().getDownloadUrl().addOnCompleteListener(task -> {
             Uri uri = null;
             if (task.isSuccessful()) {

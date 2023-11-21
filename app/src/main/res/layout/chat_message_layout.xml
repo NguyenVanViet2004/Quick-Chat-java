@@ -44,13 +44,6 @@
         android:layout_marginStart="@dimen/_60sdp"
         android:id="@+id/right_chat_layout">
 
-        <TextView
-            android:id="@+id/status"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="@dimen/_10sdp"
-            android:layout_marginRight="@dimen/_10sdp"
-            android:visibility="gone"/>
 
         <ImageView
             android:id="@+id/mySendImg"
@@ -73,7 +66,7 @@
             android:layout_width="@dimen/_20sdp"
             android:layout_height="@dimen/_20sdp"
             android:layout_gravity="center_vertical"
-            android:layout_marginLeft="@dimen/_10sdp"
+            android:layout_marginStart="@dimen/_10sdp"
             android:src="@drawable/img_5" />
     </LinearLayout>
 
