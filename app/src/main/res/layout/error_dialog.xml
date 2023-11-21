@@ -72,7 +72,7 @@
         app:layout_constraintBottom_toBottomOf="@+id/layoutDialog"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintHorizontal_bias="0.200"
+        app:layout_constraintHorizontal_bias="0.800"
         app:layout_constraintTop_toBottomOf="@+id/layoutDialog" />
 
     <Button
@@ -84,8 +84,8 @@
         android:textSize="@dimen/_15sdp"
         app:layout_constraintBottom_toBottomOf="@+id/layoutDialog"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.800"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintHorizontal_bias="0.200"
         app:layout_constraintTop_toBottomOf="@+id/layoutDialog"
         app:layout_constraintVertical_bias="0.166" />
 

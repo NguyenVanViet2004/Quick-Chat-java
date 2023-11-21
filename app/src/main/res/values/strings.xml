@@ -6,6 +6,6 @@
     <string name="network_comeback">kết nối mạng đã quay trở lại</string>
     <string name="error_network">Kết nối internet không ổn định hoặc không có internet. Vui lòng kiểm tra lại kết nối.</string>
     <string name="bottom_nav_message">Tin nhắn</string>
-    <string name="bottom_nav_option">Thêm</string>
+    <string name="bottom_nav_option">Tùy chọn</string>
     <string name="bottom_nav_setting">Cài đặt</string>
 </resources>

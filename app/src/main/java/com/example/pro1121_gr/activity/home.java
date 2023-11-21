@@ -29,6 +29,7 @@ import com.google.android.material.navigation.NavigationBarView;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.qamar.curvedbottomnaviagtion.CurvedBottomNavigation;
 
+import es.dmoral.toasty.Toasty;
 import kotlin.Unit;
 import kotlin.jvm.functions.Function1;
 
@@ -157,7 +158,7 @@ public class home extends AppCompatActivity {
         }
 
         this.doubleBackToExitPressedOnce = true;
-        Toast.makeText(this, "Nhấn lần nữa để thoát", Toast.LENGTH_SHORT).show();
+        Toasty.warning(this,"Nhấn lần nữa để thoát", Toasty.LENGTH_LONG, true).show();
 
         // Đặt thời gian chờ để reset trạng thái doubleBackToExitPressedOnce
         new android.os.Handler().postDelayed(

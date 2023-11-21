@@ -42,6 +42,7 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
                 } else {
                     // Hiển thị thông báo khi có kết nối mạng trở lại
                     Toasty.success(context, context.getString(R.string.network_comeback), Toast.LENGTH_SHORT, true).show();
+                    if (isDialog != null) isDialog.dismiss();
                 }
             } else {
                 // Kết nối mạng không ổn định hoặc không có kết nối mạng
