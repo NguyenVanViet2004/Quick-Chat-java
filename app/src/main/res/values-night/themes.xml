@@ -8,7 +8,7 @@
     <!--Dark mode-->
     <!-- màu nền background sẽ chuyển nếu dark mode on-->
     <style name="SCREEN">
-        <item name="android:background">#232323</item>
+        <item name="android:background">@color/colorPrimaryNight</item>
     </style>
 
     <!-- màu chữ-->

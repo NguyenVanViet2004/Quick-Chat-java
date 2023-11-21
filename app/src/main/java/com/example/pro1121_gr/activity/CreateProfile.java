@@ -48,10 +48,17 @@ public class CreateProfile extends AppCompatActivity {
         phoneNumber = getIntent().getStringExtra("phone");
         getData();
 
+        binding.fullName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                StaticFunction.isEmpty(binding.fullName,0);
+            }
+        });
 
         binding.edtAge.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                StaticFunction.isEmpty(binding.edtAge, 1);
                 showDatePickerDialog();
             }
         });
@@ -108,7 +115,9 @@ public class CreateProfile extends AppCompatActivity {
         firebaseUtil.currentUserDetails().get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 model = task.getResult().toObject(userModel.class);
-                if (model != null) {
+                if (model != null && !model.getUsername().isEmpty()
+                        && !model.getDate().isEmpty()
+                        && !model.getPhone().isEmpty()) {
                     loadingDialog.isDismiss();
                     startActivity(new Intent(CreateProfile.this, home.class));
                     finish();
@@ -136,13 +145,6 @@ public class CreateProfile extends AppCompatActivity {
                 year, month, day
         );
         datePickerDialog.show();
-    }
-    void setInProgress(boolean inProgress){
-        if(inProgress){
-            btnLoginNextEnter.setVisibility(View.GONE);
-        }else{
-            btnLoginNextEnter.setVisibility(View.VISIBLE);
-        }
     }
 
 }

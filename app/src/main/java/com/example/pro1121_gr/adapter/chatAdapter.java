@@ -2,6 +2,7 @@ package com.example.pro1121_gr.adapter;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -15,8 +16,13 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.pro1121_gr.R;
+import com.example.pro1121_gr.custom_textview.AlluraTextView;
+import com.example.pro1121_gr.custom_textview.BlackjackTextview;
+import com.example.pro1121_gr.custom_textview.utils;
+import com.example.pro1121_gr.databinding.ChatMessageLayoutBinding;
 import com.example.pro1121_gr.function.LoadingDialog;
 import com.example.pro1121_gr.function.StaticFunction;
+import com.example.pro1121_gr.model.CustomTypefaceInfo;
 import com.example.pro1121_gr.model.chatMesseageModel;
 import com.example.pro1121_gr.util.firebaseUtil;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
@@ -30,6 +36,7 @@ public class chatAdapter extends FirestoreRecyclerAdapter<chatMesseageModel, cha
     private String uriOther;
     private static String TAG = chatAdapter.ChatModelViewHolder.class.toString();
 
+
     public chatAdapter(@NonNull FirestoreRecyclerOptions<chatMesseageModel> options, Context context, String uriOther) {
         super(options);
         this.context = context;
@@ -39,68 +46,9 @@ public class chatAdapter extends FirestoreRecyclerAdapter<chatMesseageModel, cha
     @Override
     protected void onBindViewHolder(@NonNull ChatModelViewHolder holder, int position, @NonNull chatMesseageModel model) {
 
-        if(model.getSenderId().equals(firebaseUtil.currentUserId())){
-
-            firebaseUtil.getCurrentProfileImageStorageReference().getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
-                @Override
-                public void onComplete(@NonNull Task<Uri> task) {
-                    Uri uri = null;
-                    if (task.isSuccessful()) {
-                        uri = task.getResult();
-                        firebaseUtil.setAvatar(context, uri, holder.myAVT);
-                    } else {
-                        Log.e(TAG, "Download URL not successful");
-                    }
-                }
-            });
-
-
-            if (StaticFunction.isURL(model.getMessage())){
-                holder.mySendImg.setVisibility(View.VISIBLE);
-                holder.rightChatTextview.setVisibility(View.GONE);
-                holder.myAVT.setVisibility(View.GONE);
-                // Sử dụng Glide để hiển thị ảnh từ URL vào ImageView
-                firebaseUtil.loadImageInChat(context, model.getMessage(), holder.mySendImg);
-            }else{
-                holder.rightChatTextview.setText(model.getMessage());
-                holder.mySendImg.setVisibility(View.GONE);
-                holder.myAVT.setVisibility(View.VISIBLE);
-            }
-            holder.leftChatLayout.setVisibility(View.GONE);
-            holder.otherAVT.setVisibility(View.GONE);
-            holder.rightChatLayout.setVisibility(View.VISIBLE);
-        }else{ // xử lý giao diện chat của đối phương
-
-            firebaseUtil.getCurrentProfileImageStorageReference().getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
-                @Override
-                public void onComplete(@NonNull Task<Uri> task) {
-                    Uri uri = null;
-                    if (task.isSuccessful()) {
-                        uri = task.getResult();
-                        firebaseUtil.setAvatar(context, Uri.parse(uriOther), holder.otherAVT);
-                    } else {
-                        Log.e(TAG, "Download URL not successful");
-                    }
-                }
-            });
-
-            if (StaticFunction.isURL(model.getMessage())){
-                holder.otherSendImg.setVisibility(View.VISIBLE);
-                holder.leftChatTextview.setVisibility(View.GONE);
-                holder.otherAVT.setVisibility(View.GONE);
-                // Sử dụng Glide để hiển thị ảnh từ URL vào ImageView
-                firebaseUtil.loadImageInChat(context, model.getMessage(), holder.otherSendImg);
-            }else {
-                holder.leftChatTextview.setText(model.getMessage());
-                holder.otherSendImg.setVisibility(View.GONE);
-                holder.otherAVT.setVisibility(View.VISIBLE);
-            }
-            holder.rightChatLayout.setVisibility(View.GONE);
-            holder.myAVT.setVisibility(View.GONE);
-            holder.leftChatLayout.setVisibility(View.VISIBLE);
-
-        }
-
+        if(model.getSenderId().equals(firebaseUtil.currentUserId()) ) setChatLeftLayout(holder, model);
+            // xử lý giao diện chat của đối phương
+        else setChatRightLayout(holder,model);
     }
 
     @NonNull
@@ -130,4 +78,77 @@ public class chatAdapter extends FirestoreRecyclerAdapter<chatMesseageModel, cha
             otherSendImg = itemView.findViewById(R.id.otherSendImg);
         }
     }
+
+    private void setChatLeftLayout(ChatModelViewHolder holder,chatMesseageModel model){
+        firebaseUtil.getCurrentProfileImageStorageReference().getDownloadUrl().addOnCompleteListener(task -> {
+            Uri uri = null;
+            if (task.isSuccessful()) {
+                uri = task.getResult();
+                firebaseUtil.setAvatar(context, uri, holder.myAVT);
+            } else {
+                Log.e(TAG, "Download URL not successful");
+            }
+        });
+
+
+        if (StaticFunction.isURL(model.getMessage())){
+            holder.mySendImg.setVisibility(View.VISIBLE);
+            holder.rightChatTextview.setVisibility(View.GONE);
+            holder.myAVT.setVisibility(View.GONE);
+            // Sử dụng Glide để hiển thị ảnh từ URL vào ImageView
+            firebaseUtil.loadImageInChat(context, model.getMessage(), holder.mySendImg);
+        }else{
+            holder.rightChatTextview.setText(model.getMessage());
+            holder.mySendImg.setVisibility(View.GONE);
+            holder.myAVT.setVisibility(View.VISIBLE);
+        }
+        if (model.getTypeface() != null){
+            utils.setFontForTextView(holder.rightChatTextview, getTypeface(model.getTypeface().getTypefaceName()));
+        } else model.setTypeface(new CustomTypefaceInfo("RobotoLightTextView"));
+        holder.leftChatLayout.setVisibility(View.GONE);
+        holder.otherAVT.setVisibility(View.GONE);
+        holder.rightChatLayout.setVisibility(View.VISIBLE);
+    }
+
+    private void setChatRightLayout(ChatModelViewHolder holder, chatMesseageModel model){
+        firebaseUtil.getCurrentProfileImageStorageReference().getDownloadUrl().addOnCompleteListener(task -> {
+            Uri uri = null;
+            if (task.isSuccessful()) {
+                uri = task.getResult();
+                firebaseUtil.setAvatar(context, Uri.parse(uriOther), holder.otherAVT);
+            } else {
+                Log.e(TAG, "Download URL not successful");
+            }
+        });
+
+        if (StaticFunction.isURL(model.getMessage())){
+            holder.otherSendImg.setVisibility(View.VISIBLE);
+            holder.leftChatTextview.setVisibility(View.GONE);
+            holder.otherAVT.setVisibility(View.GONE);
+            // Sử dụng Glide để hiển thị ảnh từ URL vào ImageView
+            firebaseUtil.loadImageInChat(context, model.getMessage(), holder.otherSendImg);
+        }else {
+            holder.leftChatTextview.setText(model.getMessage());
+            holder.otherSendImg.setVisibility(View.GONE);
+            holder.otherAVT.setVisibility(View.VISIBLE);
+        }
+        if (model.getTypeface() != null){
+            utils.setFontForTextView(holder.leftChatTextview, getTypeface(model.getTypeface().getTypefaceName()));
+        } else model.setTypeface(new CustomTypefaceInfo("RobotoLightTextView"));
+        //utils.setFontForTextView(holder.leftChatTextview, getTypeface(model.getTypeface().getTypefaceName()));
+        holder.rightChatLayout.setVisibility(View.GONE);
+        holder.myAVT.setVisibility(View.GONE);
+        holder.leftChatLayout.setVisibility(View.VISIBLE);
+
+    }
+
+
+    private Typeface getTypeface(String type){
+        if (type.equals("RobotoBoldTextView")) return utils.getRobotoBoldTypeFace(context);
+        else if (type.equals("RobotoItalicTextView")) return utils.getRobotoItalicTypeFace(context);
+        else if (type.equals("BlackjackTextview")) return utils.getBlackjackTypeFace(context);
+        else if (type.equals("AlluraTextView")) return utils.getAlluraTypeFace(context);
+        else return utils.getRobotoLightTypeFace(context);
+    }
+
 }

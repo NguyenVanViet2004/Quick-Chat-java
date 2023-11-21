@@ -43,28 +43,43 @@
 
 
     <ImageView
-        android:id="@+id/item_avatar"
-        android:layout_width="@dimen/_90sdp"
-        android:layout_height="@dimen/_90sdp"
-        android:layout_marginTop="48dp"
+        android:id="@+id/item_background"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_150sdp"
         android:scaleType="fitXY"
-        android:src="@drawable/img_5"
+        android:src="@drawable/backgournd_profile"
+        app:layout_constraintBottom_toBottomOf="@id/fullName"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/line1"
-        app:layout_constraintBottom_toBottomOf="@id/fullName"/>
+        app:layout_constraintVertical_bias="0.0" />
+
+    <ImageView
+        android:id="@+id/item_avatar"
+        android:layout_width="@dimen/_90sdp"
+        android:layout_height="@dimen/_90sdp"
+        android:layout_marginTop="@dimen/_90sdp"
+        android:scaleType="fitXY"
+        android:src="@drawable/img_5"
+        app:layout_constraintBottom_toBottomOf="@id/fullName"
+        app:layout_constraintHorizontal_bias="0.146"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/line1" />
 
     <TextView
         android:id="@+id/fullName"
         style="@style/TEXT"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/_20sdp"
         android:layout_marginTop="28dp"
         android:gravity="center"
-        android:text="FULL NAME"
+        android:text="LOADING"
         android:textSize="@dimen/_17sdp"
         android:textStyle="bold"
-        android:layout_marginHorizontal="@dimen/_20sdp"
+        app:layout_constraintHorizontal_bias="0.088"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/item_avatar"
@@ -73,38 +88,39 @@
     <TextView
         android:id="@+id/nightMode"
         style="@style/TEXT"
-        android:layout_width="wrap_content"
+        android:background="@drawable/onclickitem"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="@dimen/_10sdp"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="76dp"
-        android:layout_marginRight="236dp"
+        android:layout_marginHorizontal="@dimen/_20sdp"
+        android:layout_marginTop="@dimen/_50sdp"
         android:padding="@dimen/_10sdp"
-
         android:text="Chế độ tối"
         android:textSize="@dimen/_15sdp"
         app:layout_constraintRight_toRightOf="@id/nightSwitch"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/fullName"
-        tools:ignore="HardcodedText" />
+        tools:ignore="HardcodedText,RtlHardcoded" />
 
     <Switch
         android:id="@+id/nightSwitch"
         android:layout_width="@dimen/_50sdp"
         android:layout_height="@dimen/_50sdp"
-        android:layout_marginTop="72dp"
+        android:layout_marginTop="60dp"
+        android:layout_marginRight="24dp"
         android:padding="@dimen/_10sdp"
-        app:layout_constraintHorizontal_bias="0.808"
+        android:textOff="Off"
+        android:textOn="On"
+        android:thumb="@drawable/thumb"
+        android:track="@drawable/track"
         app:layout_constraintHorizontal_weight="0"
-        app:layout_constraintLeft_toRightOf="@id/nightMode"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/fullName"
-        tools:ignore="UseSwitchCompatOrMaterialXml" />
+        tools:ignore="HardcodedText,UseSwitchCompatOrMaterialXml" />
 
     <TextView
         android:id="@+id/editProfile"
         style="@style/TEXT"
-
+        android:background="@drawable/onclickitem"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/_20sdp"
@@ -115,12 +131,13 @@
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/nightMode" />
+        app:layout_constraintTop_toBottomOf="@id/nightMode"
+        tools:ignore="HardcodedText" />
 
     <TextView
         android:id="@+id/contact"
         style="@style/TEXT"
-
+        android:background="@drawable/onclickitem"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/_20sdp"
@@ -133,7 +150,8 @@
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/editProfile" />
+        app:layout_constraintTop_toBottomOf="@id/editProfile"
+        tools:ignore="HardcodedText" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/logout"

@@ -60,15 +60,12 @@ public class SplashScreen extends AppCompatActivity {
         }else gotoHome();
     }
 
-    private Boolean isLogin(){
-        if (firebaseUtil.isLoggedIn()) return true;
-        return false;
-    }
 
     private void gotoHome(){
         new Handler().postDelayed(() ->{
-            if (isLogin()){
-                startActivity(new Intent(this, home.class)); finish();
+            if (firebaseUtil.isLoggedIn()){
+                startActivity(new Intent(this, home.class));
+                finish();
             }else {
                 startActivity(new Intent(this, LoginActivity.class));
                 finish();

@@ -24,30 +24,27 @@ public class RequestPermission {
         return true;
     }
 
-    public static void requestReadMediaImagesPermission(Activity activity, int requestCode) {
-        requestPermission(activity, Manifest.permission.READ_EXTERNAL_STORAGE, requestCode);
-    }
-
+    // yêu cầu quyền ghi dữ liệu vào bộ nhớ
     public static void requestWriteExternalStoragePermission(Activity activity, int requestCode) {
         requestPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE, requestCode);
     }
-
+    // yêu cầu cấp quyền đọc dữ liệu từ bộ nhớ
     public static void requestReadExternalStoragePermission(Activity activity, int requestCode) {
         requestPermission(activity, Manifest.permission.READ_EXTERNAL_STORAGE, requestCode);
     }
-
+    // yêu cầu cấp quyền sử dụng camera
     public static void requestCameraPermission(Activity activity, int requestCode) {
         requestPermission(activity, Manifest.permission.CAMERA, requestCode);
     }
-
+    // yêu cầu cấp quyền đọc danh bạ
     public static void requestReadContactsPermission(Activity activity, int requestCode) {
         requestPermission(activity, Manifest.permission.READ_CONTACTS, requestCode);
     }
-
+    // yêu cầu cấp quyền truy cập vị trí
     public static void requestLocationPermission(Activity activity, int requestCode) {
         requestPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION, requestCode);
     }
-
+    // hàm yêu cầu quyền
     private static void requestPermission(Activity activity, String permission, int requestCode) {
         if (!checkPermission(activity, permission)) {
             ActivityCompat.requestPermissions(activity, new String[]{permission}, requestCode);
