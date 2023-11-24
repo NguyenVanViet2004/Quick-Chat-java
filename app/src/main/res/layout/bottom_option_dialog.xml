@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@drawable/dialogbg"
+    android:orientation="vertical">
+
+    <ImageView
+        android:layout_width="@dimen/_70sdp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center|top"
+        android:scaleType="centerCrop"
+        android:src="@drawable/ic_round_remove_24" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/createText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_10sdp"
+            android:layout_marginTop="@dimen/_5sdp"
+            android:layout_weight="2"
+            android:padding="@dimen/_6sdp"
+            android:text="Tùy chọn"
+            android:textAlignment="viewStart"
+            android:textColor="@color/lavender"
+            android:textSize="@dimen/_20sdp" />
+
+        <ImageView
+            android:id="@+id/cancelButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_margin="@dimen/_5sdp"
+            android:layout_weight="0"
+            android:src="@drawable/ic_baseline_clear_24" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="@dimen/_10sdp"
+        android:orientation="horizontal"
+        android:gravity="center_horizontal">
+
+
+        <TextView
+            android:id="@+id/copyText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawablePadding="@dimen/_5sdp"
+            android:text="sao chép"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@id/Fonts"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="HardcodedText"
+            android:layout_marginEnd="@dimen/_35sdp"
+            app:drawableTopCompat="@drawable/icon_copy" />
+
+        <TextView
+            android:id="@+id/delete_message"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawablePadding="@dimen/_5sdp"
+            android:text="Thu hồi tin nhắn"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            android:layout_marginStart="@dimen/_35sdp"
+            app:drawableTopCompat="@drawable/icon_delete"
+            tools:ignore="HardcodedText" />
+    </LinearLayout>
+
+
+</LinearLayout>

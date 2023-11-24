@@ -431,7 +431,7 @@ public class ChatActivity extends AppCompatActivity {
                     .setQuery(query, chatMesseageModel.class)
                     .build();
 
-            adapter = new chatAdapter(options, getApplicationContext(), uriOther.toString(), chatRoomID);
+            adapter = new chatAdapter(options, ChatActivity.this, uriOther.toString(), chatRoomID);
             Log.e(TAG, "onComplete: " + uriOther.toString());
             LinearLayoutManager manager = new LinearLayoutManager(this);
             manager.setReverseLayout(true);
