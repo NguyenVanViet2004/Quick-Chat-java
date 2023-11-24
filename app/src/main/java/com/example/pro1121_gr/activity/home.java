@@ -94,9 +94,9 @@ public class home extends AppCompatActivity {
                         new ChatFragment(),
                         false
                 );
-            }else if (item.getItemId() == R.id.bottomNavOption){
+            }/*else if (item.getItemId() == R.id.bottomNavOption){
                 showBottomDialog();
-            }else {
+            }*/else {
                 startActivity(new Intent(home.this, SettingActivity.class));
             }
             return true;

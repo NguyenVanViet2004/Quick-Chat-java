@@ -47,7 +47,7 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
             } else {
                 // Kết nối mạng không ổn định hoặc không có kết nối mạng
                 showError((Activity) context);
-                Toasty.error(context, R.string.error_network, Toast.LENGTH_SHORT, true).show();
+                //Toasty.error(context, R.string.error_network, Toast.LENGTH_SHORT, true).show();
             }
         }
     }

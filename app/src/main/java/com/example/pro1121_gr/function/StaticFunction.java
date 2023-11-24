@@ -153,6 +153,14 @@ public class StaticFunction {
         });
     }
 
+    public static void openLink(Activity activity) {
+        String facebookUri = "https://www.facebook.com/VietNguyenVan2004";
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(facebookUri));
+
+        if (intent.resolveActivity(activity.getPackageManager()) != null) activity.startActivity(intent);
+        else activity.startActivity(intent);
+    }
+
 
 
 }
