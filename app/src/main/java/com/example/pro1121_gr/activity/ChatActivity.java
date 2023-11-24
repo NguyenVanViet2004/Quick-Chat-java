@@ -336,6 +336,7 @@ public class ChatActivity extends AppCompatActivity {
                     JSONObject notification = new JSONObject();
                     notification.put("title", userModel1.getUsername());
                     notification.put("body", message);
+                    notification.put("sound", "default");
                     JSONObject data = new JSONObject();
                     data.put("userId", userModel1.getUserId());
                     jsonObject.put("notification", notification);

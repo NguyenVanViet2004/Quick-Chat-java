@@ -14,6 +14,7 @@ import android.view.View;
 
 import com.example.pro1121_gr.R;
 import com.example.pro1121_gr.databinding.ActivitySettingBinding;
+import com.example.pro1121_gr.function.StaticFunction;
 import com.example.pro1121_gr.model.userModel;
 import com.example.pro1121_gr.util.firebaseUtil;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -41,8 +42,9 @@ public class SettingActivity extends AppCompatActivity {
         binding.backFragmentMess.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(SettingActivity.this, home.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
-                finish();
+//                startActivity(new Intent(SettingActivity.this, home.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+//                finish();
+                onBackPressed();
             }
         });
 
@@ -74,7 +76,7 @@ public class SettingActivity extends AppCompatActivity {
         binding.contact.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                openLink();
+                StaticFunction.openLink(SettingActivity.this);
             }
         });
     }
@@ -100,13 +102,7 @@ public class SettingActivity extends AppCompatActivity {
         });
     }
 
-    private void openLink() {
-        String facebookUri = "https://www.facebook.com/VietNguyenVan2004";
-        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(facebookUri));
 
-        if (intent.resolveActivity(getPackageManager()) != null) startActivity(intent);
-        else startActivity(intent);
-    }
 
     private void logOut() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
