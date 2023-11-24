@@ -13,7 +13,6 @@ dependencyResolutionManagement {
         mavenCentral()
         // add thư viện ImagePicker
         maven { url = uri("https://jitpack.io") }
-        maven { url = uri("https://jitpack.io") }
         jcenter()
     }
 }

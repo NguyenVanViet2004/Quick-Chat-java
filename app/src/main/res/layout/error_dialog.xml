@@ -8,8 +8,8 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/layoutDialog"
-        android:layout_width="@dimen/_300sdp"
-        android:layout_height="@dimen/_120sdp"
+        android:layout_width="@dimen/_250sdp"
+        android:layout_height="@dimen/_100sdp"
         android:background="@drawable/custom_bkg"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -72,9 +72,22 @@
         app:layout_constraintBottom_toBottomOf="@+id/layoutDialog"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/layoutDialog"
+        app:layout_constraintHorizontal_bias="0.800"
+        app:layout_constraintTop_toBottomOf="@+id/layoutDialog" />
 
-        />
+    <Button
+        android:id="@+id/errorGoToSetting"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/red"
+        android:text="Setting"
+        android:textSize="@dimen/_15sdp"
+        app:layout_constraintBottom_toBottomOf="@+id/layoutDialog"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintHorizontal_bias="0.200"
+        app:layout_constraintTop_toBottomOf="@+id/layoutDialog"
+        app:layout_constraintVertical_bias="0.166" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

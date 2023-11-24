@@ -1,25 +1,17 @@
 package com.example.pro1121_gr.util;
 
-import android.app.Activity;
 import android.content.Context;
 import android.net.Uri;
-import android.util.Log;
 import android.widget.ImageView;
-
-import androidx.annotation.NonNull;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.pro1121_gr.R;
-import com.example.pro1121_gr.function.LoadingDialog;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
@@ -118,21 +110,6 @@ public class firebaseUtil {
                 .error(R.drawable.img_5) // Đặt hình ảnh mặc định khi có lỗi
                 .apply(RequestOptions.circleCropTransform())
                 .into(image);
-    }
-
-    public static void setAVTinChat(Context context,Uri uri, ImageView imageView){
-        firebaseUtil.getCurrentProfileImageStorageReference().getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
-            @Override
-            public void onComplete(@NonNull Task<Uri> task) {
-                Uri uri = null;
-                if (task.isSuccessful()) {
-                    uri = task.getResult();
-                    firebaseUtil.setAvatar(context, uri, imageView);
-                } else {
-                    Log.e("set avatar", "Download URL not successful");
-                }
-            }
-        });
     }
 
 

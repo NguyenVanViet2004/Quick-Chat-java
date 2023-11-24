@@ -1,13 +1,20 @@
 package com.example.pro1121_gr.adapter;
 
 import android.app.Activity;
+import android.app.Dialog;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.Typeface;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -16,39 +23,38 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.pro1121_gr.R;
-import com.example.pro1121_gr.custom_textview.AlluraTextView;
-import com.example.pro1121_gr.custom_textview.BlackjackTextview;
 import com.example.pro1121_gr.custom_textview.utils;
-import com.example.pro1121_gr.databinding.ChatMessageLayoutBinding;
-import com.example.pro1121_gr.function.LoadingDialog;
+import com.example.pro1121_gr.databinding.BottomOptionDialogBinding;
 import com.example.pro1121_gr.function.StaticFunction;
 import com.example.pro1121_gr.model.CustomTypefaceInfo;
 import com.example.pro1121_gr.model.chatMesseageModel;
 import com.example.pro1121_gr.util.firebaseUtil;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
+
+import es.dmoral.toasty.Toasty;
 
 public class chatAdapter extends FirestoreRecyclerAdapter<chatMesseageModel, chatAdapter.ChatModelViewHolder> {
 
     private Context context;
-    private String uriOther;
+    private String uriOther, chatRoomID;
     private static String TAG = chatAdapter.ChatModelViewHolder.class.toString();
 
 
-    public chatAdapter(@NonNull FirestoreRecyclerOptions<chatMesseageModel> options, Context context, String uriOther) {
+    public chatAdapter(@NonNull FirestoreRecyclerOptions<chatMesseageModel> options, Context context, String uriOther, String ChatRoomId) {
         super(options);
         this.context = context;
         this.uriOther = uriOther;
+        this.chatRoomID = ChatRoomId;
     }
 
     @Override
     protected void onBindViewHolder(@NonNull ChatModelViewHolder holder, int position, @NonNull chatMesseageModel model) {
-
-        if(model.getSenderId().equals(firebaseUtil.currentUserId()) ) setChatLeftLayout(holder, model);
+        String documentId = getSnapshots().getSnapshot(position).getId();
+        if (model.getSenderId().equals(firebaseUtil.currentUserId()))
+            setChatRightLayout(holder, model, documentId);
             // xử lý giao diện chat của đối phương
-        else setChatRightLayout(holder,model);
+        else setChatLeftLayout(holder, model);
     }
 
     @NonNull
@@ -76,10 +82,11 @@ public class chatAdapter extends FirestoreRecyclerAdapter<chatMesseageModel, cha
             myAVT = itemView.findViewById(R.id.item_avatar2);
             mySendImg = itemView.findViewById(R.id.mySendImg);
             otherSendImg = itemView.findViewById(R.id.otherSendImg);
+
         }
     }
 
-    private void setChatLeftLayout(ChatModelViewHolder holder,chatMesseageModel model){
+    private void setChatRightLayout(ChatModelViewHolder holder, chatMesseageModel model, String documentId) {
         firebaseUtil.getCurrentProfileImageStorageReference().getDownloadUrl().addOnCompleteListener(task -> {
             Uri uri = null;
             if (task.isSuccessful()) {
@@ -102,15 +109,20 @@ public class chatAdapter extends FirestoreRecyclerAdapter<chatMesseageModel, cha
             holder.mySendImg.setVisibility(View.GONE);
             holder.myAVT.setVisibility(View.VISIBLE);
         }
-        if (model.getTypeface() != null){
+        if (model.getTypeface() != null) {
             utils.setFontForTextView(holder.rightChatTextview, getTypeface(model.getTypeface().getTypefaceName()));
         } else model.setTypeface(new CustomTypefaceInfo("RobotoLightTextView"));
         holder.leftChatLayout.setVisibility(View.GONE);
         holder.otherAVT.setVisibility(View.GONE);
         holder.rightChatLayout.setVisibility(View.VISIBLE);
+
+        holder.rightChatTextview.setOnLongClickListener(view -> {
+            showBottomDialog(holder, documentId, 0, model);
+            return true;
+        });
     }
 
-    private void setChatRightLayout(ChatModelViewHolder holder, chatMesseageModel model){
+    private void setChatLeftLayout(ChatModelViewHolder holder, chatMesseageModel model) {
         firebaseUtil.getCurrentProfileImageStorageReference().getDownloadUrl().addOnCompleteListener(task -> {
             Uri uri = null;
             if (task.isSuccessful()) {
@@ -132,7 +144,7 @@ public class chatAdapter extends FirestoreRecyclerAdapter<chatMesseageModel, cha
             holder.otherSendImg.setVisibility(View.GONE);
             holder.otherAVT.setVisibility(View.VISIBLE);
         }
-        if (model.getTypeface() != null){
+        if (model.getTypeface() != null) {
             utils.setFontForTextView(holder.leftChatTextview, getTypeface(model.getTypeface().getTypefaceName()));
         } else model.setTypeface(new CustomTypefaceInfo("RobotoLightTextView"));
         //utils.setFontForTextView(holder.leftChatTextview, getTypeface(model.getTypeface().getTypefaceName()));
@@ -140,10 +152,71 @@ public class chatAdapter extends FirestoreRecyclerAdapter<chatMesseageModel, cha
         holder.myAVT.setVisibility(View.GONE);
         holder.leftChatLayout.setVisibility(View.VISIBLE);
 
+        holder.leftChatTextview.setOnLongClickListener(view -> {
+            copyToClipboard(model);
+            return true;
+        });
+
     }
 
 
-    private Typeface getTypeface(String type){
+    private void showBottomDialog(ChatModelViewHolder holder, String documentId, int typeUser, chatMesseageModel model) {
+        BottomOptionDialogBinding bottomOptionDialogBinding =
+                BottomOptionDialogBinding.inflate(LayoutInflater.from(context));
+        Dialog dialog = new Dialog(context);
+        if (context == null) Log.e(TAG, "showBottomDialog: " + context );
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(bottomOptionDialogBinding.getRoot());
+
+        if (typeUser == 0) {
+            bottomOptionDialogBinding.deleteMessage.setVisibility(View.VISIBLE);
+            bottomOptionDialogBinding.deleteMessage.setOnClickListener(view ->
+                    firebaseUtil.getChatRoomReference(chatRoomID)
+                            .collection("chats")
+                            .document(documentId)
+                            .update("message", "Tin nhắn đã bị thu hồi!").addOnSuccessListener(aVoid -> {
+                                dialog.dismiss();
+                                Toasty.success(context, "Thu hồi tin nhắn thành công!", Toasty.LENGTH_LONG, true).show();
+                            }).addOnFailureListener(e -> {
+                                Log.e(TAG, "onLongClick: " + e.getMessage());
+                                Toasty.error(context, "Thu hồi tin nhắn thất bại!", Toasty.LENGTH_LONG, true).show();
+                            }));
+        } else bottomOptionDialogBinding.deleteMessage.setVisibility(View.GONE);
+
+        bottomOptionDialogBinding.copyText.setOnClickListener(view -> {
+            copyToClipboard(model);
+            dialog.dismiss();
+        });
+
+        bottomOptionDialogBinding.cancelButton.setOnClickListener(view -> dialog.dismiss());
+
+        dialog.show();
+        Window window = dialog.getWindow();
+        if (window != null) {
+            window.setLayout(
+                    ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.WRAP_CONTENT
+            );
+            window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            window.setWindowAnimations(R.style.DialogAnimation);
+            window.setGravity(Gravity.BOTTOM);
+        }
+    }
+
+    private void copyToClipboard(chatMesseageModel model){
+        // Tạo ClipboardManager
+        ClipboardManager clipboard = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
+
+        // Tạo một đối tượng ClipData để chứa dữ liệu copy
+        ClipData clip = ClipData.newPlainText("label", model.getMessage());
+
+        // Sao chép dữ liệu vào Clipboard
+        clipboard.setPrimaryClip(clip);
+        Toasty.success(context, "Sao chép tin nhắn thành công!", Toasty.LENGTH_LONG, true).show();
+    }
+
+
+    private Typeface getTypeface(String type) {
         if (type.equals("RobotoBoldTextView")) return utils.getRobotoBoldTypeFace(context);
         else if (type.equals("RobotoItalicTextView")) return utils.getRobotoItalicTypeFace(context);
         else if (type.equals("BlackjackTextview")) return utils.getBlackjackTypeFace(context);

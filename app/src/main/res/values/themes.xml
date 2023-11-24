@@ -12,6 +12,10 @@
         <item name="android:windowExitAnimation">@anim/slide_out_bottom</item>
     </style>
 
+    <style name="App.Custom.Indicator" parent="Widget.Material3.BottomNavigationView.ActiveIndicator">
+        <item name="android:color">@color/lavender</item>
+    </style>
+
     <!--Light mode-->
     <style name="SCREEN">
         <item name="android:background">#FFF</item>

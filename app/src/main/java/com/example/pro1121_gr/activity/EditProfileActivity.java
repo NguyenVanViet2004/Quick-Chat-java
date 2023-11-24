@@ -4,6 +4,7 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.app.Activity;
 import android.app.DatePickerDialog;
@@ -93,6 +94,11 @@ public class EditProfileActivity extends AppCompatActivity {
                     else Toasty.error(EditProfileActivity.this, "Cập nhật thông tin thất bại!", Toasty.LENGTH_LONG, true).show();
                 }
             }
+        });
+
+        binding.swipeRefreshLayout.setOnRefreshListener(() -> {
+            checkInformation();
+            binding.swipeRefreshLayout.setRefreshing(false);
         });
     }
 

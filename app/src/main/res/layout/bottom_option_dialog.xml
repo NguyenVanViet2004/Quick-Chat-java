@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -42,53 +43,41 @@
 
     </LinearLayout>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:padding="@dimen/_10sdp"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:gravity="center_horizontal">
 
 
         <TextView
-            android:id="@+id/GPS"
+            android:id="@+id/copyText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:drawableTop="@drawable/gps_icon"
             android:drawablePadding="@dimen/_5sdp"
-            android:text="Chia sẻ vị trí"
+            android:text="sao chép"
             android:textColor="@color/black"
             android:textSize="16sp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toLeftOf="@id/Fonts"
-            app:layout_constraintTop_toTopOf="parent"/>
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="HardcodedText"
+            android:layout_marginEnd="@dimen/_35sdp"
+            app:drawableTopCompat="@drawable/icon_copy" />
 
         <TextView
-            android:id="@+id/Fonts"
+            android:id="@+id/delete_message"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/_10sdp"
-            android:drawableTop="@drawable/fonts_icon"
             android:drawablePadding="@dimen/_5sdp"
-            android:text="font chữ"
+            android:text="Thu hồi tin nhắn"
             android:textColor="@color/black"
             android:textSize="16sp"
-            app:layout_constraintLeft_toRightOf="@id/GPS"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:id="@+id/Voice"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/_10sdp"
-            android:drawableTop="@drawable/icon_voice"
-            android:drawablePadding="@dimen/_5sdp"
-            android:text="Giọng nói"
-            android:textColor="@color/black"
-            android:textSize="16sp"
-            app:layout_constraintLeft_toRightOf="@id/Fonts"
-            app:layout_constraintTop_toTopOf="parent" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            android:layout_marginStart="@dimen/_35sdp"
+            app:drawableTopCompat="@drawable/icon_delete"
+            tools:ignore="HardcodedText" />
+    </LinearLayout>
 
 
 </LinearLayout>

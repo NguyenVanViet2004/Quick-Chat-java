@@ -9,12 +9,15 @@ import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import com.example.pro1121_gr.R;
 import com.example.pro1121_gr.databinding.ActivityHomeBinding;
@@ -22,9 +25,11 @@ import com.example.pro1121_gr.fragments.ChatFragment;
 import com.example.pro1121_gr.function.ReplaceFragment;
 import com.example.pro1121_gr.util.NetworkChangeReceiver;
 import com.example.pro1121_gr.util.firebaseUtil;
+import com.google.android.material.navigation.NavigationBarView;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.qamar.curvedbottomnaviagtion.CurvedBottomNavigation;
 
+import es.dmoral.toasty.Toasty;
 import kotlin.Unit;
 import kotlin.jvm.functions.Function1;
 
@@ -32,6 +37,7 @@ public class home extends AppCompatActivity {
 
     private ActivityHomeBinding binding;
     private NetworkChangeReceiver networkChangeReceiver;
+    private boolean doubleBackToExitPressedOnce = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,8 +48,12 @@ public class home extends AppCompatActivity {
         // Bật chế độ tối nếu được kích hoạt
         MyApplication.applyNightMode();
         getFMCtoken();
+        initView();
 
 
+    }
+
+    private void initView() {
         ReplaceFragment.replaceFragment(
                 this.getSupportFragmentManager(),
                 R.id.frame_layout,
@@ -56,7 +66,7 @@ public class home extends AppCompatActivity {
         IntentFilter intentFilter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
         registerReceiver(networkChangeReceiver, intentFilter);
 
-        binding.bottomNavigation.add(new CurvedBottomNavigation.Model(1, "Tin nhắn", R.drawable.baseline_message_24));
+        /*binding.bottomNavigation.add(new CurvedBottomNavigation.Model(1, "Tin nhắn", R.drawable.baseline_message_24));
         binding.bottomNavigation.add(new CurvedBottomNavigation.Model(2, "Thêm", R.drawable.ic_baseline_add_24));
         binding.bottomNavigation.add(new CurvedBottomNavigation.Model(3, "Cài đặt", R.drawable.baseline_settings_24));
 
@@ -74,9 +84,23 @@ public class home extends AppCompatActivity {
                     break;
             }
             return null;
+        });*/
+
+        binding.bottomNavigation.setOnItemSelectedListener(item -> {
+            if (item.getItemId() == R.id.bottomNavMessage){
+                ReplaceFragment.replaceFragment(
+                        home.this.getSupportFragmentManager(),
+                        R.id.frame_layout,
+                        new ChatFragment(),
+                        false
+                );
+            }/*else if (item.getItemId() == R.id.bottomNavOption){
+                showBottomDialog();
+            }*/else {
+                startActivity(new Intent(home.this, SettingActivity.class));
+            }
+            return true;
         });
-
-
     }
 
     private void getFMCtoken() {
@@ -124,5 +148,27 @@ public class home extends AppCompatActivity {
         if (networkChangeReceiver != null) {
             unregisterReceiver(networkChangeReceiver);
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (doubleBackToExitPressedOnce) {
+            super.onBackPressed();
+            return;
+        }
+
+        this.doubleBackToExitPressedOnce = true;
+        Toasty.warning(this,"Nhấn lần nữa để thoát", Toasty.LENGTH_LONG, true).show();
+
+        // Đặt thời gian chờ để reset trạng thái doubleBackToExitPressedOnce
+        new android.os.Handler().postDelayed(
+                new Runnable() {
+                    @Override
+                    public void run() {
+                        doubleBackToExitPressedOnce = false;
+                    }
+                },
+                2000 // 2 giây
+        );
     }
 }

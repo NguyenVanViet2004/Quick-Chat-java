@@ -57,7 +57,7 @@ public class LoginActivityWithOTP extends AppCompatActivity {
         MyApplication.applyNightMode();
 
         // Khởi tạo LoadingDialog
-        loadingDialog = LoadingDialog.getInstance(this);
+        loadingDialog = LoadingDialog.getInstance(LoginActivityWithOTP.this);
 
 
         EditText otpInput = findViewById(R.id.edt_loginOTP);
@@ -66,7 +66,6 @@ public class LoginActivityWithOTP extends AppCompatActivity {
         binding.titleLoginOTP.setText("VUI LÒNG NHẬP MÃ OTP ĐÃ ĐƯỢC GỬI ĐẾN : " + phoneNumber);
 
         FirebaseFirestore.getInstance().collection("phoneNumber");
-        Toast.makeText(getApplicationContext(), phoneNumber, Toast.LENGTH_SHORT).show();
         binding.btnLoginNextOTP.setEnabled(false);
 
         loadingDialog.startLoading();
