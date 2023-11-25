@@ -75,7 +75,7 @@
                 android:id="@+id/logout"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_40sdp"
-                android:layout_marginHorizontal="@dimen/_20sdp"
+                android:layout_marginHorizontal="@dimen/_10sdp"
                 android:layout_marginTop="@dimen/_25sdp"
                 android:layout_marginBottom="@dimen/_50sdp"
                 android:background="@drawable/login_button_background"

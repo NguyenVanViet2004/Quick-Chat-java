@@ -14,7 +14,7 @@ import java.util.concurrent.TimeUnit;
 
 public class DBhelper extends SQLiteOpenHelper {
     private static final String DatabaseName = "QuickChat";
-    private static final int DatabaseVersion = 3;
+    private static final int DatabaseVersion = 7;
     private static final String TABLE_USAGE = "usage_table";
     private static final String COLUMN_ID = "id";
     private static final String COLUMN_DATE = "date";
@@ -59,22 +59,36 @@ public class DBhelper extends SQLiteOpenHelper {
 
     private void insertData(SQLiteDatabase sqLiteDatabase){
         sqLiteDatabase.execSQL("INSERT INTO " + TABLE_USAGE + " (" + COLUMN_DATE + ", " + COLUMN_USAGE_TIME + ") " +
-                "VALUES ('23/11/2023', " + TimeUnit.SECONDS.toMillis(10) + ")");
+                "VALUES ('23/11/2023', " + TimeUnit.HOURS.toMillis(1) + ")");
         sqLiteDatabase.execSQL("INSERT INTO " + TABLE_USAGE + " (" + COLUMN_DATE + ", " + COLUMN_USAGE_TIME + ") " +
-                "VALUES ('24/11/2023', " + TimeUnit.SECONDS.toMillis(30) + ")");
+                "VALUES ('24/11/2023', " + TimeUnit.HOURS.toMillis(3) + ")");
         sqLiteDatabase.execSQL("INSERT INTO " + TABLE_USAGE + " (" + COLUMN_DATE + ", " + COLUMN_USAGE_TIME + ") " +
-                "VALUES ('25/11/2023', " + TimeUnit.SECONDS.toMillis(5) + ")");
+                "VALUES ('25/11/2023', " + TimeUnit.HOURS.toMillis(2) + ")");
     }
 
     // Thêm dữ liệu thời gian sử dụng mới
     public void addUsageInfo(String date, long usageTime) {
         SQLiteDatabase db = this.getWritableDatabase();
+
         ContentValues values = new ContentValues();
         values.put(COLUMN_DATE, date);
-        values.put(COLUMN_USAGE_TIME, usageTime);
-        db.insert(TABLE_USAGE, null, values);
-        db.close();
+        values.put(COLUMN_USAGE_TIME, TimeUnit.MILLISECONDS.toSeconds(usageTime) + getUsageTimeToday());
+
+        // Kiểm tra xem có bản ghi nào với ngày tương tự chưa
+        Cursor cursor = db.query(TABLE_USAGE, new String[]{COLUMN_ID}, COLUMN_DATE + "=?", new String[]{date}, null, null, null);
+
+        if (cursor.getCount() > 0) {
+            // Nếu đã tồn tại bản ghi với ngày tương tự, cập nhật lại giá trị
+            db.update(TABLE_USAGE, values, COLUMN_DATE + "=?", new String[]{date});
+        } else {
+            // Nếu chưa tồn tại, thêm mới
+            db.insert(TABLE_USAGE, null, values);
+        }
+
+        cursor.close();
+        //db.close();
     }
+
 
     // Lấy thời gian sử dụng của ngày hôm nay
     public long getUsageTimeToday() {
@@ -90,7 +104,7 @@ public class DBhelper extends SQLiteOpenHelper {
         }
 
         cursor.close();
-        db.close();
+        //db.close();
         return usageTime;
     }
 
@@ -137,7 +151,7 @@ public class DBhelper extends SQLiteOpenHelper {
         }
 
         cursor.close();
-        db.close();
+        //db.close();
         return usageTime;
     }
 

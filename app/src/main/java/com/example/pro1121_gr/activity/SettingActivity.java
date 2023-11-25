@@ -59,7 +59,7 @@ public class SettingActivity extends AppCompatActivity {
 
         binding.helpLayout.btnEmail.setOnClickListener(view -> {
             Intent intent = new Intent(Intent.ACTION_SENDTO);
-            intent.setData(Uri.parse("mailto:" + "quanlykhohang204@gmail.com"));
+            intent.setData(Uri.parse("mailto:" + "nviet7532@gmail.com"));
             intent.putExtra(Intent.EXTRA_SUBJECT, "Cần giúp đỡ");
             intent.putExtra(Intent.EXTRA_TEXT, "Viết vấn đề của bạn vào đây");
 
