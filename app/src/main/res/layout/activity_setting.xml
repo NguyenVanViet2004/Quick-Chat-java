@@ -6,18 +6,17 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".activity.SettingActivity">
-
     <LinearLayout
         android:id="@+id/line1"
         android:layout_width="match_parent"
         android:layout_height="@dimen/_50sdp"
+        android:layout_gravity="top"
         android:background="@color/lavender"
         android:gravity="center_vertical"
         android:orientation="horizontal"
-        app:layout_constraintBottom_toTopOf="@id/item_avatar"
-        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/scrollView"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintLeft_toLeftOf="parent">
 
         <ImageView
             android:id="@+id/backFragment_mess"
@@ -41,133 +40,67 @@
 
     </LinearLayout>
 
-
-    <ImageView
-        android:id="@+id/item_background"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/_150sdp"
-        android:scaleType="fitXY"
-        android:src="@drawable/backgournd_profile"
-        app:layout_constraintBottom_toBottomOf="@id/fullName"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/line1"
-        app:layout_constraintVertical_bias="0.0" />
-
-    <ImageView
-        android:id="@+id/item_avatar"
-        android:layout_width="@dimen/_90sdp"
-        android:layout_height="@dimen/_90sdp"
-        android:layout_marginTop="@dimen/_90sdp"
-        android:scaleType="fitXY"
-        android:src="@drawable/img_5"
-        app:layout_constraintBottom_toBottomOf="@id/fullName"
-        app:layout_constraintHorizontal_bias="0.146"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/line1" />
-
-    <TextView
-        android:id="@+id/fullName"
-        style="@style/TEXT"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="@dimen/_20sdp"
-        android:layout_marginTop="28dp"
-        android:gravity="center"
-        android:text="LOADING"
-        android:textSize="@dimen/_17sdp"
-        android:textStyle="bold"
-        app:layout_constraintHorizontal_bias="0.088"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/item_avatar"
-        tools:ignore="HardcodedText" />
-
-    <TextView
-        android:id="@+id/nightMode"
-        style="@style/TEXT"
-        android:background="@drawable/onclickitem"
+    <ScrollView
+        android:id="@+id/scrollView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="@dimen/_20sdp"
-        android:layout_marginTop="@dimen/_50sdp"
-        android:padding="@dimen/_10sdp"
-        android:text="Chế độ tối"
-        android:textSize="@dimen/_15sdp"
-        app:layout_constraintRight_toRightOf="@id/nightSwitch"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/fullName"
-        tools:ignore="HardcodedText,RtlHardcoded" />
-
-    <Switch
-        android:id="@+id/nightSwitch"
-        android:layout_width="@dimen/_50sdp"
-        android:layout_height="@dimen/_50sdp"
-        android:layout_marginTop="60dp"
-        android:layout_marginRight="24dp"
-        android:padding="@dimen/_10sdp"
-        android:textOff="Off"
-        android:textOn="On"
-        android:thumb="@drawable/thumb"
-        android:track="@drawable/track"
-        app:layout_constraintHorizontal_weight="0"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/fullName"
-        tools:ignore="HardcodedText,UseSwitchCompatOrMaterialXml" />
-
-    <TextView
-        android:id="@+id/editProfile"
-        style="@style/TEXT"
-        android:background="@drawable/onclickitem"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="@dimen/_20sdp"
-        android:layout_marginTop="8dp"
-        android:padding="@dimen/_10sdp"
-        android:text="Chỉnh sửa thông tin cá nhân"
-        android:textSize="@dimen/_15sdp"
-        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/nightMode"
-        tools:ignore="HardcodedText" />
+        app:layout_constraintTop_toBottomOf="@id/line1">
 
-    <TextView
-        android:id="@+id/contact"
-        style="@style/TEXT"
-        android:background="@drawable/onclickitem"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="@dimen/_20sdp"
-        android:layout_marginTop="8dp"
-        android:padding="@dimen/_10sdp"
-        android:text="Bạn cần hỗ trợ?"
-        android:textSize="@dimen/_15sdp"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/editProfile"
-        tools:ignore="HardcodedText"
-        app:drawableTint="@color/purple_700"
-        app:drawableRightCompat="@drawable/baseline_call_24" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
 
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/logout"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/_40sdp"
-        android:layout_marginBottom="16dp"
-        android:background="@drawable/login_button_background"
-        android:text="LOG OUT"
-        android:textColor="@color/white"
-        app:cornerRadius="@dimen/_20sdp"
-        android:layout_marginHorizontal="@dimen/_20sdp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        tools:ignore="HardcodedText" />
 
+            <include
+                android:id="@+id/profile"
+                layout="@layout/profile_layout" />
+
+            <include
+                android:id="@+id/option"
+                layout="@layout/shortcuts_layout" />
+
+            <include
+                android:id="@+id/helpLayout"
+                layout="@layout/help_layout"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/shortcut" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/logout"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_40sdp"
+                android:layout_marginHorizontal="@dimen/_20sdp"
+                android:layout_marginTop="@dimen/_25sdp"
+                android:layout_marginBottom="@dimen/_50sdp"
+                android:background="@drawable/login_button_background"
+                android:text="LOG OUT"
+                android:textColor="@color/white"
+                app:cornerRadius="@dimen/_20sdp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                tools:ignore="HardcodedText" />
+
+
+            <ImageView
+                android:id="@+id/logout2"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_40sdp"
+                android:layout_marginHorizontal="@dimen/_20sdp"
+                style="@style/SCREEN"
+                app:cornerRadius="@dimen/_20sdp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                tools:ignore="HardcodedText" />
+        </LinearLayout>
+    </ScrollView>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

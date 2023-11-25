@@ -90,6 +90,8 @@ dependencies {
     // add library voice/video call
     implementation ("com.github.ZEGOCLOUD:zego_uikit_prebuilt_call_android:+")
     implementation ("com.github.ZEGOCLOUD:zego_uikit_signaling_plugin_android:+")
+    // chart
+    implementation("com.github.PhilJay:MPAndroidChart:v3.1.0")
 
 
 }

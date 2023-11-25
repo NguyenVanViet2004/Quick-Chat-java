@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activity.NightModeActivity">
+
+    <LinearLayout
+        android:id="@+id/line1"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_50sdp"
+        android:background="@color/lavender"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/backFragment_mess"
+            android:layout_width="@dimen/_24sdp"
+            android:layout_height="@dimen/_24sdp"
+            android:layout_marginLeft="@dimen/_15sdp"
+            android:layout_weight="0"
+            android:scaleType="fitXY"
+            android:src="@drawable/baseline_arrow_back_ios_24"
+            app:tint="@color/white" />
+
+        <TextView
+            android:layout_width="0sp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:paddingHorizontal="@dimen/_20sdp"
+            android:text="Chế độ tối"
+            android:textColor="@color/white"
+            android:textSize="@dimen/_15sdp"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/nightMode"
+        style="@style/TEXT"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/_20sdp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="@dimen/_30sdp"
+        android:background="@drawable/onclickitem"
+        android:padding="@dimen/_10sdp"
+        android:text="Chế độ tối"
+        android:textSize="@dimen/_15sdp"
+        app:layout_constraintRight_toRightOf="@id/nightSwitch"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/line1"
+        tools:ignore="HardcodedText,RtlHardcoded" />
+
+    <Switch
+        android:id="@+id/nightSwitch"
+        android:layout_width="@dimen/_50sdp"
+        android:layout_height="@dimen/_50sdp"
+        android:layout_marginTop="@dimen/_24sdp"
+        android:layout_marginRight="24dp"
+        android:padding="@dimen/_10sdp"
+        android:textOff="Off"
+        android:textOn="On"
+        android:thumb="@drawable/thumb"
+        android:track="@drawable/track"
+        app:layout_constraintHorizontal_weight="0"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/line1"
+        tools:ignore="HardcodedText,UseSwitchCompatOrMaterialXml" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

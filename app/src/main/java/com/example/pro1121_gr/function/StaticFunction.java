@@ -4,6 +4,8 @@ package com.example.pro1121_gr.function;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -14,6 +16,7 @@ import android.widget.ImageView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.pro1121_gr.model.userModel;
+import com.example.pro1121_gr.util.NetworkChangeReceiver;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.text.ParseException;
@@ -123,6 +126,14 @@ public class StaticFunction {
         );
         snackbar.setAction("Cancel", view -> snackbar.dismiss());
         snackbar.show();
+    }
+
+    public static NetworkChangeReceiver getNetworkChangeReceiver(Activity activity){
+        // Khởi tạo và đăng ký BroadcastReceiver
+        NetworkChangeReceiver networkChangeReceiver = new NetworkChangeReceiver();
+        IntentFilter intentFilter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+        activity.registerReceiver(networkChangeReceiver, intentFilter);
+        return networkChangeReceiver;
     }
 
 

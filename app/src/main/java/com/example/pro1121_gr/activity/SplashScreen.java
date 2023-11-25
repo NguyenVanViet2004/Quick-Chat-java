@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 
+import com.example.pro1121_gr.Database.DBhelper;
 import com.example.pro1121_gr.databinding.ActivitySplashScreenBinding;
 import com.example.pro1121_gr.function.StaticFunction;
 import com.example.pro1121_gr.model.userModel;
@@ -20,7 +21,7 @@ public class SplashScreen extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        com.example.pro1121_gr.databinding.ActivitySplashScreenBinding binding = ActivitySplashScreenBinding.inflate(getLayoutInflater());
+        ActivitySplashScreenBinding binding = ActivitySplashScreenBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         MyApplication.applyNightMode();
@@ -33,7 +34,7 @@ public class SplashScreen extends AppCompatActivity {
                 firebaseUtil.allUserCollectionReference().document(userID).get().addOnCompleteListener(task -> {
                     if (task.isSuccessful()){
                         userModel model = task.getResult().toObject(userModel.class);
-                        Intent mainIntent = new Intent(this, home.class);
+                        Intent mainIntent = new Intent(this, homeActivity.class);
                         mainIntent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                         startActivity(mainIntent);
 
@@ -51,8 +52,11 @@ public class SplashScreen extends AppCompatActivity {
 
     private void gotoHome(){
         new Handler().postDelayed(() ->{
+            // bắt đầu tính thời gian sử dụng app
+            DBhelper.getInstance(this).startUsageTracking();
             if (firebaseUtil.isLoggedIn()){
-                startActivity(new Intent(this, home.class));
+                Log.e(TAG, "gotoHome: " + DBhelper.getInstance(this).getUsageTimeToday() );
+                startActivity(new Intent(this, homeActivity.class));
                 finish();
             }else {
                 startActivity(new Intent(this, LoginActivity.class));
@@ -62,4 +66,9 @@ public class SplashScreen extends AppCompatActivity {
         }, 2000);
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        DBhelper.getInstance(this).endUsageTracking();
+    }
 }

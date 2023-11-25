@@ -13,10 +13,12 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.DatePicker;
 
+import com.example.pro1121_gr.Database.DBhelper;
 import com.example.pro1121_gr.R;
 import com.example.pro1121_gr.databinding.ActivityEditProfileBinding;
 import com.example.pro1121_gr.function.StaticFunction;
 import com.example.pro1121_gr.model.userModel;
+import com.example.pro1121_gr.util.NetworkChangeReceiver;
 import com.example.pro1121_gr.util.firebaseUtil;
 import com.github.dhaval2404.imagepicker.ImagePicker;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -35,6 +37,7 @@ public class EditProfileActivity extends AppCompatActivity {
     private ActivityResultLauncher<Intent> imagePickerLauncher;
     private Uri selectedImageUri;
     private userModel userModel;
+    private NetworkChangeReceiver networkChangeReceiver;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,6 +52,7 @@ public class EditProfileActivity extends AppCompatActivity {
 
 
     private void initView() {
+        networkChangeReceiver = StaticFunction.getNetworkChangeReceiver(this);
         editProfile();
         binding.backEdit.setOnClickListener(view -> {
             startActivity(new Intent(EditProfileActivity.this, SettingActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
@@ -168,5 +172,14 @@ public class EditProfileActivity extends AppCompatActivity {
                 year, month, day
         );
         datePickerDialog.show();
+    }
+
+    protected void onDestroy() {
+        // Hủy đăng ký BroadcastReceiver khi hoạt động bị hủy
+        super.onDestroy();
+        if (networkChangeReceiver != null) {
+            unregisterReceiver(networkChangeReceiver);
+        }
+        DBhelper.getInstance(this).endUsageTracking();
     }
 }

@@ -36,6 +36,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.pro1121_gr.Database.DBhelper;
 import com.example.pro1121_gr.R;
 import com.example.pro1121_gr.adapter.chatAdapter;
 import com.example.pro1121_gr.databinding.ActivityChatBinding;
@@ -128,9 +129,7 @@ public class ChatActivity extends AppCompatActivity {
         // Bật chế độ tối nếu được kích hoạt
         MyApplication.applyNightMode();
         // Khởi tạo và đăng ký BroadcastReceiver
-        networkChangeReceiver = new NetworkChangeReceiver();
-        IntentFilter intentFilter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
-        registerReceiver(networkChangeReceiver, intentFilter);
+        networkChangeReceiver = StaticFunction.getNetworkChangeReceiver(this);
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
         //get UserModel
         userModel = StaticFunction.getUserModelFromIntent(getIntent());
@@ -671,6 +670,7 @@ public class ChatActivity extends AppCompatActivity {
         }
         // stop service
         ZegoUIKitPrebuiltCallInvitationService.unInit();
+        DBhelper.getInstance(this).endUsageTracking();
     }
 
 }
