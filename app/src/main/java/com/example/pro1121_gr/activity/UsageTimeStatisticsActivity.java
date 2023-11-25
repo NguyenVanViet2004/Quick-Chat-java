@@ -34,7 +34,7 @@ public class UsageTimeStatisticsActivity extends AppCompatActivity {
         setContentView(usageTimeStatisticsBinding.getRoot());
 
         setupClickEvents();
-        displayUsageChart();
+        displayUsageBarChart();
         displayUsagePieChart();
     }
 
@@ -42,7 +42,7 @@ public class UsageTimeStatisticsActivity extends AppCompatActivity {
         usageTimeStatisticsBinding.backFragmentMess.setOnClickListener(view -> onBackPressed());
     }
 
-    private void displayUsageChart() {
+    private void displayUsageBarChart() {
         List<BarEntry> entries = getUsageEntries();
 
         BarDataSet dataSet = new BarDataSet(entries, "Thời gian sử dụng 7 ngày gần nhất");
