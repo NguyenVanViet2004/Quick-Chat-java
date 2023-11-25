@@ -2,29 +2,19 @@ package com.example.pro1121_gr.function;
 
 
 import android.app.Activity;
-import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.widget.Button;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.TextView;
-
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
-import com.example.pro1121_gr.R;
-import com.example.pro1121_gr.activity.CreateProfile;
 import com.example.pro1121_gr.model.userModel;
-import com.example.pro1121_gr.util.firebaseUtil;
-import com.google.firebase.Timestamp;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -74,10 +64,10 @@ public class StaticFunction {
                     if (editText.getText().toString().trim().length() < 5) editText.setError("Tên người dùng không được nhỏ hơn 5 ký tự");
                     else editText.setError(null);
                 } else if (type == 1) {
-                    if (!isValidDateFormat(String.valueOf(charSequence))) editText.setError("Sai định dạng Ngày-Tháng-Năm!");
+                    if (isValidDateFormat(String.valueOf(charSequence))) editText.setError("Sai định dạng Ngày-Tháng-Năm!");
                     else editText.setError(null);
                 }else {
-                    if (!isValidPhoneNumber(charSequence.toString())) editText.setError("Sai định dạng số điện thoại");
+                    if (isValidPhoneNumber(charSequence.toString())) editText.setError("Sai định dạng số điện thoại");
                     else editText.setError(null);
                 }
             }
@@ -100,9 +90,9 @@ public class StaticFunction {
             Date date = dateFormat.parse(inputDate);
 
             // Kiểm tra xem chuỗi có phù hợp với định dạng không
-            return date != null;
+            return date == null;
         } catch (ParseException e) {
-            return false;
+            return true;
         }
     }
 
@@ -112,46 +102,10 @@ public class StaticFunction {
 
         // Kiểm tra xem số điện thoại có đúng định dạng không
         // 10 hoặc 11 chữ số (trong trường hợp số điện thoại quốc tế)
-        return cleanPhoneNumber.matches("\\d{10,11}");
-    }
-
-    public static void showError(Activity activity){
-        android.view.LayoutInflater inflater = activity.getLayoutInflater();
-        android.view.View dialogView = inflater.inflate(R.layout.error_dialog, null);
-
-        // set dialog
-        Dialog builder = new Dialog(activity);
-        builder.setContentView(dialogView);
-        builder.setCancelable(false);
-        builder.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        builder.show();
-
-        Button button = dialogView.findViewById(R.id.errorClose);
-        button.setOnClickListener(view -> {
-            builder.dismiss();
-        });
+        return !cleanPhoneNumber.matches("\\d{10,11}");
     }
 
 
-    public static void showWarning(Activity activity, String message){
-        android.view.LayoutInflater inflater = activity.getLayoutInflater();
-        android.view.View dialogView = inflater.inflate(R.layout.waring_dialog, null);
-
-        // set dialog
-        Dialog builder = new Dialog(activity);
-        builder.setContentView(dialogView);
-        builder.setCancelable(false);
-        builder.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        builder.show();
-
-        TextView textView = dialogView.findViewById(R.id.errorDesc);
-        Button button = dialogView.findViewById(R.id.warningClose);
-
-        textView.setText(message);
-        button.setOnClickListener(view -> {
-            builder.dismiss();
-        });
-    }
 
     public static void openLink(Activity activity) {
         String facebookUri = "https://www.facebook.com/VietNguyenVan2004";
@@ -159,6 +113,16 @@ public class StaticFunction {
 
         if (intent.resolveActivity(activity.getPackageManager()) != null) activity.startActivity(intent);
         else activity.startActivity(intent);
+    }
+
+    public static void showSnackBar(View rootView, String message){
+        Snackbar snackbar = Snackbar.make(
+                rootView,
+                message,
+                Snackbar.LENGTH_INDEFINITE
+        );
+        snackbar.setAction("Cancel", view -> snackbar.dismiss());
+        snackbar.show();
     }
 
 

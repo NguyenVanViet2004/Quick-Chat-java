@@ -11,9 +11,11 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
-        // add thư viện ImagePicker
         maven { url = uri("https://jitpack.io") }
+        // library voice/video call
+        maven { url = uri("https://storage.zego.im/maven") }   // <- Add this line.
         jcenter()
+
     }
 }
 

@@ -1,7 +1,6 @@
 package com.example.pro1121_gr.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.app.AppCompatDelegate;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import android.annotation.SuppressLint;
@@ -10,7 +9,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.SearchView;
 
-import com.example.pro1121_gr.R;
 import com.example.pro1121_gr.adapter.searchUserAdapter;
 import com.example.pro1121_gr.databinding.ActivitySearchBinding;
 import com.example.pro1121_gr.model.userModel;

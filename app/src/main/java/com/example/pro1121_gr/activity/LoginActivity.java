@@ -3,8 +3,6 @@ package com.example.pro1121_gr.activity;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
-import android.content.IntentFilter;
-import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.view.View;
 
@@ -15,11 +13,6 @@ import android.widget.Toast;
 
 import com.example.pro1121_gr.R;
 import com.example.pro1121_gr.databinding.ActivityLoginBinding;
-import com.example.pro1121_gr.util.NetworkChangeReceiver;
-import com.example.pro1121_gr.util.AndroidUlti;
-import com.hbb20.CountryCodePicker;
-
-import es.dmoral.toasty.Toasty;
 
 public class LoginActivity extends AppCompatActivity {
     private ActivityLoginBinding binding;
@@ -52,7 +45,6 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private Boolean isValid(){
-        if ( !binding.countryCodePicker.isValidFullNumber() || binding.countryCodePicker.getFullNumberWithPlus().length() < 10) return false;
-        return true;
+        return binding.countryCodePicker.isValidFullNumber() && binding.countryCodePicker.getFullNumberWithPlus().length() >= 10;
     }
 }

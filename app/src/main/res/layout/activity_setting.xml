@@ -145,13 +145,13 @@
         android:padding="@dimen/_10sdp"
         android:text="Bạn cần hỗ trợ?"
         android:textSize="@dimen/_15sdp"
-        android:drawableRight="@drawable/baseline_call_24"
-        android:drawableTint="@color/purple_700"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/editProfile"
-        tools:ignore="HardcodedText" />
+        tools:ignore="HardcodedText"
+        app:drawableTint="@color/purple_700"
+        app:drawableRightCompat="@drawable/baseline_call_24" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/logout"
