@@ -3,11 +3,9 @@ package com.example.pro1121_gr.activity;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.app.AppCompatDelegate;
 
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
@@ -19,7 +17,6 @@ import com.example.pro1121_gr.model.userModel;
 import com.example.pro1121_gr.util.firebaseUtil;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.messaging.FirebaseMessaging;
 
@@ -39,46 +36,36 @@ public class SettingActivity extends AppCompatActivity {
 
     private void initView(){
         MyApplication.applyNightMode();
-        binding.backFragmentMess.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-//                startActivity(new Intent(SettingActivity.this, home.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
-//                finish();
-                onBackPressed();
-            }
+        binding.backFragmentMess.setOnClickListener(view -> onBackPressed());
+
+        binding.option.btnNightMode.setOnClickListener(view -> {
+            startActivity(new Intent(SettingActivity.this, NightModeActivity.class));
         });
 
-        binding.nightSwitch.setChecked(AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES);
 
-        // Nút chuyển đổi chế độ tối
-        binding.nightSwitch.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                MyApplication.toggleNightMode();
-            }
+        binding.option.btnUsedTime.setOnClickListener(view -> {
+            startActivity(new Intent(SettingActivity.this,UsageTimeStatisticsActivity.class));
         });
-
         //nút chỉnh sửa thông tin cá nhân
-        binding.editProfile.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(SettingActivity.this,EditProfileActivity.class));
-            }
-        });
+        binding.option.editProfile.setOnClickListener(view ->
+                startActivity(new Intent(SettingActivity.this,EditProfileActivity.class)));
 
         //nút đăng xuất
-        binding.logout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                logOut(); // Gọi phương thức logout khi nút được nhấn
-            }
+        binding.logout.setOnClickListener(view -> {
+            logOut(); // Gọi phương thức logout khi nút được nhấn
         });
-        binding.contact.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                StaticFunction.openLink(SettingActivity.this);
-            }
+
+        binding.helpLayout.btnMessenger.setOnClickListener(view -> StaticFunction.openLink(SettingActivity.this));
+
+        binding.helpLayout.btnEmail.setOnClickListener(view -> {
+            Intent intent = new Intent(Intent.ACTION_SENDTO);
+            intent.setData(Uri.parse("mailto:" + "quanlykhohang204@gmail.com"));
+            intent.putExtra(Intent.EXTRA_SUBJECT, "Cần giúp đỡ");
+            intent.putExtra(Intent.EXTRA_TEXT, "Viết vấn đề của bạn vào đây");
+
+            startActivity(Intent.createChooser(intent, "Choose an Email Client"));
         });
+
     }
 
 
@@ -90,11 +77,11 @@ public class SettingActivity extends AppCompatActivity {
                 if (task.isSuccessful()){
                     userModel = task.getResult().toObject(userModel.class);
                     if (userModel != null){
-                        binding.fullName.setText(userModel.getUsername());
+                        binding.profile.fullName.setText(userModel.getUsername());
                         // xu ly avt
                         firebaseUtil.getCurrentOtherProfileImageStorageReference(userModel.getUserId())
                                 .getDownloadUrl().addOnCompleteListener(task1 ->{
-                                    if (task1.isSuccessful()) firebaseUtil.setAvatar(SettingActivity.this,task1.getResult(), binding.itemAvatar);
+                                    if (task1.isSuccessful()) firebaseUtil.setAvatar(SettingActivity.this,task1.getResult(), binding.profile.itemAvatar);
                         });
                     }
                 }

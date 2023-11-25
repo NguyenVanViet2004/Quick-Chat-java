@@ -25,7 +25,7 @@
             android:id="@+id/backFragment_mess"
             android:layout_width="@dimen/_24sdp"
             android:layout_height="@dimen/_24sdp"
-            android:layout_marginLeft="@dimen/_15sdp"
+            android:layout_marginStart="@dimen/_15sdp"
             android:layout_weight="0"
             android:scaleType="fitXY"
             android:src="@drawable/baseline_arrow_back_ios_24"
@@ -35,7 +35,7 @@
             android:id="@+id/avatar_chat"
             android:layout_width="@dimen/_35sdp"
             android:layout_height="@dimen/_35sdp"
-            android:layout_marginLeft="@dimen/_5sdp"
+            android:layout_marginStart="@dimen/_5sdp"
             android:layout_weight="0"
             android:scaleType="fitXY"
             android:src="@drawable/img_5" />
@@ -51,21 +51,22 @@
             android:textSize="@dimen/_13sdp"
             android:textStyle="bold" />
 
-        <ImageView
+
+        <com.zegocloud.uikit.prebuilt.call.invite.widget.ZegoSendCallInvitationButton
             android:id="@+id/call"
             android:layout_width="@dimen/_24sdp"
             android:layout_height="@dimen/_24sdp"
-            android:layout_marginRight="@dimen/_15sdp"
+            android:layout_marginEnd="@dimen/_15sdp"
             android:layout_weight="0"
             android:scaleType="fitXY"
             android:src="@drawable/baseline_call_24"
             app:tint="@color/white" />
 
-        <ImageView
+        <com.zegocloud.uikit.prebuilt.call.invite.widget.ZegoSendCallInvitationButton
             android:id="@+id/videoCall"
             android:layout_width="@dimen/_24sdp"
             android:layout_height="@dimen/_24sdp"
-            android:layout_marginRight="@dimen/_15sdp"
+            android:layout_marginEnd="@dimen/_15sdp"
             android:layout_weight="0"
             android:scaleType="fitXY"
             android:src="@drawable/baseline_video_call_24"
@@ -93,7 +94,7 @@
             android:id="@+id/optionInMess"
             android:layout_width="@dimen/_24sdp"
             android:layout_height="@dimen/_24sdp"
-            android:layout_marginLeft="@dimen/_15sdp"
+            android:layout_marginStart="@dimen/_15sdp"
             android:scaleType="fitXY"
             android:src="@drawable/option_in_chat_message"
             android:visibility="gone" />
@@ -102,7 +103,7 @@
             android:id="@+id/cameraMess"
             android:layout_width="@dimen/_24sdp"
             android:layout_height="@dimen/_24sdp"
-            android:layout_marginLeft="@dimen/_15sdp"
+            android:layout_marginStart="@dimen/_15sdp"
             android:scaleType="fitXY"
             android:src="@drawable/baseline_photo_camera_24"
             app:tint="@color/lavender" />
@@ -111,7 +112,7 @@
             android:id="@+id/imageMess"
             android:layout_width="@dimen/_24sdp"
             android:layout_height="@dimen/_24sdp"
-            android:layout_marginLeft="@dimen/_15sdp"
+            android:layout_marginStart="@dimen/_15sdp"
             android:scaleType="fitXY"
             android:src="@drawable/baseline_image_24"
             app:tint="@color/lavender" />
@@ -119,7 +120,7 @@
         <EditText
             android:id="@+id/TextMESS"
             android:layout_weight="5"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_marginHorizontal="@dimen/_13sdp"
             android:layout_height="@dimen/_35sdp"
             android:padding="@dimen/_10sdp"
@@ -130,7 +131,7 @@
             android:id="@+id/sendMess"
             android:layout_width="@dimen/_24sdp"
             android:layout_height="@dimen/_24sdp"
-            android:layout_marginRight="@dimen/_15sdp"
+            android:layout_marginEnd="@dimen/_15sdp"
             android:scaleType="fitXY"
             android:visibility="gone"
             android:src="@drawable/baseline_send_24"
@@ -140,7 +141,7 @@
             android:id="@+id/like"
             android:layout_width="@dimen/_24sdp"
             android:layout_height="@dimen/_24sdp"
-            android:layout_marginRight="@dimen/_15sdp"
+            android:layout_marginEnd="@dimen/_15sdp"
             android:scaleType="fitXY"
             android:src="@drawable/like_icon"
             app:tint="@color/lavender" />

@@ -1,8 +1,5 @@
 package com.example.pro1121_gr.util;
 
-import static android.provider.ContactsContract.Directory.PACKAGE_NAME;
-
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.BroadcastReceiver;
@@ -13,15 +10,12 @@ import android.graphics.drawable.ColorDrawable;
 import android.net.ConnectivityManager;
 import android.net.Network;
 import android.net.NetworkInfo;
-import android.net.Uri;
 import android.os.Build;
 import android.provider.Settings;
-import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
 import com.example.pro1121_gr.R;
-import com.example.pro1121_gr.function.RequestPermission;
 
 import es.dmoral.toasty.Toasty;
 
@@ -29,6 +23,10 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
 
     private boolean isFirstLogin = true;
     private Dialog isDialog;
+
+
+
+
     @Override
     public void onReceive(Context context, Intent intent) {
 

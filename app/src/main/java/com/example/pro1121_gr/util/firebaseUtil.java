@@ -24,10 +24,7 @@ public class firebaseUtil {
     }
 
     public static boolean isLoggedIn(){
-        if(currentUserId()!=null){
-            return true;
-        }
-        return false;
+        return currentUserId() != null;
     }
 
     public static DocumentReference currentUserDetails(){
@@ -85,14 +82,6 @@ public class firebaseUtil {
         return FirebaseStorage.getInstance().getReference().child("profile_img")
                 .child(otherUserId);
     }
-
-    /*public static void loadImageInChat(Context context, String message, ImageView image){
-        Glide.with(context)
-                .load(message)
-                .override(500, 500) // Điều chỉnh kích thước ảnh tại đây
-                .centerCrop() // Đường dẫn URL của ảnh đã tải lên
-                .into(image); // ImageView để hiển thị ảnh
-    }*/
 
     public static void loadImageInChat(Context context, String message, ImageView image) {
         Glide.with(context)

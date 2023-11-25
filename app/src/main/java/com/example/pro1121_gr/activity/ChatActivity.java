@@ -4,8 +4,10 @@ package com.example.pro1121_gr.activity;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.Application;
 import android.app.Dialog;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -13,6 +15,7 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.location.Address;
 import android.location.Geocoder;
+import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -33,6 +36,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.pro1121_gr.Database.DBhelper;
 import com.example.pro1121_gr.R;
 import com.example.pro1121_gr.adapter.chatAdapter;
 import com.example.pro1121_gr.databinding.ActivityChatBinding;
@@ -45,6 +49,7 @@ import com.example.pro1121_gr.model.CustomTypefaceInfo;
 import com.example.pro1121_gr.model.chatMesseageModel;
 import com.example.pro1121_gr.model.chatRoomModel;
 import com.example.pro1121_gr.model.userModel;
+import com.example.pro1121_gr.util.NetworkChangeReceiver;
 import com.example.pro1121_gr.util.firebaseUtil;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.common.api.ApiException;
@@ -62,16 +67,21 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.zegocloud.uikit.prebuilt.call.config.ZegoNotificationConfig;
+import com.zegocloud.uikit.prebuilt.call.invite.ZegoUIKitPrebuiltCallInvitationConfig;
+import com.zegocloud.uikit.prebuilt.call.invite.ZegoUIKitPrebuiltCallInvitationService;
+import com.zegocloud.uikit.service.defines.ZegoUIKitUser;
 
 import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 
-import es.dmoral.toasty.Toasty;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.MediaType;
@@ -89,9 +99,8 @@ public class ChatActivity extends AppCompatActivity {
     private chatRoomModel chatRoomModel;
     private chatAdapter adapter;
     private ActivityChatBinding binding;
-    private Uri selectImageUri;
-    private LocationRequest locationRequest;
     private FusedLocationProviderClient fusedLocationProviderClient;
+    private NetworkChangeReceiver networkChangeReceiver;
     private static final int REQUEST_IMAGE_PICK = 100, REQUEST_IMAGE_CAPTURE = 1000,
             LOCATION_PERMISSION_REQUEST_CODE = 200, REQUEST_CODE_SPEECH_INPUT = 1;
 
@@ -101,27 +110,40 @@ public class ChatActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         binding = ActivityChatBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+        firebaseUtil.currentUserDetails().get().addOnCompleteListener(ChatActivity.this, task -> {
+            if (task.isSuccessful()){
+                userModel MyUserModel = task.getResult().toObject(userModel.class);
+                if (MyUserModel != null) {
+                    startService(MyUserModel.getUserId(), MyUserModel.getUsername());
+                } else StaticFunction.showSnackBar(binding.getRoot(), "Error, please try again");
+            } else StaticFunction.showSnackBar(binding.getRoot(), "Error, please try again");
+        });
         initView();
     }
 
     private void initView(){
         // Bật chế độ tối nếu được kích hoạt
         MyApplication.applyNightMode();
+        // Khởi tạo và đăng ký BroadcastReceiver
+        networkChangeReceiver = StaticFunction.getNetworkChangeReceiver(this);
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
         //get UserModel
         userModel = StaticFunction.getUserModelFromIntent(getIntent());
         chatRoomID = firebaseUtil.getChatroomId(firebaseUtil.currentUserId(), userModel.getUserId());
+        setVoiceCall(userModel.getUserId(), userModel.getUsername());
+        setVideoCall(userModel.getUserId(), userModel.getUsername());
         setUpCLickEvents();
         getDataChatRoom();
     }
 
     @SuppressLint("ClickableViewAccessibility")
     private void setUpCLickEvents(){
-        binding.backFragmentMess.setOnClickListener((View.OnClickListener) view -> {
-            startActivity(new Intent(ChatActivity.this, home.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
-            finish();
+        binding.backFragmentMess.setOnClickListener(view -> {
+            onBackPressed();
         });
 
         binding.usernameMess.setText(userModel.getUsername().trim());
@@ -147,14 +169,14 @@ public class ChatActivity extends AppCompatActivity {
             }
         });
 
-        binding.TextMESS.setOnTouchListener((View.OnTouchListener) (view, motionEvent) -> {
+        binding.TextMESS.setOnTouchListener((view, motionEvent) -> {
             if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
                 hiddenItem(true);
             }
             return false;
         });
 
-        binding.rcvMess.setOnTouchListener((View.OnTouchListener) (view, motionEvent) -> {
+        binding.rcvMess.setOnTouchListener((view, motionEvent) -> {
             if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
                 hiddenItem(false);
                 if (binding.TextMESS.getText().toString().isEmpty()) {
@@ -168,12 +190,12 @@ public class ChatActivity extends AppCompatActivity {
             return false;
         });
 
-        binding.sendMess.setOnClickListener((View.OnClickListener) view -> {
+        binding.sendMess.setOnClickListener(view -> {
             hiddenItem(false);
             sendMessToOther(binding.TextMESS.getText().toString().trim());
         });
 
-        binding.imageMess.setOnClickListener((View.OnClickListener) view -> {
+        binding.imageMess.setOnClickListener(view -> {
             if (RequestPermission.checkPermission(ChatActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE)) {
                 // Quyền đã được cấp
                 Intent intent = new Intent(Intent.ACTION_PICK);
@@ -184,7 +206,7 @@ public class ChatActivity extends AppCompatActivity {
 
         });
 
-        binding.cameraMess.setOnClickListener((View.OnClickListener) view -> {
+        binding.cameraMess.setOnClickListener(view -> {
             if (RequestPermission.checkPermission(ChatActivity.this, Manifest.permission.CAMERA)) {
                 // Quyền đã được cấp
                 Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -195,34 +217,11 @@ public class ChatActivity extends AppCompatActivity {
                 RequestPermission.requestCameraPermission(ChatActivity.this, REQUEST_IMAGE_CAPTURE);
         });
 
-        binding.call.setOnClickListener((View.OnClickListener) view -> {
-            // Tạo một Intent với hành động ACTION_DIAL
-            Intent intent = new Intent(Intent.ACTION_DIAL);
 
-            // Đặt dữ liệu Uri cho số điện thoại cần gọi
-            intent.setData(Uri.parse("tel:" + userModel.getPhone()));
-
-            // Kiểm tra xem ứng dụng Gọi điện thoại có sẵn trên thiết bị hay chưa
-            if (intent.resolveActivity(getPackageManager()) != null) {
-                // Nếu có, mở ứng dụng Gọi điện thoại
-                startActivity(intent);
-            } else {
-                Toasty.warning(ChatActivity.this, "Không tìm thấy ứng dụng phù hợp", Toasty.LENGTH_SHORT, true).show();
-            }
+        binding.call.setOnClickListener(view -> {
         });
 
-        binding.videoCall.setOnClickListener((View.OnClickListener) view -> {
-            // Số điện thoại người dùng muốn gọi
-            String phoneNumber = userModel.getPhone();
-            try {
-                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("tel:" + phoneNumber));
-                intent.putExtra("videocall", true);
-
-                // Gọi ứng dụng Gọi điện thoại hoặc xử lý trường hợp không tìm thấy
-                startActivity(intent);
-            } catch (Exception e) {
-                Log.e("call click in chatActivity", e.getMessage());
-            }
+        binding.videoCall.setOnClickListener(view -> {
         });
 
 
@@ -230,7 +229,7 @@ public class ChatActivity extends AppCompatActivity {
             showBottomDialog();
         });
 
-        binding.like.setOnClickListener((View.OnClickListener) view -> sendMessToOther("https://firebasestorage.googleapis.com/v0/b/du-an-1-197e4.appspot.com/o/like_icon%2Flike_icon.png?alt=media&token=63213f37-2681-412d-b096-177b20373976"));
+        binding.like.setOnClickListener(view -> sendMessToOther("https://firebasestorage.googleapis.com/v0/b/du-an-1-197e4.appspot.com/o/like_icon%2Flike_icon.png?alt=media&token=63213f37-2681-412d-b096-177b20373976"));
 
     }
 
@@ -254,6 +253,7 @@ public class ChatActivity extends AppCompatActivity {
             } else RequestPermission.showPermissionRationaleDialog(ChatActivity.this);
         } else if (requestCode == LOCATION_PERMISSION_REQUEST_CODE) {
             if (RequestPermission.checkPermission(ChatActivity.this, Manifest.permission.ACCESS_FINE_LOCATION)) {
+                checkGPS();
                 // Người dùng từ chối cấp quyền vị trí
             } else RequestPermission.showPermissionRationaleDialog(ChatActivity.this);
         }
@@ -269,20 +269,30 @@ public class ChatActivity extends AppCompatActivity {
         // xử lý gửi ảnh
         if (requestCode == REQUEST_IMAGE_PICK && resultCode == Activity.RESULT_OK) {
             if (data != null) {
-                selectImageUri = data.getData();
-                UploadTask uploadTask = imageRef.putFile(selectImageUri);
-                uploadTask.addOnSuccessListener(taskSnapshot -> {
-                    // Lấy URL của ảnh sau khi tải lên thành công
-                    imageRef.getDownloadUrl().addOnSuccessListener(uri -> {
-                        sendMessToOther(uri.toString());
-                        setChatLayout();
+                Uri selectImageUri = data.getData();
+                UploadTask uploadTask = null;
+                if (selectImageUri != null) {
+                    uploadTask = imageRef.putFile(selectImageUri);
+                }
+                if (uploadTask != null) {
+                    uploadTask.addOnSuccessListener(taskSnapshot -> {
+                        // Lấy URL của ảnh sau khi tải lên thành công
+                        imageRef.getDownloadUrl().addOnSuccessListener(uri -> {
+                            sendMessToOther(uri.toString());
+                            setChatLayout();
+                        });
                     });
-                });
+                }
             }
         } else if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == Activity.RESULT_OK) {
-            Bitmap imageBitmap = (Bitmap) data.getExtras().get("data");
+            Bitmap imageBitmap = null;
+            if (data != null) {
+                imageBitmap = (Bitmap) Objects.requireNonNull(data.getExtras()).get("data");
+            }
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            imageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+            if (imageBitmap != null) {
+                imageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+            }
             byte[] imageData = baos.toByteArray();
 
             UploadTask uploadTask = imageRef.putBytes(imageData);
@@ -293,15 +303,12 @@ public class ChatActivity extends AppCompatActivity {
                     sendMessToOther(imageUrl);
                     setChatLayout();
                 });
-            }).addOnFailureListener(exception -> StaticFunction.showWarning(ChatActivity.this, "Đã xảy ra lỗi trong quá trình xử lý ảnh!"));
+            }).addOnFailureListener(exception -> StaticFunction.showSnackBar( binding.getRoot(), "Lỗi xử lý ảnh"));
         } else if (requestCode == REQUEST_CODE_SPEECH_INPUT) {
-            VoiceRecordingUtil.processVoiceInput(requestCode, resultCode, data, new VoiceRecordingUtil.VoiceInputListener() {
-                @Override
-                public void onVoiceInput(String text) {
-                    if (!text.isEmpty()) {
-                        sendNotification(text);
-                        sendMessToOther(text);
-                    }
+            VoiceRecordingUtil.processVoiceInput(requestCode, resultCode, data, text -> {
+                if (!text.isEmpty()) {
+                    sendNotification(text);
+                    sendMessToOther(text);
                 }
             });
         }
@@ -319,9 +326,6 @@ public class ChatActivity extends AppCompatActivity {
                 new chatMesseageModel(message, firebaseUtil.currentUserId(), Timestamp.now(), new CustomTypefaceInfo(customTypeFace));
 
         firebaseUtil.getChatroomMessageReference(chatRoomID).add(chatMesseageModel);
-        /*firebaseUtil.getChatroomMessageReference(chatRoomID).add(chatMesseageModel).addOnSuccessListener(documentReference -> {
-            String messageId = documentReference.getId();
-        });*/
         if (StaticFunction.isURL(message)) sendNotification("[Link]");
         else sendNotification(message);
         binding.TextMESS.setText("");
@@ -334,15 +338,17 @@ public class ChatActivity extends AppCompatActivity {
                 try {
                     JSONObject jsonObject = new JSONObject();
                     JSONObject notification = new JSONObject();
-                    notification.put("title", userModel1.getUsername());
-                    notification.put("body", message);
-                    notification.put("sound", "default");
-                    JSONObject data = new JSONObject();
-                    data.put("userId", userModel1.getUserId());
-                    jsonObject.put("notification", notification);
-                    jsonObject.put("data", data);
-                    jsonObject.put("to", userModel.getFMCToken());
-                    callAPI(jsonObject);
+                    if (userModel1 != null) {
+                        notification.put("title", userModel1.getUsername());
+                        notification.put("body", message);
+                        notification.put("sound", "default");
+                        JSONObject data = new JSONObject();
+                        data.put("userId", userModel1.getUserId());
+                        jsonObject.put("notification", notification);
+                        jsonObject.put("data", data);
+                        jsonObject.put("to", userModel.getFMCToken());
+                        callAPI(jsonObject);
+                    }
 
                 } catch (Exception e) {
                     Log.e(ChatActivity.class.getSimpleName(), "notification: " + e.getMessage());
@@ -398,7 +404,6 @@ public class ChatActivity extends AppCompatActivity {
                     if (task.isSuccessful()) {
                         Uri uri = task.getResult();
                         uriOther = uri.toString();
-                        Log.e(TAG, "getdata: " + uriOther);
                         firebaseUtil.setAvatar(ChatActivity.this, uri, binding.avatarChat);
                         setChatLayout();
                     }
@@ -431,8 +436,7 @@ public class ChatActivity extends AppCompatActivity {
                     .setQuery(query, chatMesseageModel.class)
                     .build();
 
-            adapter = new chatAdapter(options, ChatActivity.this, uriOther.toString(), chatRoomID);
-            Log.e(TAG, "onComplete: " + uriOther.toString());
+            adapter = new chatAdapter(options, ChatActivity.this, uriOther, chatRoomID);
             LinearLayoutManager manager = new LinearLayoutManager(this);
             manager.setReverseLayout(true);
             binding.rcvMess.setLayoutManager(manager);
@@ -547,7 +551,7 @@ public class ChatActivity extends AppCompatActivity {
 
 
     private void checkGPS() {
-        locationRequest = LocationRequest.create();
+        LocationRequest locationRequest = LocationRequest.create();
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
         locationRequest.setInterval(5000);
         locationRequest.setFastestInterval(2000);
@@ -573,6 +577,7 @@ public class ChatActivity extends AppCompatActivity {
                     }
                 } else {
                     // GPS đã bị tắt hoặc có lỗi khác
+                    StaticFunction.showSnackBar(binding.getRoot(), "Error, please try again");
                 }
             }
         });
@@ -606,6 +611,35 @@ public class ChatActivity extends AppCompatActivity {
         });
     }
 
+    private void startService(String userIdCall, String userName2){
+        Application application = getApplication(); // Android's application context
+        long appID = 189168233;   // yourAppID
+        String appSign = "57b5cefe54ad7738673c16a35e9b3a758bf7e116a0d6f9ee1b7ea1b7d1a8056e";  // yourAppSign
+        String userID = userIdCall; // yourUserID, userID should only contain numbers, English characters, and '_'.
+        String userName = userName2;   // yourUserName
+
+
+        ZegoUIKitPrebuiltCallInvitationConfig callInvitationConfig = new ZegoUIKitPrebuiltCallInvitationConfig();
+        callInvitationConfig.notifyWhenAppRunningInBackgroundOrQuit = true;
+        ZegoNotificationConfig notificationConfig = new ZegoNotificationConfig();
+        notificationConfig.sound = "zego_uikit_sound_call";
+        notificationConfig.channelID = "CallInvitation";
+        notificationConfig.channelName = "CallInvitation";
+        ZegoUIKitPrebuiltCallInvitationService.init(getApplication(), appID, appSign, userID, userName,callInvitationConfig);
+    }
+
+    private void setVideoCall(String targetUserID, String targetUserName) {
+        binding.videoCall.setIsVideoCall(true);
+        binding.videoCall.setResourceID("zego_uikit_call");
+        binding.videoCall.setInvitees(Collections.singletonList(new ZegoUIKitUser(targetUserID,targetUserName)));
+    }
+
+    private void setVoiceCall(String targetUserID, String targetUserName) {
+        binding.call.setIsVideoCall(false);
+        binding.call.setResourceID("zego_uikit_call");
+        binding.call.setInvitees(Collections.singletonList(new ZegoUIKitUser(targetUserID,targetUserName)));
+    }
+
 
 
 
@@ -626,4 +660,17 @@ public class ChatActivity extends AppCompatActivity {
         super.onResume();
         if (adapter != null) adapter.notifyDataSetChanged();
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        // Hủy đăng ký BroadcastReceiver khi hoạt động bị hủy
+        if (networkChangeReceiver != null) {
+            unregisterReceiver(networkChangeReceiver);
+        }
+        // stop service
+        ZegoUIKitPrebuiltCallInvitationService.unInit();
+        DBhelper.getInstance(this).endUsageTracking();
+    }
+
 }

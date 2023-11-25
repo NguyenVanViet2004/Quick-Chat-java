@@ -25,8 +25,6 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 
-import es.dmoral.toasty.Toasty;
-
 public class CreateProfile extends AppCompatActivity {
 
     private ActivityCreateProfileBinding binding;
@@ -98,13 +96,13 @@ public class CreateProfile extends AppCompatActivity {
             public void onComplete(@NonNull Task<Void> task) {
                 if(task.isSuccessful()){
                     loadingDialog.isDismiss();
-                    Intent intent = new Intent(CreateProfile.this, home.class);
+                    Intent intent = new Intent(CreateProfile.this, homeActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(intent);
                     finish();
                 }else{
                     loadingDialog.isDismiss();
-                    StaticFunction.showError(CreateProfile.this);
+                    StaticFunction.showSnackBar(binding.getRoot(), "Error, please try again!");
                 }
             }
         });
@@ -119,7 +117,7 @@ public class CreateProfile extends AppCompatActivity {
                         && !model.getDate().isEmpty()
                         && !model.getPhone().isEmpty()) {
                     loadingDialog.isDismiss();
-                    startActivity(new Intent(CreateProfile.this, home.class));
+                    startActivity(new Intent(CreateProfile.this, homeActivity.class));
                     finish();
                 } else loadingDialog.isDismiss();
             }

@@ -1,7 +1,5 @@
 package com.example.pro1121_gr.model;
 
-import android.graphics.Typeface;
-
 import com.google.firebase.Timestamp;
 
 public class chatMesseageModel {

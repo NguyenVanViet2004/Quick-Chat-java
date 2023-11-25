@@ -1,7 +1,6 @@
 package com.example.pro1121_gr.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.app.AppCompatDelegate;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import android.annotation.SuppressLint;
@@ -10,10 +9,12 @@ import android.util.Log;
 import android.view.View;
 import android.widget.SearchView;
 
-import com.example.pro1121_gr.R;
+import com.example.pro1121_gr.Database.DBhelper;
 import com.example.pro1121_gr.adapter.searchUserAdapter;
 import com.example.pro1121_gr.databinding.ActivitySearchBinding;
+import com.example.pro1121_gr.function.StaticFunction;
 import com.example.pro1121_gr.model.userModel;
+import com.example.pro1121_gr.util.NetworkChangeReceiver;
 import com.example.pro1121_gr.util.firebaseUtil;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.firebase.firestore.Query;
@@ -22,6 +23,7 @@ public class SearchActivity extends AppCompatActivity {
 
     private ActivitySearchBinding binding;
     private searchUserAdapter adapter;
+    private NetworkChangeReceiver networkChangeReceiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +31,15 @@ public class SearchActivity extends AppCompatActivity {
         binding = ActivitySearchBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+        networkChangeReceiver = StaticFunction.getNetworkChangeReceiver(this);
+
+        setupClickEvents();
+        setupSearchRecyclerView("");
+
+        MyApplication.applyNightMode();
+    }
+
+    private void setupClickEvents() {
         binding.backFragmentMess.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -49,10 +60,6 @@ public class SearchActivity extends AppCompatActivity {
                 return false;
             }
         });
-
-        setupSearchRecyclerView("");
-
-        MyApplication.applyNightMode();
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -77,5 +84,14 @@ public class SearchActivity extends AppCompatActivity {
         });
         adapter.startListening();
         adapter.notifyDataSetChanged();
+    }
+
+    protected void onDestroy() {
+        // Hủy đăng ký BroadcastReceiver khi hoạt động bị hủy
+        super.onDestroy();
+        if (networkChangeReceiver != null) {
+            unregisterReceiver(networkChangeReceiver);
+        }
+        DBhelper.getInstance(this).endUsageTracking();
     }
 }

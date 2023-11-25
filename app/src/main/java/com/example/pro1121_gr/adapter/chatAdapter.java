@@ -1,6 +1,5 @@
 package com.example.pro1121_gr.adapter;
 
-import android.app.Activity;
 import android.app.Dialog;
 import android.content.ClipData;
 import android.content.ClipboardManager;
@@ -36,9 +35,10 @@ import es.dmoral.toasty.Toasty;
 
 public class chatAdapter extends FirestoreRecyclerAdapter<chatMesseageModel, chatAdapter.ChatModelViewHolder> {
 
-    private Context context;
-    private String uriOther, chatRoomID;
-    private static String TAG = chatAdapter.ChatModelViewHolder.class.toString();
+    private final Context context;
+    private final String uriOther;
+    private final String chatRoomID;
+    private static final String TAG = chatAdapter.ChatModelViewHolder.class.toString();
 
 
     public chatAdapter(@NonNull FirestoreRecyclerOptions<chatMesseageModel> options, Context context, String uriOther, String ChatRoomId) {
@@ -64,7 +64,7 @@ public class chatAdapter extends FirestoreRecyclerAdapter<chatMesseageModel, cha
         return new ChatModelViewHolder(view);
     }
 
-    class ChatModelViewHolder extends RecyclerView.ViewHolder{
+    static class ChatModelViewHolder extends RecyclerView.ViewHolder{
 
         LinearLayout leftChatLayout,rightChatLayout;
         TextView leftChatTextview,rightChatTextview;
@@ -117,7 +117,7 @@ public class chatAdapter extends FirestoreRecyclerAdapter<chatMesseageModel, cha
         holder.rightChatLayout.setVisibility(View.VISIBLE);
 
         holder.rightChatTextview.setOnLongClickListener(view -> {
-            showBottomDialog(holder, documentId, 0, model);
+            showBottomDialog(holder, documentId, model);
             return true;
         });
     }
@@ -160,28 +160,23 @@ public class chatAdapter extends FirestoreRecyclerAdapter<chatMesseageModel, cha
     }
 
 
-    private void showBottomDialog(ChatModelViewHolder holder, String documentId, int typeUser, chatMesseageModel model) {
+    private void showBottomDialog(ChatModelViewHolder holder, String documentId, chatMesseageModel model) {
         BottomOptionDialogBinding bottomOptionDialogBinding =
                 BottomOptionDialogBinding.inflate(LayoutInflater.from(context));
         Dialog dialog = new Dialog(context);
-        if (context == null) Log.e(TAG, "showBottomDialog: " + context );
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(bottomOptionDialogBinding.getRoot());
-
-        if (typeUser == 0) {
-            bottomOptionDialogBinding.deleteMessage.setVisibility(View.VISIBLE);
-            bottomOptionDialogBinding.deleteMessage.setOnClickListener(view ->
-                    firebaseUtil.getChatRoomReference(chatRoomID)
-                            .collection("chats")
-                            .document(documentId)
-                            .update("message", "Tin nhắn đã bị thu hồi!").addOnSuccessListener(aVoid -> {
-                                dialog.dismiss();
-                                Toasty.success(context, "Thu hồi tin nhắn thành công!", Toasty.LENGTH_LONG, true).show();
-                            }).addOnFailureListener(e -> {
-                                Log.e(TAG, "onLongClick: " + e.getMessage());
-                                Toasty.error(context, "Thu hồi tin nhắn thất bại!", Toasty.LENGTH_LONG, true).show();
-                            }));
-        } else bottomOptionDialogBinding.deleteMessage.setVisibility(View.GONE);
+        bottomOptionDialogBinding.deleteMessage.setOnClickListener(view ->
+                firebaseUtil.getChatRoomReference(chatRoomID)
+                        .collection("chats")
+                        .document(documentId)
+                        .update("message", "Tin nhắn đã bị thu hồi!").addOnSuccessListener(aVoid -> {
+                            dialog.dismiss();
+                            Toasty.success(context, "Thu hồi tin nhắn thành công!", Toasty.LENGTH_LONG, true).show();
+                        }).addOnFailureListener(e -> {
+                            Log.e(TAG, "onLongClick: " + e.getMessage());
+                            Toasty.error(context, "Thu hồi tin nhắn thất bại!", Toasty.LENGTH_LONG, true).show();
+                        }));
 
         bottomOptionDialogBinding.copyText.setOnClickListener(view -> {
             copyToClipboard(model);

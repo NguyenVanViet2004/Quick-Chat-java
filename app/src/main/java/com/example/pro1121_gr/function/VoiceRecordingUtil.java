@@ -3,7 +3,6 @@ package com.example.pro1121_gr.function;
 import android.app.Activity;
 import android.content.Intent;
 import android.speech.RecognizerIntent;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 

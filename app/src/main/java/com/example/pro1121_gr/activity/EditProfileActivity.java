@@ -4,7 +4,6 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.app.Activity;
 import android.app.DatePickerDialog;
@@ -14,16 +13,16 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.DatePicker;
 
+import com.example.pro1121_gr.Database.DBhelper;
 import com.example.pro1121_gr.R;
 import com.example.pro1121_gr.databinding.ActivityEditProfileBinding;
-import com.example.pro1121_gr.databinding.ActivityHomeBinding;
 import com.example.pro1121_gr.function.StaticFunction;
 import com.example.pro1121_gr.model.userModel;
+import com.example.pro1121_gr.util.NetworkChangeReceiver;
 import com.example.pro1121_gr.util.firebaseUtil;
 import com.github.dhaval2404.imagepicker.ImagePicker;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.DocumentSnapshot;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -38,6 +37,7 @@ public class EditProfileActivity extends AppCompatActivity {
     private ActivityResultLauncher<Intent> imagePickerLauncher;
     private Uri selectedImageUri;
     private userModel userModel;
+    private NetworkChangeReceiver networkChangeReceiver;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,28 +52,21 @@ public class EditProfileActivity extends AppCompatActivity {
 
 
     private void initView() {
+        networkChangeReceiver = StaticFunction.getNetworkChangeReceiver(this);
         editProfile();
-        binding.backEdit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(EditProfileActivity.this, SettingActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
-                finish();
-            }
+        binding.backEdit.setOnClickListener(view -> {
+            startActivity(new Intent(EditProfileActivity.this, SettingActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+            finish();
         });
 
-        binding.itemAvatar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                ImagePicker.with(EditProfileActivity.this).cropSquare().compress(512).maxResultSize(512,512)
-                        .createIntent(new Function1<Intent, Unit>() {
-                            @Override
-                            public Unit invoke(Intent intent) {
-                                imagePickerLauncher.launch(intent);
-                                return Unit.INSTANCE;
-                            }
-                        });
-            }
-        });
+        binding.itemAvatar.setOnClickListener(view -> ImagePicker.with(EditProfileActivity.this).cropSquare().compress(512).maxResultSize(512,512)
+                .createIntent(new Function1<Intent, Unit>() {
+                    @Override
+                    public Unit invoke(Intent intent) {
+                        imagePickerLauncher.launch(intent);
+                        return Unit.INSTANCE;
+                    }
+                }));
 
         binding.birthday.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -120,27 +113,22 @@ public class EditProfileActivity extends AppCompatActivity {
         StaticFunction.isEmpty(binding.birthday,1);
         StaticFunction.isEmpty(binding.phoneNumber,2);
 
-        if (!StaticFunction.isValidPhoneNumber(binding.phoneNumber.getText().toString())) return false;
-        else if(!StaticFunction.isValidDateFormat(binding.birthday.getText().toString())) return false;
-        else if (binding.fullName.length() < 5) return false;
-
-        return true;
+        if (StaticFunction.isValidPhoneNumber(binding.phoneNumber.getText().toString())) return false;
+        else if(StaticFunction.isValidDateFormat(binding.birthday.getText().toString())) return false;
+        else return binding.fullName.length() >= 5;
     }
 
     private void checkInformation(){
-        firebaseUtil.getCurrentProfileImageStorageReference().getDownloadUrl().addOnCompleteListener(this, new OnCompleteListener<Uri>() {
-            @Override
-            public void onComplete(@NonNull Task<Uri> task) {
-                if (task.isSuccessful()) firebaseUtil.setAvatar(EditProfileActivity.this,task.getResult(), binding.itemAvatar);
-                else Toasty.error(EditProfileActivity.this, "Đã xảy ra lỗi!", Toasty.LENGTH_LONG, true).show();
-            }
+        // get avt
+        firebaseUtil.getCurrentProfileImageStorageReference().getDownloadUrl().addOnCompleteListener(this, task -> {
+            if (task.isSuccessful()) firebaseUtil.setAvatar(EditProfileActivity.this,task.getResult(), binding.itemAvatar);
+            else Toasty.error(EditProfileActivity.this, "Đã xảy ra lỗi!", Toasty.LENGTH_LONG, true).show();
         });
 
-        firebaseUtil.currentUserDetails().get().addOnCompleteListener(EditProfileActivity.this, new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()){
-                    userModel = task.getResult().toObject(userModel.class);
+        firebaseUtil.currentUserDetails().get().addOnCompleteListener(EditProfileActivity.this, task -> {
+            if (task.isSuccessful()){
+                userModel = task.getResult().toObject(userModel.class);
+                if (userModel != null) {
                     binding.fullName.setText(userModel.getUsername());
                     binding.birthday.setText(userModel.getDate());
                     binding.phoneNumber.setText(userModel.getPhone());
@@ -184,5 +172,14 @@ public class EditProfileActivity extends AppCompatActivity {
                 year, month, day
         );
         datePickerDialog.show();
+    }
+
+    protected void onDestroy() {
+        // Hủy đăng ký BroadcastReceiver khi hoạt động bị hủy
+        super.onDestroy();
+        if (networkChangeReceiver != null) {
+            unregisterReceiver(networkChangeReceiver);
+        }
+        DBhelper.getInstance(this).endUsageTracking();
     }
 }
