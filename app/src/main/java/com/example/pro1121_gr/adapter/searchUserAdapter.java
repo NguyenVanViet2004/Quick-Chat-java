@@ -18,11 +18,10 @@ import com.example.pro1121_gr.model.userModel;
 import com.example.pro1121_gr.util.firebaseUtil;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
-import com.google.firebase.messaging.FirebaseMessaging;
 
 public class searchUserAdapter extends FirestoreRecyclerAdapter<userModel, searchUserAdapter.UserModelViewHolder> {
 
-    private Context context;
+    private final Context context;
     public searchUserAdapter(@NonNull FirestoreRecyclerOptions<userModel> options, Application context) {
         super(options);
         this.context = context;
@@ -69,7 +68,7 @@ public class searchUserAdapter extends FirestoreRecyclerAdapter<userModel, searc
         return new UserModelViewHolder(binding);
     }
 
-    class UserModelViewHolder extends RecyclerView.ViewHolder{
+    static class UserModelViewHolder extends RecyclerView.ViewHolder{
         SearchUserBinding binding;
         public UserModelViewHolder(@NonNull SearchUserBinding binding) {
             super(binding.getRoot());

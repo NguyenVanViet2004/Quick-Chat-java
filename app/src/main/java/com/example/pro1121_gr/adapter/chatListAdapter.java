@@ -22,11 +22,10 @@ import com.example.pro1121_gr.model.userModel;
 import com.example.pro1121_gr.util.firebaseUtil;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
-import com.google.firebase.messaging.FirebaseMessaging;
 
 public class chatListAdapter extends FirestoreRecyclerAdapter<chatRoomModel,chatListAdapter.chatListAdapterViewHolder> {
 
-    private Context context;
+    private final Context context;
 
     public chatListAdapter(@NonNull FirestoreRecyclerOptions<chatRoomModel> options, Context context) {
         super(options);
@@ -43,7 +42,7 @@ public class chatListAdapter extends FirestoreRecyclerAdapter<chatRoomModel,chat
                 userModel otherUserModel = task.getResult().toObject(userModel.class);
 
                 try {
-                    firebaseUtil.getCurrentOtherProfileImageStorageReference(otherUserModel.getUserId()).getDownloadUrl().addOnCompleteListener(task1 -> {
+                    firebaseUtil.getCurrentOtherProfileImageStorageReference(otherUserModel != null ? otherUserModel.getUserId() : null).getDownloadUrl().addOnCompleteListener(task1 -> {
                         if (task1.isSuccessful()){
                             Uri uri = task1.getResult();
                             firebaseUtil.setAvatar(context,uri,holder.avatar);
@@ -53,7 +52,7 @@ public class chatListAdapter extends FirestoreRecyclerAdapter<chatRoomModel,chat
 
                     if (lastMessageSendByMe) holder.lastMessageText.setText("Bạn : " + model.getLastMessage());
                     else holder.lastMessageText.setText(model.getLastMessage());
-                    if (StaticFunction.isURL(model.getLastMessage().trim().toString())) holder.lastMessageText.setText("[Image]");
+                    if (StaticFunction.isURL(model.getLastMessage().trim())) holder.lastMessageText.setText("[Image]");
 
                     holder.lastMessageTime.setText(firebaseUtil.timestampToString(model.getLastMessageTimestamp()));
 
@@ -78,7 +77,7 @@ public class chatListAdapter extends FirestoreRecyclerAdapter<chatRoomModel,chat
         return new chatListAdapterViewHolder(view);
     }
 
-    class chatListAdapterViewHolder extends RecyclerView.ViewHolder{
+    static class chatListAdapterViewHolder extends RecyclerView.ViewHolder{
 
         TextView usernameText;
         TextView lastMessageText;

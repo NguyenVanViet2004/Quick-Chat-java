@@ -25,8 +25,6 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 
-import es.dmoral.toasty.Toasty;
-
 public class CreateProfile extends AppCompatActivity {
 
     private ActivityCreateProfileBinding binding;
@@ -104,7 +102,7 @@ public class CreateProfile extends AppCompatActivity {
                     finish();
                 }else{
                     loadingDialog.isDismiss();
-                    StaticFunction.showError(CreateProfile.this);
+                    StaticFunction.showSnackBar(binding.getRoot(), "Error, please try again!");
                 }
             }
         });

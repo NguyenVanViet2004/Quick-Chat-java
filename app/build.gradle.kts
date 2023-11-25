@@ -87,6 +87,9 @@ dependencies {
 
     implementation ("com.google.android.gms:play-services-location:21.0.1")
     implementation ("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0")
+    // add library voice/video call
+    implementation ("com.github.ZEGOCLOUD:zego_uikit_prebuilt_call_android:+")
+    implementation ("com.github.ZEGOCLOUD:zego_uikit_signaling_plugin_android:+")
 
 
 }
