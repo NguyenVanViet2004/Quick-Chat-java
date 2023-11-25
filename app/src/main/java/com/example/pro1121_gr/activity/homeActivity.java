@@ -7,17 +7,20 @@ import android.os.Bundle;
 import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.example.pro1121_gr.Database.DBhelper;
 import com.example.pro1121_gr.R;
 import com.example.pro1121_gr.databinding.ActivityHomeBinding;
 import com.example.pro1121_gr.fragments.ChatFragment;
 import com.example.pro1121_gr.function.ReplaceFragment;
+import com.example.pro1121_gr.function.StaticFunction;
 import com.example.pro1121_gr.util.NetworkChangeReceiver;
 import com.example.pro1121_gr.util.firebaseUtil;
 import com.google.firebase.messaging.FirebaseMessaging;
 
 import es.dmoral.toasty.Toasty;
 
-public class home extends AppCompatActivity {
+public class homeActivity extends AppCompatActivity {
 
     private ActivityHomeBinding binding;
     private NetworkChangeReceiver networkChangeReceiver;
@@ -45,21 +48,18 @@ public class home extends AppCompatActivity {
                 false
         );
 
-        // Khởi tạo và đăng ký BroadcastReceiver
-        networkChangeReceiver = new NetworkChangeReceiver();
-        IntentFilter intentFilter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
-        registerReceiver(networkChangeReceiver, intentFilter);
+        networkChangeReceiver = StaticFunction.getNetworkChangeReceiver(this);
 
         binding.bottomNavigation.setOnItemSelectedListener(item -> {
             if (item.getItemId() == R.id.bottomNavMessage){
                 ReplaceFragment.replaceFragment(
-                        home.this.getSupportFragmentManager(),
+                        homeActivity.this.getSupportFragmentManager(),
                         R.id.frame_layout,
                         new ChatFragment(),
                         false
                 );
             } else {
-                startActivity(new Intent(home.this, SettingActivity.class));
+                startActivity(new Intent(homeActivity.this, SettingActivity.class));
             }
             return true;
         });
@@ -67,7 +67,7 @@ public class home extends AppCompatActivity {
 
     private void getFMCtoken() {
         FirebaseMessaging.getInstance().getToken().addOnCompleteListener(task -> {
-            if (task.isSuccessful()) Log.e(home.class.getSimpleName(), "getFMCtoken: " + task.getResult() );
+            if (task.isSuccessful()) Log.e(homeActivity.class.getSimpleName(), "getFMCtoken: " + task.getResult() );
             firebaseUtil.currentUserDetails().update("fmctoken",task.getResult());
         });
     }
@@ -79,6 +79,7 @@ public class home extends AppCompatActivity {
         if (networkChangeReceiver != null) {
             unregisterReceiver(networkChangeReceiver);
         }
+        DBhelper.getInstance(this).endUsageTracking();
     }
 
     @Override
