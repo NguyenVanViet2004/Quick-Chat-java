@@ -72,4 +72,18 @@
         app:layout_constraintTop_toBottomOf="@+id/line1"
         tools:ignore="HardcodedText,UseSwitchCompatOrMaterialXml" />
 
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/animationView"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_280sdp"
+        android:layout_marginTop="64dp"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/nightMode"
+        app:lottie_autoPlay="true"
+        app:lottie_loop="true"
+        android:layout_marginHorizontal="@dimen/_10sdp"
+        app:lottie_rawRes="@raw/night_mode_animation" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

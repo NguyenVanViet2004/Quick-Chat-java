@@ -18,9 +18,29 @@
 
     <!--Light mode-->
     <style name="SCREEN">
-        <item name="android:background">#FFF</item>
+        <item name="android:background">@color/white</item>
     </style>
-    
+
+    <style name="SCREEN_for_layout" parent="Base.Theme.PRO1121GR">
+        <item name="android:background">@drawable/buttom_shortcut_home</item>
+    </style>
+
+    <style name="SCREEN_for_item" parent="Base.Theme.PRO1121GR">
+        <item name="android:background">@drawable/item_layout_home</item>
+    </style>
+
+    <style name="item_search" parent="Base.Theme.PRO1121GR">
+        <item name="android:background">@drawable/radius_item</item>
+    </style>
+
+    <style name="botttom_dialog" parent="Base.Theme.PRO1121GR">
+        <item name="android:background">@drawable/dialogbg</item>
+    </style>
+
+    <style name="editText" parent="Base.Theme.PRO1121GR">
+        <item name="android:background">@drawable/edittext_bkg</item>
+    </style>
+
     <!-- màu chữ-->
     <style name="TEXT">
         <item name="android:textColor">#000</item>

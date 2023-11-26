@@ -2,13 +2,10 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginStart="@dimen/_10sdp"
+    style="@style/SCREEN_for_layout"
     android:layout_marginTop="@dimen/_10sdp"
-    android:layout_marginEnd="@dimen/_10sdp"
-    android:background="@drawable/item_layout_home"
     android:elevation="8dp"
-    android:orientation="vertical"
-    android:paddingBottom="@dimen/_20sdp">
+    android:orientation="vertical">
 
     <TextView
         android:id="@+id/tv"
@@ -17,7 +14,7 @@
         android:layout_marginTop="@dimen/_10sdp"
         android:gravity="center_horizontal"
         android:text="Lối tắt"
-        android:textColor="@color/black"
+        style="@style/TEXT"
         android:textSize="@dimen/_17ssp" />
 
     <LinearLayout
@@ -32,7 +29,7 @@
             android:layout_width="@dimen/_100sdp"
             android:layout_height="@dimen/_100sdp"
             android:layout_gravity="center"
-            android:background="@drawable/buttom_shortcut_home"
+            style="@style/SCREEN_for_layout"
             android:gravity="center_horizontal"
             android:orientation="vertical">
 
@@ -40,9 +37,10 @@
                 android:layout_width="@dimen/_35sdp"
                 android:layout_height="@dimen/_35sdp"
                 android:layout_marginTop="@dimen/_15sdp"
-                android:src="@drawable/icon_night_mode" />
+                android:src="@drawable/icon_moon" />
 
             <TextView
+                style="@style/TEXT"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/_5sdp"
@@ -56,7 +54,7 @@
             android:layout_height="@dimen/_100sdp"
             android:layout_marginStart="@dimen/_10sdp"
             android:layout_marginEnd="@dimen/_10sdp"
-            android:background="@drawable/buttom_shortcut_home"
+            style="@style/SCREEN_for_layout"
             android:gravity="center_horizontal"
             android:orientation="vertical">
 
@@ -64,9 +62,10 @@
                 android:layout_width="@dimen/_35sdp"
                 android:layout_height="@dimen/_35sdp"
                 android:layout_marginTop="@dimen/_15sdp"
-                android:src="@drawable/icon_chart" />
+                android:src="@drawable/icon_chart2" />
 
             <TextView
+                style="@style/TEXT"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/_5sdp"
@@ -89,7 +88,7 @@
             android:id="@+id/editProfile"
             android:layout_width="@dimen/_100sdp"
             android:layout_height="@dimen/_100sdp"
-            android:background="@drawable/buttom_shortcut_home"
+            style="@style/SCREEN_for_layout"
             android:gravity="center_horizontal"
             android:orientation="vertical">
 
@@ -100,6 +99,7 @@
                 android:src="@drawable/icon_profile" />
 
             <TextView
+                style="@style/TEXT"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/_5sdp"
@@ -113,7 +113,7 @@
             android:layout_height="@dimen/_100sdp"
             android:layout_marginStart="@dimen/_10sdp"
             android:layout_marginEnd="@dimen/_10sdp"
-            android:background="@drawable/buttom_shortcut_home"
+            style="@style/SCREEN_for_layout"
             android:gravity="center_horizontal"
             android:orientation="vertical">
 
@@ -124,6 +124,7 @@
                 android:src="@drawable/icon_change_language" />
 
             <TextView
+                style="@style/TEXT"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/_5sdp"

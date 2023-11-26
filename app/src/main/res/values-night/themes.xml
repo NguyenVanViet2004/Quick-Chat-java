@@ -11,6 +11,26 @@
         <item name="android:background">@color/colorPrimaryNight</item>
     </style>
 
+    <style name="SCREEN_for_layout" parent="Base.Theme.PRO1121GR">
+        <item name="android:background">@drawable/buttom_shortcut_home_night</item>
+    </style>
+
+    <style name="SCREEN_for_item" parent="Base.Theme.PRO1121GR">
+        <item name="android:background">@drawable/item_layout_home_night</item>
+    </style>
+
+    <style name="item_search" parent="Base.Theme.PRO1121GR">
+        <item name="android:background">@drawable/radius_item_night</item>
+    </style>
+
+    <style name="botttom_dialog" parent="Base.Theme.PRO1121GR">
+        <item name="android:background">@drawable/dialogbg_nightl</item>
+    </style>
+
+    <style name="editText" parent="Base.Theme.PRO1121GR">
+        <item name="android:background">@drawable/edittext_bkg_night</item>
+    </style>
+
     <!-- màu chữ-->
     <style name="TEXT">
         <item name="android:textColor">#FFFFFF</item>
