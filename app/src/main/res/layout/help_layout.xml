@@ -2,8 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/item_layout_home"
-    style="@style/SCREEN"
+    style="@style/SCREEN_for_item"
     android:elevation="8dp"
     android:layout_marginTop="@dimen/_10sdp"
     android:layout_marginStart="@dimen/_10sdp"
@@ -21,14 +20,14 @@
             android:layout_width="@dimen/_20sdp"
             android:layout_height="@dimen/_20sdp"
             android:layout_marginEnd="@dimen/_5sdp"
-            android:src="@drawable/icon_question_circle"/>
+            android:src="@drawable/icon_question"/>
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="@dimen/_10ssp"
             android:text="Bạn cần trợ giúp"
             android:gravity="center_vertical"
-            android:textColor="@color/black"
+            style="@style/TEXT"
             />
     </LinearLayout>
 
@@ -37,7 +36,7 @@
         android:layout_height="wrap_content"
         android:textSize="@dimen/_8ssp"
         android:layout_marginTop="@dimen/_3sdp"
-        android:textColor="#7D7878"
+        style="@style/TEXT"
         android:layout_marginStart="@dimen/_10sdp"
         android:text="Giải đáp mọi thắc mắc của bạn hoặc báo cáo sự cố cho chúng tôi"/>
     <RelativeLayout
