@@ -40,7 +40,9 @@ public class SplashScreen extends AppCompatActivity {
 
                         Intent intent = new Intent(this, ChatActivity.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        StaticFunction.passUserModelAsIntent(intent, model);
+                        if (model != null) {
+                            StaticFunction.passUserModelAsIntent(intent, model);
+                        }
                         startActivity(intent);
                         finish();
                     }

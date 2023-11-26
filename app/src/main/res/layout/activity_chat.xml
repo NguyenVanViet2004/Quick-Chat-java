@@ -125,7 +125,7 @@
             android:layout_height="@dimen/_35sdp"
             android:padding="@dimen/_10sdp"
             android:hint="Tin nhắn"
-            android:background="@drawable/edittext_bkg"/>
+            style="@style/editText"/>
 
         <ImageView
             android:id="@+id/sendMess"
