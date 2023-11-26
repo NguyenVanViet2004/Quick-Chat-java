@@ -56,7 +56,7 @@
                 android:layout_marginStart="@dimen/_10sdp"
                 android:layout_marginTop="@dimen/_10sdp"
                 android:layout_marginEnd="@dimen/_10sdp"
-                android:background="@drawable/item_layout_home"
+                style="@style/SCREEN_for_item"
                 android:elevation="8dp"
                 android:orientation="vertical"
                 android:padding="@dimen/_10sdp">
@@ -67,7 +67,7 @@
                     android:drawablePadding="@dimen/_8sdp"
                     android:gravity="center_vertical"
                     android:text="Thống kê thời gian sử dụng"
-                    android:textColor="@color/black"
+                    style="@style/TEXT"
                     android:textSize="@dimen/_10ssp"
                     app:drawableStartCompat="@drawable/icon_pie_chart" />
 
@@ -85,7 +85,7 @@
                 android:layout_marginTop="@dimen/_10sdp"
                 android:layout_marginEnd="@dimen/_10sdp"
                 android:layout_marginBottom="@dimen/_30sdp"
-                android:background="@drawable/item_layout_home"
+                style="@style/SCREEN_for_item"
                 android:elevation="8dp"
                 android:orientation="vertical"
                 android:padding="@dimen/_10sdp">
@@ -96,9 +96,9 @@
                     android:drawablePadding="@dimen/_8sdp"
                     android:gravity="center_vertical"
                     android:text="Thống kê thời gian sử dụng"
-                    android:textColor="@color/black"
+                    style="@style/TEXT"
                     android:textSize="@dimen/_10ssp"
-                    app:drawableStartCompat="@drawable/icon_chart" />
+                    app:drawableStartCompat="@drawable/icon_chart2" />
 
                 <com.github.mikephil.charting.charts.BarChart
                     android:id="@+id/barChart"
