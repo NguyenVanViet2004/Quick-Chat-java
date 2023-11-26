@@ -32,6 +32,7 @@
             android:orientation="vertical">
 
             <TextView
+                android:id="@+id/day1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/_5sdp"
@@ -43,6 +44,7 @@
                 app:drawableTint="@color/red" />
 
             <TextView
+                android:id="@+id/day2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/_5sdp"
@@ -54,6 +56,7 @@
                 app:drawableTint="@color/blue" />
 
             <TextView
+                android:id="@+id/day3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/_5sdp"
@@ -73,6 +76,7 @@
             android:orientation="vertical">
 
             <TextView
+                android:id="@+id/day4"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/_5sdp"
@@ -84,6 +88,7 @@
                 app:drawableTint="#FFFF00" />
 
             <TextView
+                android:id="@+id/day5"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/_5sdp"
@@ -95,6 +100,7 @@
                 app:drawableTint="#FF00FF" />
 
             <TextView
+                android:id="@+id/day6"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/_5sdp"
@@ -108,6 +114,7 @@
     </LinearLayout>
 
     <TextView
+        android:id="@+id/day7"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/_5sdp"
@@ -118,6 +125,15 @@
         android:textSize="@dimen/_13sdp"
         app:drawableLeftCompat="@drawable/icon_square"
         app:drawableTint="#808080" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="* Dữ liệu được thống kê trong 7 ngày gần nhất!"
+        android:textSize="@dimen/_10ssp"
+        android:textColor="@color/red"
+        android:layout_marginTop="@dimen/_5sdp"
+        />
 
 
 </LinearLayout>
