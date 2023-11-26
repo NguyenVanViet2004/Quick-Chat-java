@@ -14,7 +14,7 @@ import java.util.concurrent.TimeUnit;
 
 public class DBhelper extends SQLiteOpenHelper {
     private static final String DatabaseName = "QuickChat";
-    private static final int DatabaseVersion = 7;
+    private static final int DatabaseVersion = 11;
     private static final String TABLE_USAGE = "usage_table";
     private static final String COLUMN_ID = "id";
     private static final String COLUMN_DATE = "date";
@@ -59,11 +59,11 @@ public class DBhelper extends SQLiteOpenHelper {
 
     private void insertData(SQLiteDatabase sqLiteDatabase){
         sqLiteDatabase.execSQL("INSERT INTO " + TABLE_USAGE + " (" + COLUMN_DATE + ", " + COLUMN_USAGE_TIME + ") " +
-                "VALUES ('23/11/2023', " + TimeUnit.HOURS.toMillis(1) + ")");
+                "VALUES ('23/11/2023', " + TimeUnit.HOURS.toMinutes(1) + ")");
         sqLiteDatabase.execSQL("INSERT INTO " + TABLE_USAGE + " (" + COLUMN_DATE + ", " + COLUMN_USAGE_TIME + ") " +
-                "VALUES ('24/11/2023', " + TimeUnit.HOURS.toMillis(3) + ")");
+                "VALUES ('24/11/2023', " + TimeUnit.HOURS.toMinutes(3) + ")");
         sqLiteDatabase.execSQL("INSERT INTO " + TABLE_USAGE + " (" + COLUMN_DATE + ", " + COLUMN_USAGE_TIME + ") " +
-                "VALUES ('25/11/2023', " + TimeUnit.HOURS.toMillis(2) + ")");
+                "VALUES ('25/11/2023', " + TimeUnit.HOURS.toMinutes(2) + ")");
     }
 
     // Thêm dữ liệu thời gian sử dụng mới
@@ -72,7 +72,7 @@ public class DBhelper extends SQLiteOpenHelper {
 
         ContentValues values = new ContentValues();
         values.put(COLUMN_DATE, date);
-        values.put(COLUMN_USAGE_TIME, TimeUnit.MILLISECONDS.toSeconds(usageTime) + getUsageTimeToday());
+        values.put(COLUMN_USAGE_TIME, usageTime + getUsageTimeToday());
 
         // Kiểm tra xem có bản ghi nào với ngày tương tự chưa
         Cursor cursor = db.query(TABLE_USAGE, new String[]{COLUMN_ID}, COLUMN_DATE + "=?", new String[]{date}, null, null, null);
@@ -86,7 +86,6 @@ public class DBhelper extends SQLiteOpenHelper {
         }
 
         cursor.close();
-        //db.close();
     }
 
 
@@ -104,7 +103,6 @@ public class DBhelper extends SQLiteOpenHelper {
         }
 
         cursor.close();
-        //db.close();
         return usageTime;
     }
 
@@ -117,13 +115,15 @@ public class DBhelper extends SQLiteOpenHelper {
 
     // Bắt đầu sử dụng ứng dụng
     public void startUsageTracking() {
-        startTime = System.currentTimeMillis();
+        Calendar calendar = Calendar.getInstance();
+        startTime = calendar.get(Calendar.HOUR_OF_DAY) * 60 + calendar.get(Calendar.MINUTE);
     }
 
     // Kết thúc sử dụng ứng dụng và cập nhật thời gian vào cơ sở dữ liệu
     public void endUsageTracking() {
-        long endTime = System.currentTimeMillis();
-        long usageTime = endTime - startTime;
+        Calendar calendar = Calendar.getInstance();
+        long endTime = calendar.get(Calendar.HOUR_OF_DAY) * 60 + calendar.get(Calendar.MINUTE);
+        long usageTime = (endTime - startTime);
 
         // Lấy ngày hiện tại
         String currentDate = getCurrentDate();
@@ -151,12 +151,11 @@ public class DBhelper extends SQLiteOpenHelper {
         }
 
         cursor.close();
-        //db.close();
         return usageTime;
     }
 
     // Hàm lấy ngày cách đây một số ngày
-    private String getTargetDate(int daysAgo) {
+    public String getTargetDate(int daysAgo) {
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
 
         // Lấy ngày hiện tại

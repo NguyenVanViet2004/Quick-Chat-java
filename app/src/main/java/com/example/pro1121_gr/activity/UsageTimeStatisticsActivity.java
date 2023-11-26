@@ -2,6 +2,8 @@ package com.example.pro1121_gr.activity;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -26,6 +28,10 @@ import java.util.concurrent.TimeUnit;
 public class UsageTimeStatisticsActivity extends AppCompatActivity {
 
     private ActivityUsageTimeStatisticsBinding usageTimeStatisticsBinding;
+    private int[] colors = new int[]{Color.RED, Color.BLUE, Color.GREEN, Color.YELLOW, Color.MAGENTA, Color.CYAN, Color.GRAY};
+
+    private TextView[] dayTextViews;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,9 +39,24 @@ public class UsageTimeStatisticsActivity extends AppCompatActivity {
         usageTimeStatisticsBinding = ActivityUsageTimeStatisticsBinding.inflate(getLayoutInflater());
         setContentView(usageTimeStatisticsBinding.getRoot());
 
+        initView();
+        DBhelper.getInstance(this).endUsageTracking();
+        DBhelper.getInstance(this).startUsageTracking();
         setupClickEvents();
         displayUsageBarChart();
         displayUsagePieChart();
+    }
+
+    private void initView() {
+       dayTextViews = new TextView[]{
+                usageTimeStatisticsBinding.note.day1,
+                usageTimeStatisticsBinding.note.day2,
+                usageTimeStatisticsBinding.note.day3,
+                usageTimeStatisticsBinding.note.day4,
+                usageTimeStatisticsBinding.note.day5,
+                usageTimeStatisticsBinding.note.day6,
+                usageTimeStatisticsBinding.note.day7
+        };
     }
 
     private void setupClickEvents() {
@@ -46,8 +67,7 @@ public class UsageTimeStatisticsActivity extends AppCompatActivity {
         List<BarEntry> entries = getUsageEntries();
 
         BarDataSet dataSet = new BarDataSet(entries, "Thời gian sử dụng 7 ngày gần nhất");
-        // Tạo một danh sách màu sắc cho từng cột
-        int[] colors = new int[]{Color.RED, Color.BLUE, Color.GREEN, Color.YELLOW, Color.MAGENTA, Color.CYAN, Color.GRAY};
+        // Set color for each column
         dataSet.setColors(colors);
         BarData barData = new BarData(dataSet);
         usageTimeStatisticsBinding.barChart.setData(barData);
@@ -79,6 +99,7 @@ public class UsageTimeStatisticsActivity extends AppCompatActivity {
         // Lấy thời gian sử dụng trong 7 ngày gần đây
         for (int i = 0; i < 7; i++) {
             long usageTime = DBhelper.getInstance(this).getUsageTimeForDay(i);
+            dayTextViews[i].setText(DBhelper.getInstance(this).getTargetDate(i));
             entries.add(new BarEntry(i, usageTime));
         }
 
@@ -89,14 +110,11 @@ public class UsageTimeStatisticsActivity extends AppCompatActivity {
         List<PieEntry> entries = getUsageEntriesForPieChart();
 
         PieDataSet dataSet = new PieDataSet(entries, "Thời gian sử dụng");
-
-        // Tạo một danh sách màu sắc cho từng phần tử
-        int[] colors = new int[]{Color.RED, Color.BLUE, Color.GREEN, Color.YELLOW, Color.MAGENTA, Color.CYAN, Color.GRAY};
+        //Set color for each column
         dataSet.setColors(colors);
 
         PieData pieData = new PieData(dataSet);
         usageTimeStatisticsBinding.pieChart.setData(pieData);
-
 
         // Refresh biểu đồ
         usageTimeStatisticsBinding.pieChart.invalidate();
@@ -116,13 +134,14 @@ public class UsageTimeStatisticsActivity extends AppCompatActivity {
 
 
     private String formatTime(long totalTimeInMillis) {
-        long hours = TimeUnit.MILLISECONDS.toHours(totalTimeInMillis);
-        long minutes = TimeUnit.MILLISECONDS.toMinutes(totalTimeInMillis) % 60;
+        long hours = TimeUnit.MINUTES.toHours(totalTimeInMillis);
+        long minutes = totalTimeInMillis % 60;
+        Log.e("TAG", "formatTime: " + minutes );
 
         if (hours > 0) {
-            return String.format(Locale.getDefault(), hours + "h " + minutes + "s");
+            return String.format(Locale.getDefault(), hours + "h " + minutes + "m");
         } else {
-            return String.format(Locale.getDefault(), minutes + "s");
+            return String.format(Locale.getDefault(), minutes + "m");
         }
     }
 }
