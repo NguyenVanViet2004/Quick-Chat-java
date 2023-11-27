@@ -49,7 +49,6 @@ import com.example.pro1121_gr.model.chatRoomModel;
 import com.example.pro1121_gr.model.userModel;
 import com.example.pro1121_gr.util.NetworkChangeReceiver;
 import com.example.pro1121_gr.util.firebaseUtil;
-import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.common.api.ResolvableApiException;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -62,6 +61,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -74,6 +74,7 @@ import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -99,6 +100,8 @@ public class ChatActivity extends AppCompatActivity {
     private ActivityChatBinding binding;
     private FusedLocationProviderClient fusedLocationProviderClient;
     private NetworkChangeReceiver networkChangeReceiver;
+
+    private ArrayList<chatMesseageModel> messageList;
     private static final int REQUEST_IMAGE_PICK = 100, REQUEST_IMAGE_CAPTURE = 1000,
             LOCATION_PERMISSION_REQUEST_CODE = 200, REQUEST_CODE_SPEECH_INPUT = 1;
 
@@ -321,12 +324,15 @@ public class ChatActivity extends AppCompatActivity {
         firebaseUtil.getChatRoomReference(chatRoomID).set(chatRoomModel);
 
         chatMesseageModel chatMesseageModel =
-                new chatMesseageModel(message, firebaseUtil.currentUserId(), Timestamp.now(), new CustomTypefaceInfo(customTypeFace));
+                new chatMesseageModel(messageList.size() + "_mess",message, firebaseUtil.currentUserId(), Timestamp.now(), new CustomTypefaceInfo(customTypeFace));
 
-        firebaseUtil.getChatroomMessageReference(chatRoomID).add(chatMesseageModel);
+        firebaseUtil.getChatroomMessageReference(chatRoomID).document(messageList.size() + "_mess").set(chatMesseageModel);
+        messageList.add(0, chatMesseageModel); // Thêm tin nhắn vào đầu danh sách
         if (StaticFunction.isURL(message)) sendNotification("[Link]");
         else sendNotification(message);
         binding.TextMESS.setText("");
+
+        adapter.notifyDataSetChanged();
     }
 
     private void sendNotification(String message) {
@@ -414,45 +420,59 @@ public class ChatActivity extends AppCompatActivity {
                     chatRoomModel.setChatroomId(chatRoomID);
                     chatRoomModel.setUserIds(Arrays.asList(firebaseUtil.currentUserId(), userModel.getUserId()));
                     chatRoomModel.setLastMessageTimestamp(Timestamp.now());
-                    chatRoomModel.setLastMessageSenderId("");
+                    chatRoomModel.setLastMessageSenderId("system");
+                    chatRoomModel.setLastMessage("Các bạn đã được kết nối với nhau, hãy gửi lời chào đến " + userModel.getUsername());
                 }
                 firebaseUtil.getChatRoomReference(chatRoomID).set(chatRoomModel);
             });
 
         } catch (Exception e) {
-            Log.e("getDataChatRoom", e.toString());
+            StaticFunction.showSnackBar(binding.getRoot(),"Đã có lỗi xảy ra!");
         }
 
     }
 
     private void setChatLayout() {
-        try {
-            Query query = firebaseUtil.getChatroomMessageReference(chatRoomID)
-                    .orderBy("timestamp", Query.Direction.DESCENDING);
+        fetchChatMessages();
+    }
 
-            FirestoreRecyclerOptions<chatMesseageModel> options = new FirestoreRecyclerOptions.Builder<chatMesseageModel>()
-                    .setQuery(query, chatMesseageModel.class)
-                    .build();
+    private void fetchChatMessages() {
+        messageList = new ArrayList<>();
+        Query query = firebaseUtil.getChatroomMessageReference(chatRoomID)
+                .orderBy("timestamp", Query.Direction.DESCENDING);
 
-            adapter = new chatAdapter(options, ChatActivity.this, uriOther, chatRoomID);
-            LinearLayoutManager manager = new LinearLayoutManager(this);
-            manager.setReverseLayout(true);
-            binding.rcvMess.setLayoutManager(manager);
-            binding.rcvMess.setAdapter(adapter);
-            adapter.startListening();
-
-            // Cuộn màn hình xuống tin nhắn mới nhất khi gửi
-            adapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
-                @Override
-                public void onItemRangeInserted(int positionStart, int itemCount) {
-                    super.onItemRangeInserted(positionStart, itemCount);
-                    binding.rcvMess.smoothScrollToPosition(0);
+        query.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                for (QueryDocumentSnapshot document : task.getResult()) {
+                    chatMesseageModel message = document.toObject(chatMesseageModel.class);
+                    messageList.add(message);
                 }
-            });
+                setAdapter();
+                adapter.notifyDataSetChanged(); // Thông báo adapter về sự thay đổi
+            } else {
+                Log.e(TAG, "Lỗi khi lấy dữ liệu từ Firestore: " + task.getException());
+            }
+        });
+    }
 
-        } catch (Exception e) {
-            Log.e(TAG, "setChatLayout : " + e.getMessage());
-        }
+    private void setAdapter(){
+        //adapter = new chatAdapter(options, ChatActivity.this, uriOther, chatRoomID);
+        adapter = new chatAdapter(messageList, ChatActivity.this, uriOther, chatRoomID,
+                index -> messageList.get(index).setMessage("Tin nhắn đã bị thu hồi!"));
+        LinearLayoutManager manager = new LinearLayoutManager(this);
+        manager.setReverseLayout(true);
+        binding.rcvMess.setLayoutManager(manager);
+        binding.rcvMess.setAdapter(adapter);
+
+        // Cuộn màn hình xuống tin nhắn mới nhất khi gửi
+        adapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
+            @Override
+            public void onItemRangeInserted(int positionStart, int itemCount) {
+                super.onItemRangeInserted(positionStart, itemCount);
+                binding.rcvMess.smoothScrollToPosition(0);
+            }
+        });
+
     }
 
     private void showBottomDialog() {
@@ -636,27 +656,6 @@ public class ChatActivity extends AppCompatActivity {
         binding.call.setIsVideoCall(false);
         binding.call.setResourceID("zego_uikit_call");
         binding.call.setInvitees(Collections.singletonList(new ZegoUIKitUser(targetUserID,targetUserName)));
-    }
-
-
-
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        if (adapter != null) adapter.startListening();
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        if (adapter != null) adapter.stopListening();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        if (adapter != null) adapter.notifyDataSetChanged();
     }
 
     @Override

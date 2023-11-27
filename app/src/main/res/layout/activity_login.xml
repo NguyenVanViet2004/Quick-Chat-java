@@ -67,9 +67,9 @@
         android:padding="@dimen/_5sdp"
         android:text="vui lòng nhập số điện thoại của bạn"
         android:textAllCaps="true"
-        android:textColor="@color/lavender"
         android:textSize="@dimen/_19sdp"
         android:textStyle="bold"
+        style="@style/TEXT"
         app:layout_constraintBottom_toTopOf="@id/countryCodePicker"
         app:layout_constraintHorizontal_bias="0.64"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -97,7 +97,7 @@
         app:layout_constraintVertical_bias="0.499" />
 
     <EditText
-        style="@style/TEXT"
+        style="@style/editText"
         android:id="@+id/edt_login"
         android:layout_width="0dp"
         android:layout_height="@dimen/_40sdp"

@@ -80,7 +80,7 @@
         android:layout_height="wrap_content"
         android:text="vui lòng nhập mã OTP của bạn"
         android:textAllCaps="true"
-        android:textColor="@color/lavender"
+        style="@style/TEXT"
         android:textSize="@dimen/_18sdp"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@id/edt_loginOTP"
@@ -95,6 +95,7 @@
         android:layout_height="@dimen/_40sdp"
         android:background="@drawable/radius_item"
         android:hint="Mã OTP"
+        style="@style/editText"
         android:textColorHint="@color/black"
         app:layout_constraintHorizontal_weight="1"
         android:inputType="number"
@@ -124,6 +125,7 @@
 
 
     <TextView
+        style="@style/TEXT"
         android:id="@+id/resendOTP"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

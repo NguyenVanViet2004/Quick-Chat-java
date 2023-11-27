@@ -2,14 +2,12 @@ package com.example.pro1121_gr.activity;
 
 import android.graphics.Color;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.pro1121_gr.Database.DBhelper;
 import com.example.pro1121_gr.databinding.ActivityUsageTimeStatisticsBinding;
-import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.BarData;
@@ -136,7 +134,6 @@ public class UsageTimeStatisticsActivity extends AppCompatActivity {
     private String formatTime(long totalTimeInMillis) {
         long hours = TimeUnit.MINUTES.toHours(totalTimeInMillis);
         long minutes = totalTimeInMillis % 60;
-        Log.e("TAG", "formatTime: " + minutes );
 
         if (hours > 0) {
             return String.format(Locale.getDefault(), hours + "h " + minutes + "m");
