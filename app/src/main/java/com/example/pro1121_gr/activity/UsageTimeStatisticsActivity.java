@@ -136,7 +136,6 @@ public class UsageTimeStatisticsActivity extends AppCompatActivity {
     private String formatTime(long totalTimeInMillis) {
         long hours = TimeUnit.MINUTES.toHours(totalTimeInMillis);
         long minutes = totalTimeInMillis % 60;
-        Log.e("TAG", "formatTime: " + minutes );
 
         if (hours > 0) {
             return String.format(Locale.getDefault(), hours + "h " + minutes + "m");
