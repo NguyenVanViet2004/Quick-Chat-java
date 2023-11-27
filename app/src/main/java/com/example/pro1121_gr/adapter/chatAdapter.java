@@ -1,16 +1,13 @@
 package com.example.pro1121_gr.adapter;
 
 import android.app.Dialog;
-import android.app.DownloadManager;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
-import android.os.Environment;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -120,9 +117,7 @@ public class chatAdapter extends FirestoreRecyclerAdapter<chatMesseageModel, cha
 
     private void setChatLeftLayout(ChatModelViewHolder holder, chatMesseageModel model) {
         firebaseUtil.getCurrentProfileImageStorageReference().getDownloadUrl().addOnCompleteListener(task -> {
-            Uri uri = null;
             if (task.isSuccessful()) {
-                uri = task.getResult();
                 firebaseUtil.setAvatar(context, Uri.parse(uriOther), holder.otherAVT);
             } else {
                 Log.e(TAG, "Download URL not successful");
