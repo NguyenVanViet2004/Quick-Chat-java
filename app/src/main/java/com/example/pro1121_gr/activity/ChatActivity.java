@@ -6,6 +6,8 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Application;
 import android.app.Dialog;
+import android.app.DownloadManager;
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
@@ -16,6 +18,7 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -100,7 +103,7 @@ public class ChatActivity extends AppCompatActivity {
     private FusedLocationProviderClient fusedLocationProviderClient;
     private NetworkChangeReceiver networkChangeReceiver;
     private static final int REQUEST_IMAGE_PICK = 100, REQUEST_IMAGE_CAPTURE = 1000,
-            LOCATION_PERMISSION_REQUEST_CODE = 200, REQUEST_CODE_SPEECH_INPUT = 1;
+            LOCATION_PERMISSION_REQUEST_CODE = 200, REQUEST_CODE_SPEECH_INPUT = 1, REQUEST_WRITE_EXTERNAL_STORAGE = 2;
 
     private String customTypeFace = "RobotoLightTextView";
 
@@ -434,7 +437,20 @@ public class ChatActivity extends AppCompatActivity {
                     .setQuery(query, chatMesseageModel.class)
                     .build();
 
-            adapter = new chatAdapter(options, ChatActivity.this, uriOther, chatRoomID);
+            adapter = new chatAdapter(options, ChatActivity.this, uriOther, chatRoomID, uri -> {
+                if (RequestPermission.checkPermission(ChatActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                    Uri link = Uri.parse(uri);
+                    DownloadManager.Request request = new DownloadManager.Request(link);
+                    request.setTitle("Download");
+                    request.setDescription("Downloading");
+                    request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, "image.jpg");
+
+                    DownloadManager manager = (DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE);
+
+                    long downloadId = manager.enqueue(request);
+                } else
+                    RequestPermission.requestWriteExternalStoragePermission(ChatActivity.this, REQUEST_WRITE_EXTERNAL_STORAGE);
+            });
             LinearLayoutManager manager = new LinearLayoutManager(this);
             manager.setReverseLayout(true);
             binding.rcvMess.setLayoutManager(manager);

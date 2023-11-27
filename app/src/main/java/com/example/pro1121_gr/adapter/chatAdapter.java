@@ -1,13 +1,16 @@
 package com.example.pro1121_gr.adapter;
 
 import android.app.Dialog;
+import android.app.DownloadManager;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
+import android.os.Environment;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -40,12 +43,17 @@ public class chatAdapter extends FirestoreRecyclerAdapter<chatMesseageModel, cha
     private final String chatRoomID;
     private static final String TAG = chatAdapter.ChatModelViewHolder.class.toString();
 
+    private Download download;
 
-    public chatAdapter(@NonNull FirestoreRecyclerOptions<chatMesseageModel> options, Context context, String uriOther, String ChatRoomId) {
+
+
+
+    public chatAdapter(@NonNull FirestoreRecyclerOptions<chatMesseageModel> options, Context context, String uriOther, String ChatRoomId, Download download) {
         super(options);
         this.context = context;
         this.uriOther = uriOther;
         this.chatRoomID = ChatRoomId;
+        this.download = download;
     }
 
     @Override
@@ -103,9 +111,11 @@ public class chatAdapter extends FirestoreRecyclerAdapter<chatMesseageModel, cha
         holder.rightChatLayout.setVisibility(View.VISIBLE);
 
         holder.rightChatTextview.setOnLongClickListener(view -> {
-            showBottomDialog(holder, documentId, model);
+            showBottomDialog(holder, documentId, model, false);
             return true;
         });
+
+        holder.mySendImg.setOnLongClickListener(view -> {showBottomDialog(holder, documentId, model, false); return true;});
     }
 
     private void setChatLeftLayout(ChatModelViewHolder holder, chatMesseageModel model) {
@@ -122,7 +132,7 @@ public class chatAdapter extends FirestoreRecyclerAdapter<chatMesseageModel, cha
         if (StaticFunction.isURL(model.getMessage())){
             holder.otherSendImg.setVisibility(View.VISIBLE);
             holder.leftChatTextview.setVisibility(View.GONE);
-            holder.otherAVT.setVisibility(View.GONE);
+            holder.otherAVT.setVisibility(View.VISIBLE);
             // Sử dụng Glide để hiển thị ảnh từ URL vào ImageView
             firebaseUtil.loadImageInChat(context, model.getMessage(), holder.otherSendImg);
         }else {
@@ -142,15 +152,27 @@ public class chatAdapter extends FirestoreRecyclerAdapter<chatMesseageModel, cha
             return true;
         });
 
+        holder.otherSendImg.setOnLongClickListener(view -> {
+            showBottomDialog(holder, "", model, true);
+            return true;
+        });
+
     }
 
 
-    private void showBottomDialog(ChatModelViewHolder holder, String documentId, chatMesseageModel model) {
+    private void showBottomDialog(ChatModelViewHolder holder, String documentId, chatMesseageModel model, boolean recallMessage) {
         BottomOptionDialogBinding bottomOptionDialogBinding =
                 BottomOptionDialogBinding.inflate(LayoutInflater.from(context));
         Dialog dialog = new Dialog(context);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(bottomOptionDialogBinding.getRoot());
+        if (recallMessage) {
+            bottomOptionDialogBinding.copyText.setVisibility(View.GONE);
+            bottomOptionDialogBinding.deleteMessage.setVisibility(View.GONE);
+        } else {
+            bottomOptionDialogBinding.deleteMessage.setVisibility(View.VISIBLE);
+            bottomOptionDialogBinding.copyText.setVisibility(View.VISIBLE);
+        }
         bottomOptionDialogBinding.deleteMessage.setOnClickListener(view ->
                 firebaseUtil.getChatRoomReference(chatRoomID)
                         .collection("chats")
@@ -165,6 +187,11 @@ public class chatAdapter extends FirestoreRecyclerAdapter<chatMesseageModel, cha
 
         bottomOptionDialogBinding.copyText.setOnClickListener(view -> {
             copyToClipboard(model);
+            dialog.dismiss();
+        });
+
+        bottomOptionDialogBinding.downloadImg.setOnClickListener(view -> {
+            download.downloadImage(model.getMessage());
             dialog.dismiss();
         });
 
@@ -202,6 +229,10 @@ public class chatAdapter extends FirestoreRecyclerAdapter<chatMesseageModel, cha
         else if (type.equals("BlackjackTextview")) return utils.getBlackjackTypeFace(context);
         else if (type.equals("AlluraTextView")) return utils.getAlluraTypeFace(context);
         else return utils.getRobotoLightTypeFace(context);
+    }
+
+    public interface Download{
+        void downloadImage(String uri);
     }
 
 }
