@@ -83,6 +83,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 
+import es.dmoral.toasty.Toasty;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.MediaType;
@@ -614,12 +615,15 @@ public class ChatActivity extends AppCompatActivity {
                         String addressString = addresses.get(0).getAddressLine(0);
                         sendMessToOther(addressString);
                     } else {
+                        Toasty.warning(ChatActivity.this,"Không thể định vị!", Toasty.LENGTH_LONG, true).show();
                         Log.e(TAG, "getUserLocation: Addresses is null or empty");
                     }
                 } catch (IOException e) {
+                    Toasty.warning(ChatActivity.this,"Không thể định vị!", Toasty.LENGTH_LONG, true).show();
                     Log.e(TAG, "getUserLocation: IOException - " + e.getMessage());
                 }
             } else {
+                Toasty.warning(ChatActivity.this,"Không thể định vị!", Toasty.LENGTH_LONG, true).show();
                 Log.e(TAG, "getUserLocation: Unable to get location - " + task.getException());
             }
         });
