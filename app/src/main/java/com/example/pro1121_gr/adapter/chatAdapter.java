@@ -69,7 +69,7 @@ public class chatAdapter extends FirestoreRecyclerAdapter<chatMesseageModel, cha
         LinearLayout leftChatLayout,rightChatLayout;
         TextView leftChatTextview,rightChatTextview;
 
-        ImageView otherAVT, myAVT, mySendImg, otherSendImg;
+        ImageView otherAVT, mySendImg, otherSendImg;
 
         public ChatModelViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -79,7 +79,6 @@ public class chatAdapter extends FirestoreRecyclerAdapter<chatMesseageModel, cha
             leftChatTextview = itemView.findViewById(R.id.left_chat_textview);
             rightChatTextview = itemView.findViewById(R.id.right_chat_textview);
             otherAVT = itemView.findViewById(R.id.item_avatar);
-            myAVT = itemView.findViewById(R.id.item_avatar2);
             mySendImg = itemView.findViewById(R.id.mySendImg);
             otherSendImg = itemView.findViewById(R.id.otherSendImg);
 
@@ -87,27 +86,14 @@ public class chatAdapter extends FirestoreRecyclerAdapter<chatMesseageModel, cha
     }
 
     private void setChatRightLayout(ChatModelViewHolder holder, chatMesseageModel model, String documentId) {
-        firebaseUtil.getCurrentProfileImageStorageReference().getDownloadUrl().addOnCompleteListener(task -> {
-            Uri uri = null;
-            if (task.isSuccessful()) {
-                uri = task.getResult();
-                firebaseUtil.setAvatar(context, uri, holder.myAVT);
-            } else {
-                Log.e(TAG, "Download URL not successful");
-            }
-        });
-
-
         if (StaticFunction.isURL(model.getMessage())){
             holder.mySendImg.setVisibility(View.VISIBLE);
             holder.rightChatTextview.setVisibility(View.GONE);
-            holder.myAVT.setVisibility(View.GONE);
             // Sử dụng Glide để hiển thị ảnh từ URL vào ImageView
             firebaseUtil.loadImageInChat(context, model.getMessage(), holder.mySendImg);
         }else{
             holder.rightChatTextview.setText(model.getMessage());
             holder.mySendImg.setVisibility(View.GONE);
-            holder.myAVT.setVisibility(View.VISIBLE);
         }
         if (model.getTypeface() != null) {
             utils.setFontForTextView(holder.rightChatTextview, getTypeface(model.getTypeface().getTypefaceName()));
@@ -149,7 +135,6 @@ public class chatAdapter extends FirestoreRecyclerAdapter<chatMesseageModel, cha
         } else model.setTypeface(new CustomTypefaceInfo("RobotoLightTextView"));
         //utils.setFontForTextView(holder.leftChatTextview, getTypeface(model.getTypeface().getTypefaceName()));
         holder.rightChatLayout.setVisibility(View.GONE);
-        holder.myAVT.setVisibility(View.GONE);
         holder.leftChatLayout.setVisibility(View.VISIBLE);
 
         holder.leftChatTextview.setOnLongClickListener(view -> {
