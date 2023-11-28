@@ -16,6 +16,6 @@
     <color name="dark_blue">#0F71D3</color>
     <color name="red">#cc0000</color>
     <color name="green">#50c878</color>
-    <color name="background">#F7F7FA</color>
-    <color name="background_card">#FFFFFF</color>
+    <color name="background">#252c4b</color>
+    <color name="background_card">#27325F</color>
 </resources>
