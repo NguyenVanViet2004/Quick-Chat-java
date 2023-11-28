@@ -93,7 +93,6 @@
         android:id="@+id/edt_loginOTP"
         android:layout_width="0dp"
         android:layout_height="@dimen/_40sdp"
-        android:background="@drawable/radius_item"
         android:hint="Mã OTP"
         style="@style/editText"
         app:layout_constraintHorizontal_weight="1"

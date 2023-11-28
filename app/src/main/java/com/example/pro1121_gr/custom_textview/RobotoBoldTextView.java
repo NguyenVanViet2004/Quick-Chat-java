@@ -24,7 +24,7 @@ public class RobotoBoldTextView extends AppCompatTextView {
         setFontsTextView();
     }
     private void setFontsTextView(){
-        Typeface typeface = utils.getRobotoBoldTypeFace(getContext());
+        Typeface typeface = Utils.getRobotoBoldTypeFace(getContext());
         setTypeface(typeface);
     }
 }

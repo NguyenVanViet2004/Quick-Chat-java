@@ -9,7 +9,6 @@ public class MyApplication extends Application {
     private static MyApplication instance;
     private static final String PREFS_NAME = "MyPrefsFile";
     private static final String NIGHT_MODE = "NightMode";
-    private boolean isLoggedIn = false;
 
     @Override
     public void onCreate() {
@@ -54,12 +53,4 @@ public class MyApplication extends Application {
         editor.apply();
     }
 
-    //kiểm tra trạng thái đăng nhập
-    public boolean isLoggedIn() {
-        return isLoggedIn;
-    }
-
-    public void setLoggedIn(boolean loggedIn) {
-        isLoggedIn = loggedIn;
-    }
 }

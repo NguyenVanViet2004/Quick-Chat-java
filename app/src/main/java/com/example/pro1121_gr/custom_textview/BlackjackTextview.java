@@ -25,7 +25,7 @@ public class BlackjackTextview extends AppCompatTextView {
     }
 
     private void setFontsTextView(){
-        Typeface typeface = utils.getBlackjackTypeFace(getContext());
+        Typeface typeface = Utils.getBlackjackTypeFace(getContext());
         setTypeface(typeface);
     }
 }

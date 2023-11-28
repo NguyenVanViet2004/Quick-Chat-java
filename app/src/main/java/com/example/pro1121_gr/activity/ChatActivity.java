@@ -4,11 +4,12 @@ package com.example.pro1121_gr.activity;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.Application;
 import android.app.Dialog;
 import android.app.DownloadManager;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -18,7 +19,6 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -44,14 +44,15 @@ import com.example.pro1121_gr.databinding.ActivityChatBinding;
 import com.example.pro1121_gr.databinding.BottomNavigationInChatBinding;
 import com.example.pro1121_gr.databinding.SelectFontBinding;
 import com.example.pro1121_gr.function.RequestPermission;
-import com.example.pro1121_gr.function.StaticFunction;
+import com.example.pro1121_gr.function.Functions;
 import com.example.pro1121_gr.function.VoiceRecordingUtil;
 import com.example.pro1121_gr.model.CustomTypefaceInfo;
 import com.example.pro1121_gr.model.chatMesseageModel;
 import com.example.pro1121_gr.model.chatRoomModel;
 import com.example.pro1121_gr.model.userModel;
+import com.example.pro1121_gr.util.DownloadReceiver;
 import com.example.pro1121_gr.util.NetworkChangeReceiver;
-import com.example.pro1121_gr.util.firebaseUtil;
+import com.example.pro1121_gr.util.FirebaseUtil;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.common.api.ResolvableApiException;
@@ -68,17 +69,13 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-import com.zegocloud.uikit.prebuilt.call.config.ZegoNotificationConfig;
-import com.zegocloud.uikit.prebuilt.call.invite.ZegoUIKitPrebuiltCallInvitationConfig;
 import com.zegocloud.uikit.prebuilt.call.invite.ZegoUIKitPrebuiltCallInvitationService;
-import com.zegocloud.uikit.service.defines.ZegoUIKitUser;
 
 import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
@@ -103,6 +100,7 @@ public class ChatActivity extends AppCompatActivity {
     private ActivityChatBinding binding;
     private FusedLocationProviderClient fusedLocationProviderClient;
     private NetworkChangeReceiver networkChangeReceiver;
+    private DownloadReceiver downloadReceiver;
     private static final int REQUEST_IMAGE_PICK = 100, REQUEST_IMAGE_CAPTURE = 1000,
             LOCATION_PERMISSION_REQUEST_CODE = 200, REQUEST_CODE_SPEECH_INPUT = 1, REQUEST_WRITE_EXTERNAL_STORAGE = 2;
 
@@ -115,29 +113,33 @@ public class ChatActivity extends AppCompatActivity {
 
         binding = ActivityChatBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-
-        firebaseUtil.currentUserDetails().get().addOnCompleteListener(ChatActivity.this, task -> {
+        // đăng ký sự kiện cuộc gọi voice call và video call
+        FirebaseUtil.currentUserDetails().get().addOnCompleteListener(ChatActivity.this, task -> {
             if (task.isSuccessful()){
                 userModel MyUserModel = task.getResult().toObject(userModel.class);
                 if (MyUserModel != null) {
-                    startService(MyUserModel.getUserId(), MyUserModel.getUsername());
-                } else StaticFunction.showSnackBar(binding.getRoot(), "Error, please try again");
-            } else StaticFunction.showSnackBar(binding.getRoot(), "Error, please try again");
+                    Functions.startService(MyUserModel.getUserId(), MyUserModel.getUsername(), this);
+                } else Functions.showSnackBar(binding.getRoot(), "Error, please try again");
+            } else Functions.showSnackBar(binding.getRoot(), "Error, please try again");
         });
         initView();
     }
 
+    @SuppressLint("UnspecifiedRegisterReceiverFlag")
     private void initView(){
         // Bật chế độ tối nếu được kích hoạt
         MyApplication.applyNightMode();
         // Khởi tạo và đăng ký BroadcastReceiver
-        networkChangeReceiver = StaticFunction.getNetworkChangeReceiver(this);
+        networkChangeReceiver = Functions.getNetworkChangeReceiver(this);
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
+        // Đăng ký theo dõi kết quả download ảnh
+        downloadReceiver = new DownloadReceiver();
+        registerReceiver(downloadReceiver, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
         //get UserModel
-        userModel = StaticFunction.getUserModelFromIntent(getIntent());
-        chatRoomID = firebaseUtil.getChatroomId(firebaseUtil.currentUserId(), userModel.getUserId());
-        setVoiceCall(userModel.getUserId(), userModel.getUsername());
-        setVideoCall(userModel.getUserId(), userModel.getUsername());
+        userModel = Functions.getUserModelFromIntent(getIntent());
+        chatRoomID = FirebaseUtil.getChatroomId(FirebaseUtil.currentUserId(), userModel.getUserId());
+        Functions.setVoiceCall(userModel.getUserId(), userModel.getUsername(), binding.call);
+        Functions.setVideoCall(userModel.getUserId(), userModel.getUsername(), binding.videoCall);
         setUpCLickEvents();
         getDataChatRoom();
     }
@@ -305,7 +307,7 @@ public class ChatActivity extends AppCompatActivity {
                     sendMessToOther(imageUrl);
                     setChatLayout();
                 });
-            }).addOnFailureListener(exception -> StaticFunction.showSnackBar( binding.getRoot(), "Lỗi xử lý ảnh"));
+            }).addOnFailureListener(exception -> Functions.showSnackBar( binding.getRoot(), "Lỗi xử lý ảnh"));
         } else if (requestCode == REQUEST_CODE_SPEECH_INPUT) {
             VoiceRecordingUtil.processVoiceInput(requestCode, resultCode, data, text -> {
                 if (!text.isEmpty()) {
@@ -319,22 +321,22 @@ public class ChatActivity extends AppCompatActivity {
     @SuppressLint("NotifyDataSetChanged")
     private void sendMessToOther(String message) {
         chatRoomModel.setLastMessageTimestamp(Timestamp.now());
-        chatRoomModel.setLastMessageSenderId(firebaseUtil.currentUserId());
+        chatRoomModel.setLastMessageSenderId(FirebaseUtil.currentUserId());
         chatRoomModel.setLastMessage(message);
 
-        firebaseUtil.getChatRoomReference(chatRoomID).set(chatRoomModel);
+        FirebaseUtil.getChatRoomReference(chatRoomID).set(chatRoomModel);
 
         chatMesseageModel chatMesseageModel =
-                new chatMesseageModel(message, firebaseUtil.currentUserId(), Timestamp.now(), new CustomTypefaceInfo(customTypeFace));
+                new chatMesseageModel(message, FirebaseUtil.currentUserId(), Timestamp.now(), new CustomTypefaceInfo(customTypeFace));
 
-        firebaseUtil.getChatroomMessageReference(chatRoomID).add(chatMesseageModel);
-        if (StaticFunction.isURL(message)) sendNotification("[Link]");
+        FirebaseUtil.getChatroomMessageReference(chatRoomID).add(chatMesseageModel);
+        if (Functions.isURL(message)) sendNotification("[Link]");
         else sendNotification(message);
         binding.TextMESS.setText("");
     }
 
     private void sendNotification(String message) {
-        firebaseUtil.currentUserDetails().get().addOnCompleteListener(task -> {
+        FirebaseUtil.currentUserDetails().get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 userModel userModel1 = task.getResult().toObject(userModel.class);
                 try {
@@ -395,32 +397,32 @@ public class ChatActivity extends AppCompatActivity {
     private void getDataChatRoom() {
         try {
             // Lấy đối tượng userModel
-            userModel = StaticFunction.getUserModelFromIntent(getIntent());
+            userModel = Functions.getUserModelFromIntent(getIntent());
 
-            chatRoomID = firebaseUtil.getChatroomId(firebaseUtil.currentUserId(), userModel.getUserId());
+            chatRoomID = FirebaseUtil.getChatroomId(FirebaseUtil.currentUserId(), userModel.getUserId());
 
             // Lấy avatar
-            firebaseUtil.getCurrentOtherProfileImageStorageReference(userModel.getUserId()).getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
+            FirebaseUtil.getCurrentOtherProfileImageStorageReference(userModel.getUserId()).getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
                 @Override
                 public void onComplete(@NonNull Task<Uri> task) {
                     if (task.isSuccessful()) {
                         Uri uri = task.getResult();
                         uriOther = uri.toString();
-                        firebaseUtil.setAvatar(ChatActivity.this, uri, binding.avatarChat);
+                        FirebaseUtil.setAvatar(ChatActivity.this, uri, binding.avatarChat);
                         setChatLayout();
                     }
                 }
             });
-            firebaseUtil.getChatRoomReference(chatRoomID).get().addOnCompleteListener(task -> {
+            FirebaseUtil.getChatRoomReference(chatRoomID).get().addOnCompleteListener(task -> {
                 chatRoomModel = task.getResult().toObject(chatRoomModel.class);
                 if (chatRoomModel == null) {
                     chatRoomModel = new chatRoomModel();
                     chatRoomModel.setChatroomId(chatRoomID);
-                    chatRoomModel.setUserIds(Arrays.asList(firebaseUtil.currentUserId(), userModel.getUserId()));
+                    chatRoomModel.setUserIds(Arrays.asList(FirebaseUtil.currentUserId(), userModel.getUserId()));
                     chatRoomModel.setLastMessageTimestamp(Timestamp.now());
                     chatRoomModel.setLastMessageSenderId("");
                 }
-                firebaseUtil.getChatRoomReference(chatRoomID).set(chatRoomModel);
+                FirebaseUtil.getChatRoomReference(chatRoomID).set(chatRoomModel);
             });
 
         } catch (Exception e) {
@@ -429,9 +431,10 @@ public class ChatActivity extends AppCompatActivity {
 
     }
 
+    @SuppressLint("UnspecifiedRegisterReceiverFlag")
     private void setChatLayout() {
         try {
-            Query query = firebaseUtil.getChatroomMessageReference(chatRoomID)
+            Query query = FirebaseUtil.getChatroomMessageReference(chatRoomID)
                     .orderBy("timestamp", Query.Direction.DESCENDING);
 
             FirestoreRecyclerOptions<chatMesseageModel> options = new FirestoreRecyclerOptions.Builder<chatMesseageModel>()
@@ -439,18 +442,7 @@ public class ChatActivity extends AppCompatActivity {
                     .build();
 
             adapter = new chatAdapter(options, ChatActivity.this, uriOther, chatRoomID, uri -> {
-                if (RequestPermission.checkPermission(ChatActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-                    Uri link = Uri.parse(uri);
-                    DownloadManager.Request request = new DownloadManager.Request(link);
-                    request.setTitle("Download");
-                    request.setDescription("Downloading");
-                    request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, "image.jpg");
-
-                    DownloadManager manager = (DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE);
-
-                    long downloadId = manager.enqueue(request);
-                } else
-                    RequestPermission.requestWriteExternalStoragePermission(ChatActivity.this, REQUEST_WRITE_EXTERNAL_STORAGE);
+                DownloadReceiver.progressDownload(uri, ChatActivity.this, REQUEST_WRITE_EXTERNAL_STORAGE);
             });
             LinearLayoutManager manager = new LinearLayoutManager(this);
             manager.setReverseLayout(true);
@@ -592,7 +584,7 @@ public class ChatActivity extends AppCompatActivity {
                     }
                 } else {
                     // GPS đã bị tắt hoặc có lỗi khác
-                    StaticFunction.showSnackBar(binding.getRoot(), "Error, please try again");
+                    Functions.showSnackBar(binding.getRoot(), "Error, please try again");
                 }
             }
         });
@@ -615,11 +607,11 @@ public class ChatActivity extends AppCompatActivity {
                         String addressString = addresses.get(0).getAddressLine(0);
                         sendMessToOther(addressString);
                     } else {
-                        Toasty.warning(ChatActivity.this,"Không thể định vị!", Toasty.LENGTH_LONG, true).show();
+                        Functions.Toasty(ChatActivity.this,"Không thể định vị!", Functions.warning);
                         Log.e(TAG, "getUserLocation: Addresses is null or empty");
                     }
                 } catch (IOException e) {
-                    Toasty.warning(ChatActivity.this,"Không thể định vị!", Toasty.LENGTH_LONG, true).show();
+                    Functions.Toasty(ChatActivity.this,"Không thể định vị!", Functions.warning);
                     Log.e(TAG, "getUserLocation: IOException - " + e.getMessage());
                 }
             } else {
@@ -629,37 +621,16 @@ public class ChatActivity extends AppCompatActivity {
         });
     }
 
-    private void startService(String userIdCall, String userName2){
-        Application application = getApplication(); // Android's application context
-        long appID = 189168233;   // yourAppID
-        String appSign = "57b5cefe54ad7738673c16a35e9b3a758bf7e116a0d6f9ee1b7ea1b7d1a8056e";  // yourAppSign
-        String userID = userIdCall; // yourUserID, userID should only contain numbers, English characters, and '_'.
-        String userName = userName2;   // yourUserName
 
-
-        ZegoUIKitPrebuiltCallInvitationConfig callInvitationConfig = new ZegoUIKitPrebuiltCallInvitationConfig();
-        callInvitationConfig.notifyWhenAppRunningInBackgroundOrQuit = true;
-        ZegoNotificationConfig notificationConfig = new ZegoNotificationConfig();
-        notificationConfig.sound = "zego_uikit_sound_call";
-        notificationConfig.channelID = "CallInvitation";
-        notificationConfig.channelName = "CallInvitation";
-        ZegoUIKitPrebuiltCallInvitationService.init(getApplication(), appID, appSign, userID, userName,callInvitationConfig);
-    }
-
-    private void setVideoCall(String targetUserID, String targetUserName) {
-        binding.videoCall.setIsVideoCall(true);
-        binding.videoCall.setResourceID("zego_uikit_call");
-        binding.videoCall.setInvitees(Collections.singletonList(new ZegoUIKitUser(targetUserID,targetUserName)));
-    }
-
-    private void setVoiceCall(String targetUserID, String targetUserName) {
-        binding.call.setIsVideoCall(false);
-        binding.call.setResourceID("zego_uikit_call");
-        binding.call.setInvitees(Collections.singletonList(new ZegoUIKitUser(targetUserID,targetUserName)));
-    }
-
-
-
+    private BroadcastReceiver downloadCompleteReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            if ("DOWNLOAD_COMPLETE".equals(action)) {
+                Functions.showSnackBar(binding.getRoot(), "Downloaded successfully");
+            }else Functions.showSnackBar(binding.getRoot(), "Download failed");
+        }
+    };
 
     @Override
     protected void onStart() {
@@ -673,19 +644,26 @@ public class ChatActivity extends AppCompatActivity {
         if (adapter != null) adapter.stopListening();
     }
 
+    @SuppressLint("UnspecifiedRegisterReceiverFlag")
     @Override
     protected void onResume() {
         super.onResume();
         if (adapter != null) adapter.notifyDataSetChanged();
+        registerReceiver(downloadCompleteReceiver, new IntentFilter("DOWNLOAD_COMPLETE"));
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        unregisterReceiver(downloadCompleteReceiver);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
         // Hủy đăng ký BroadcastReceiver khi hoạt động bị hủy
-        if (networkChangeReceiver != null) {
-            unregisterReceiver(networkChangeReceiver);
-        }
+        if (networkChangeReceiver != null) unregisterReceiver(networkChangeReceiver);
+        if (downloadReceiver != null) unregisterReceiver(downloadReceiver);
         // stop service
         ZegoUIKitPrebuiltCallInvitationService.unInit();
         DBhelper.getInstance(this).endUsageTracking();

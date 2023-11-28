@@ -2,14 +2,13 @@ package com.example.pro1121_gr.activity;
 
 import android.graphics.Color;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.pro1121_gr.Database.DBhelper;
 import com.example.pro1121_gr.databinding.ActivityUsageTimeStatisticsBinding;
-import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.BarData;
@@ -40,11 +39,8 @@ public class UsageTimeStatisticsActivity extends AppCompatActivity {
         setContentView(usageTimeStatisticsBinding.getRoot());
 
         initView();
-        DBhelper.getInstance(this).endUsageTracking();
-        DBhelper.getInstance(this).startUsageTracking();
         setupClickEvents();
-        displayUsageBarChart();
-        displayUsagePieChart();
+        showChart();
     }
 
     private void initView() {
@@ -61,6 +57,20 @@ public class UsageTimeStatisticsActivity extends AppCompatActivity {
 
     private void setupClickEvents() {
         usageTimeStatisticsBinding.backFragmentMess.setOnClickListener(view -> onBackPressed());
+        usageTimeStatisticsBinding.swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                showChart();
+                usageTimeStatisticsBinding.swipeRefreshLayout.setRefreshing(false);
+            }
+        });
+    }
+
+    private void showChart(){
+        DBhelper.getInstance(this).endUsageTracking();
+        DBhelper.getInstance(this).startUsageTracking();
+        displayUsageBarChart();
+        displayUsagePieChart();
     }
 
     private void displayUsageBarChart() {

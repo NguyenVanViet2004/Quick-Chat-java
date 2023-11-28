@@ -25,7 +25,7 @@ public class RobotoItalicTextView extends AppCompatTextView {
     }
 
     private void setFontsTextView(){
-        Typeface typeface = utils.getRobotoItalicTypeFace(getContext());
+        Typeface typeface = Utils.getRobotoItalicTypeFace(getContext());
         setTypeface(typeface);
     }
 }
