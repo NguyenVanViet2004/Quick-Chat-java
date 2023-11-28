@@ -1,8 +1,6 @@
 package com.example.pro1121_gr.activity;
 
 import android.content.Intent;
-import android.content.IntentFilter;
-import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -13,9 +11,9 @@ import com.example.pro1121_gr.R;
 import com.example.pro1121_gr.databinding.ActivityHomeBinding;
 import com.example.pro1121_gr.fragments.ChatFragment;
 import com.example.pro1121_gr.function.ReplaceFragment;
-import com.example.pro1121_gr.function.StaticFunction;
+import com.example.pro1121_gr.function.Functions;
 import com.example.pro1121_gr.util.NetworkChangeReceiver;
-import com.example.pro1121_gr.util.firebaseUtil;
+import com.example.pro1121_gr.util.FirebaseUtil;
 import com.google.firebase.messaging.FirebaseMessaging;
 
 import es.dmoral.toasty.Toasty;
@@ -48,7 +46,7 @@ public class homeActivity extends AppCompatActivity {
                 false
         );
 
-        networkChangeReceiver = StaticFunction.getNetworkChangeReceiver(this);
+        networkChangeReceiver = Functions.getNetworkChangeReceiver(this);
 
         binding.bottomNavigation.setOnItemSelectedListener(item -> {
             if (item.getItemId() == R.id.bottomNavMessage){
@@ -68,7 +66,7 @@ public class homeActivity extends AppCompatActivity {
     private void getFMCtoken() {
         FirebaseMessaging.getInstance().getToken().addOnCompleteListener(task -> {
             if (task.isSuccessful()) Log.e(homeActivity.class.getSimpleName(), "getFMCtoken: " + task.getResult() );
-            firebaseUtil.currentUserDetails().update("fmctoken",task.getResult());
+            FirebaseUtil.currentUserDetails().update("fmctoken",task.getResult());
         });
     }
 

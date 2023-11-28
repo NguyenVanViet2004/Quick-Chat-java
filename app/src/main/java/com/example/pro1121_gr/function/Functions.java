@@ -2,6 +2,7 @@ package com.example.pro1121_gr.function;
 
 
 import android.app.Activity;
+import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -18,15 +19,28 @@ import com.bumptech.glide.request.RequestOptions;
 import com.example.pro1121_gr.model.userModel;
 import com.example.pro1121_gr.util.NetworkChangeReceiver;
 import com.google.android.material.snackbar.Snackbar;
+import com.zegocloud.uikit.prebuilt.call.config.ZegoNotificationConfig;
+import com.zegocloud.uikit.prebuilt.call.invite.ZegoUIKitPrebuiltCallInvitationConfig;
+import com.zegocloud.uikit.prebuilt.call.invite.ZegoUIKitPrebuiltCallInvitationService;
+import com.zegocloud.uikit.service.defines.ZegoUIKitUser;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Collections;
 import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import es.dmoral.toasty.Toasty;
 
-public class StaticFunction {
+
+public class Functions {
+
+
+    public static final int error = 0;
+    public static final int success = 1;
+    public static final int warning = 2;
+
 
     public static void passUserModelAsIntent(Intent intent, userModel model){
         intent.putExtra("username",model.getUsername());
@@ -138,4 +152,41 @@ public class StaticFunction {
 
 
 
+    public static void startService(String userIdCall, String userName2, Activity activity){
+        Application application = activity.getApplication(); // Android's application context
+        long appID = 189168233;   // yourAppID
+        String appSign = "57b5cefe54ad7738673c16a35e9b3a758bf7e116a0d6f9ee1b7ea1b7d1a8056e";  // yourAppSign
+        String userID = userIdCall; // yourUserID, userID should only contain numbers, English characters, and '_'.
+        String userName = userName2;   // yourUserName
+
+
+        ZegoUIKitPrebuiltCallInvitationConfig callInvitationConfig = new ZegoUIKitPrebuiltCallInvitationConfig();
+        callInvitationConfig.notifyWhenAppRunningInBackgroundOrQuit = true;
+        ZegoNotificationConfig notificationConfig = new ZegoNotificationConfig();
+        notificationConfig.sound = "zego_uikit_sound_call";
+        notificationConfig.channelID = "CallInvitation";
+        notificationConfig.channelName = "CallInvitation";
+        ZegoUIKitPrebuiltCallInvitationService.init(activity.getApplication(), appID, appSign, userID, userName,callInvitationConfig);
+    }
+
+    public static void setVideoCall(String targetUserID, String targetUserName, com.zegocloud.uikit.prebuilt.call.invite.widget.ZegoSendCallInvitationButton videoCall) {
+        videoCall.setIsVideoCall(true);
+        videoCall.setResourceID("zego_uikit_call");
+        videoCall.setInvitees(Collections.singletonList(new ZegoUIKitUser(targetUserID,targetUserName)));
+    }
+
+    public static void setVoiceCall(String targetUserID, String targetUserName, com.zegocloud.uikit.prebuilt.call.invite.widget.ZegoSendCallInvitationButton voiceCall) {
+        voiceCall.setIsVideoCall(false);
+        voiceCall.setResourceID("zego_uikit_call");
+        voiceCall.setInvitees(Collections.singletonList(new ZegoUIKitUser(targetUserID,targetUserName)));
+    }
+
+
+    public static void Toasty(Context context,String message, int type){
+        switch (type){
+            case 0: Toasty.error(context, message, Toasty.LENGTH_LONG, true); break;
+            case 1: Toasty.success(context, message, Toasty.LENGTH_LONG, true); break;
+            case 2: Toasty.warning(context, message, Toasty.LENGTH_LONG, true); break;
+        }
+    }
 }

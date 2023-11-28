@@ -25,7 +25,7 @@ public class AlluraTextView extends AppCompatTextView {
     }
 
     private void setFontsTextView(){
-        Typeface typeface = utils.getAlluraTypeFace(getContext());
+        Typeface typeface = Utils.getAlluraTypeFace(getContext());
         setTypeface(typeface);
     }
 }

@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
-import android.widget.Button;
 import android.widget.EditText;
 
 import android.widget.Toast;
@@ -18,7 +17,6 @@ public class LoginActivity extends AppCompatActivity {
     private ActivityLoginBinding binding;
     //    CountryCodePicker countryCodePicker;
     EditText edt_login;
-    Button btnLoginNext;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +34,7 @@ public class LoginActivity extends AppCompatActivity {
                 if (isValid()) {
                     Intent intent = new Intent(LoginActivity.this, LoginActivityWithOTP.class);
                     intent.putExtra("phone", binding.countryCodePicker.getFullNumberWithPlus());
+                    intent.putExtra("phoneAndNoCodeCountry", binding.edtLogin.getText().toString().trim());
                     startActivity(intent);
                 } else
                     Toast.makeText(LoginActivity.this, "Số điện thoại không hợp lệ!", Toast.LENGTH_SHORT).show();

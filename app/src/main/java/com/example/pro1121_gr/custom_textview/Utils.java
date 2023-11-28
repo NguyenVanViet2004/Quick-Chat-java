@@ -4,7 +4,7 @@ import android.content.Context;
 import android.graphics.Typeface;
 import android.widget.TextView;
 
-public class utils {
+public class Utils {
     private static Typeface alluraTypeFace;
     private static Typeface blackjackTypeFace;
     private static Typeface robotoBoldTypeFace;

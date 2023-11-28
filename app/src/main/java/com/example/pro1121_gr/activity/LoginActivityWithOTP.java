@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import com.example.pro1121_gr.R;
 import com.example.pro1121_gr.databinding.ActivityLoginWithOtpBinding;
+import com.example.pro1121_gr.function.Functions;
 import com.example.pro1121_gr.function.LoadingDialog;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -34,6 +35,7 @@ public class LoginActivityWithOTP extends AppCompatActivity {
     private ActivityLoginWithOtpBinding binding;
     private LoadingDialog loadingDialog;
     private String phoneNumber;
+    private String phoneNumberNoCode;
     Long timeoutSeconds = 60L;
     String verificationCode;
     PhoneAuthProvider.ForceResendingToken reResendingToken;
@@ -56,7 +58,8 @@ public class LoginActivityWithOTP extends AppCompatActivity {
         EditText otpInput = findViewById(R.id.edt_loginOTP);
 
         phoneNumber = getIntent().getStringExtra("phone");
-        binding.titleLoginOTP.setText("VUI LÒNG NHẬP MÃ OTP ĐÃ ĐƯỢC GỬI ĐẾN : " + phoneNumber);
+        phoneNumberNoCode = getIntent().getStringExtra("phoneAndNoCodeCountry");
+        binding.titleLoginOTP.setText("VUI LÒNG NHẬP MÃ OTP ĐÃ ĐƯỢC GỬI ĐẾN : " + phoneNumberNoCode);
 
         FirebaseFirestore.getInstance().collection("phoneNumber");
         binding.btnLoginNextOTP.setEnabled(false);
@@ -94,7 +97,7 @@ public class LoginActivityWithOTP extends AppCompatActivity {
                             @Override
                             public void onVerificationFailed(@NonNull FirebaseException e) {
                                 loadingDialog.isDismiss();
-                                Toasty.error(LoginActivityWithOTP.this, "OTP verification failed!", Toast.LENGTH_SHORT, true).show();
+                                Functions.Toasty(LoginActivityWithOTP.this,"OTP verification failed!", Functions.error);
                             }
 
 
@@ -105,8 +108,7 @@ public class LoginActivityWithOTP extends AppCompatActivity {
                                 binding.btnLoginNextOTP.setEnabled(true);
                                 verificationCode = s;
                                 reResendingToken = forceResendingToken;
-                                Toasty.success(LoginActivityWithOTP.this, "OTP verification successfully!", Toast.LENGTH_SHORT, true).show();
-
+                                Functions.Toasty(LoginActivityWithOTP.this,"OTP verification successfully!", Functions.success);
                             }
                         });
         if(isResend){
@@ -117,18 +119,16 @@ public class LoginActivityWithOTP extends AppCompatActivity {
         }
     }
     void signIn(PhoneAuthCredential phoneAuthCredential){
-        mAuth.signInWithCredential(phoneAuthCredential).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-            @Override
-            public void onComplete(@NonNull Task<AuthResult> task) {
-                loadingDialog.isDismiss();
-                if(task.isSuccessful()){
-                    Intent intent = new Intent(LoginActivityWithOTP.this,CreateProfile.class);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-                    intent.putExtra("phone",phoneNumber);
-                    startActivity(intent);
-                }else {
-                    Toasty.error(LoginActivityWithOTP.this, "OTP verification failed!", Toast.LENGTH_SHORT, true).show();
-                }
+        mAuth.signInWithCredential(phoneAuthCredential).addOnCompleteListener(task -> {
+            loadingDialog.isDismiss();
+            if(task.isSuccessful()){
+                Intent intent = new Intent(LoginActivityWithOTP.this,CreateProfile.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+                intent.putExtra("phone",phoneNumber);
+                intent.putExtra("phoneAndNoCodeCountry",phoneNumberNoCode);
+                startActivity(intent);
+            }else {
+                Functions.Toasty(LoginActivityWithOTP.this,"OTP verification failed!", Functions.error);
             }
         });
     }

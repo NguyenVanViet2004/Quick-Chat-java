@@ -14,9 +14,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.pro1121_gr.R;
 import com.example.pro1121_gr.databinding.ActivityCreateProfileBinding;
 import com.example.pro1121_gr.function.LoadingDialog;
-import com.example.pro1121_gr.function.StaticFunction;
+import com.example.pro1121_gr.function.Functions;
 import com.example.pro1121_gr.model.userModel;
-import com.example.pro1121_gr.util.firebaseUtil;
+import com.example.pro1121_gr.util.FirebaseUtil;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
@@ -31,6 +31,7 @@ public class CreateProfile extends AppCompatActivity {
     Button btnLoginNextEnter;
     EditText edtAge,fullname;
     String phoneNumber;
+    String phoneNumberNoCode;
 
     userModel model;
     private LoadingDialog loadingDialog;
@@ -44,19 +45,20 @@ public class CreateProfile extends AppCompatActivity {
         edtAge = findViewById(R.id.edt_age);
         loadingDialog = LoadingDialog.getInstance(this);
         phoneNumber = getIntent().getStringExtra("phone");
+        phoneNumberNoCode = getIntent().getStringExtra("phoneAndNoCodeCountry");
         getData();
 
         binding.fullName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                StaticFunction.isEmpty(binding.fullName,0);
+                Functions.isEmpty(binding.fullName,0);
             }
         });
 
         binding.edtAge.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                StaticFunction.isEmpty(binding.edtAge, 1);
+                Functions.isEmpty(binding.edtAge, 1);
                 showDatePickerDialog();
             }
         });
@@ -88,21 +90,21 @@ public class CreateProfile extends AppCompatActivity {
             model.setUsername(userName);
             model.setDate(date);
         }else{
-            model = new userModel(phoneNumber,userName, Timestamp.now(),date, firebaseUtil.currentUserId());
+            model = new userModel(phoneNumberNoCode,userName, Timestamp.now(),date, FirebaseUtil.currentUserId());
         }
         loadingDialog.startLoading();
-        firebaseUtil.currentUserDetails().set(model).addOnCompleteListener(new OnCompleteListener<Void>() {
+        FirebaseUtil.currentUserDetails().set(model).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if(task.isSuccessful()){
                     loadingDialog.isDismiss();
                     Intent intent = new Intent(CreateProfile.this, homeActivity.class);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK & Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(intent);
                     finish();
                 }else{
                     loadingDialog.isDismiss();
-                    StaticFunction.showSnackBar(binding.getRoot(), "Error, please try again!");
+                    Functions.showSnackBar(binding.getRoot(), "Error, please try again!");
                 }
             }
         });
@@ -110,7 +112,7 @@ public class CreateProfile extends AppCompatActivity {
 
     void getData() {
         loadingDialog.startLoading();
-        firebaseUtil.currentUserDetails().get().addOnCompleteListener(task -> {
+        FirebaseUtil.currentUserDetails().get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 model = task.getResult().toObject(userModel.class);
                 if (model != null && !model.getUsername().isEmpty()
