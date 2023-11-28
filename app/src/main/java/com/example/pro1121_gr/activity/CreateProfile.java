@@ -89,6 +89,7 @@ public class CreateProfile extends AppCompatActivity {
         if(model!=null){
             model.setUsername(userName);
             model.setDate(date);
+            model.setStatus(1);
         }else{
             model = new userModel(phoneNumberNoCode,userName, Timestamp.now(),date, FirebaseUtil.currentUserId());
         }
@@ -119,7 +120,7 @@ public class CreateProfile extends AppCompatActivity {
                         && !model.getDate().isEmpty()
                         && !model.getPhone().isEmpty()) {
                     loadingDialog.isDismiss();
-                    startActivity(new Intent(CreateProfile.this, homeActivity.class));
+                    startActivity(new Intent(CreateProfile.this, homeActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
                     finish();
                 } else loadingDialog.isDismiss();
             }

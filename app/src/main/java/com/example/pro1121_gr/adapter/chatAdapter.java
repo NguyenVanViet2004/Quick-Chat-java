@@ -219,11 +219,18 @@ public class chatAdapter extends FirestoreRecyclerAdapter<chatMesseageModel, cha
 
 
     private Typeface getTypeface(String type) {
-        if (type.equals("RobotoBoldTextView")) return Utils.getRobotoBoldTypeFace(context);
-        else if (type.equals("RobotoItalicTextView")) return Utils.getRobotoItalicTypeFace(context);
-        else if (type.equals("BlackjackTextview")) return Utils.getBlackjackTypeFace(context);
-        else if (type.equals("AlluraTextView")) return Utils.getAlluraTypeFace(context);
-        else return Utils.getRobotoLightTypeFace(context);
+        switch (type) {
+            case "RobotoBoldTextView":
+                return Utils.getRobotoBoldTypeFace(context);
+            case "RobotoItalicTextView":
+                return Utils.getRobotoItalicTypeFace(context);
+            case "BlackjackTextview":
+                return Utils.getBlackjackTypeFace(context);
+            case "AlluraTextView":
+                return Utils.getAlluraTypeFace(context);
+            default:
+                return Utils.getRobotoLightTypeFace(context);
+        }
     }
 
     public interface Download{

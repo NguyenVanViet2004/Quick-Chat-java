@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.pro1121_gr.Database.DBhelper;
@@ -12,8 +13,12 @@ import com.example.pro1121_gr.databinding.ActivityHomeBinding;
 import com.example.pro1121_gr.fragments.ChatFragment;
 import com.example.pro1121_gr.function.ReplaceFragment;
 import com.example.pro1121_gr.function.Functions;
+import com.example.pro1121_gr.model.userModel;
 import com.example.pro1121_gr.util.NetworkChangeReceiver;
 import com.example.pro1121_gr.util.FirebaseUtil;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.messaging.FirebaseMessaging;
 
 import es.dmoral.toasty.Toasty;
@@ -23,6 +28,7 @@ public class homeActivity extends AppCompatActivity {
     private ActivityHomeBinding binding;
     private NetworkChangeReceiver networkChangeReceiver;
     private boolean doubleBackToExitPressedOnce = false;
+    String idUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +38,7 @@ public class homeActivity extends AppCompatActivity {
 
         // Bật chế độ tối nếu được kích hoạt
         MyApplication.applyNightMode();
+        idUser = FirebaseUtil.currentUserId();
         getFMCtoken();
         initView();
 
@@ -39,6 +46,7 @@ public class homeActivity extends AppCompatActivity {
     }
 
     private void initView() {
+        setSatus();
         ReplaceFragment.replaceFragment(
                 this.getSupportFragmentManager(),
                 R.id.frame_layout,
@@ -63,6 +71,10 @@ public class homeActivity extends AppCompatActivity {
         });
     }
 
+    private void setSatus(){
+        FirebaseUtil.currentUserDetails().update("status",1);
+    }
+
     private void getFMCtoken() {
         FirebaseMessaging.getInstance().getToken().addOnCompleteListener(task -> {
             if (task.isSuccessful()) Log.e(homeActivity.class.getSimpleName(), "getFMCtoken: " + task.getResult() );
@@ -78,12 +90,14 @@ public class homeActivity extends AppCompatActivity {
             unregisterReceiver(networkChangeReceiver);
         }
         DBhelper.getInstance(this).endUsageTracking();
+        FirebaseFirestore.getInstance().collection("users").document(idUser).update("status",0);
     }
 
     @Override
     public void onBackPressed() {
         if (doubleBackToExitPressedOnce) {
             super.onBackPressed();
+            FirebaseFirestore.getInstance().collection("users").document(idUser).update("status",0);
             return;
         }
 

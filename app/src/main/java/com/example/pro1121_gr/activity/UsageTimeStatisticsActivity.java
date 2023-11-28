@@ -9,6 +9,9 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.pro1121_gr.Database.DBhelper;
 import com.example.pro1121_gr.databinding.ActivityUsageTimeStatisticsBinding;
+import com.example.pro1121_gr.function.Functions;
+import com.example.pro1121_gr.util.FirebaseUtil;
+import com.example.pro1121_gr.util.NetworkChangeReceiver;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.BarData;
@@ -30,6 +33,7 @@ public class UsageTimeStatisticsActivity extends AppCompatActivity {
     private int[] colors = new int[]{Color.RED, Color.BLUE, Color.GREEN, Color.YELLOW, Color.MAGENTA, Color.CYAN, Color.GRAY};
 
     private TextView[] dayTextViews;
+    private NetworkChangeReceiver networkChangeReceiver;
 
 
     @Override
@@ -37,7 +41,7 @@ public class UsageTimeStatisticsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         usageTimeStatisticsBinding = ActivityUsageTimeStatisticsBinding.inflate(getLayoutInflater());
         setContentView(usageTimeStatisticsBinding.getRoot());
-
+        networkChangeReceiver = Functions.getNetworkChangeReceiver(this);
         initView();
         setupClickEvents();
         showChart();
@@ -152,5 +156,15 @@ public class UsageTimeStatisticsActivity extends AppCompatActivity {
         } else {
             return String.format(Locale.getDefault(), minutes + "m");
         }
+    }
+
+    protected void onDestroy() {
+        // Hủy đăng ký BroadcastReceiver khi hoạt động bị hủy
+        super.onDestroy();
+        if (networkChangeReceiver != null) {
+            unregisterReceiver(networkChangeReceiver);
+        }
+        DBhelper.getInstance(this).endUsageTracking();
+        FirebaseUtil.currentUserDetails().update("status",0);
     }
 }

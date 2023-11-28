@@ -667,6 +667,7 @@ public class ChatActivity extends AppCompatActivity {
         // stop service
         ZegoUIKitPrebuiltCallInvitationService.unInit();
         DBhelper.getInstance(this).endUsageTracking();
+        FirebaseUtil.currentUserDetails().update("status",0);
     }
 
 }
