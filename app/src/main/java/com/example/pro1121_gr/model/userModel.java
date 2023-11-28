@@ -12,6 +12,8 @@ public class userModel {
 
     private String FCMtoken;
 
+    private int status; // 0 is offline, 1 is online
+
     public userModel() {
     }
 
@@ -26,13 +28,22 @@ public class userModel {
         this.userId = userId;
     }
 
-    public userModel(String phone, String username, Timestamp createdTimestamp, String date, String userId, String FCMtoken) {
+    public userModel(String phone, String username, Timestamp createdTimestamp, String date, String userId, String FCMtoken, int status) {
         this.phone = phone;
         this.username = username;
         this.createdTimestamp = createdTimestamp;
         this.date = date;
         this.userId = userId;
         this.FCMtoken = FCMtoken;
+        this.status = status;
+    }
+
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
     }
 
     public String getPhone() {

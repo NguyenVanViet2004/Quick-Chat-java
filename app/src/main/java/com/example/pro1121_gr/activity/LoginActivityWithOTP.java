@@ -4,7 +4,11 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.app.Dialog;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
@@ -33,13 +37,14 @@ import es.dmoral.toasty.Toasty;
 public class LoginActivityWithOTP extends AppCompatActivity {
 
     private ActivityLoginWithOtpBinding binding;
-    private LoadingDialog loadingDialog;
     private String phoneNumber;
     private String phoneNumberNoCode;
     Long timeoutSeconds = 60L;
     String verificationCode;
     PhoneAuthProvider.ForceResendingToken reResendingToken;
     FirebaseAuth mAuth = FirebaseAuth.getInstance();
+    private Dialog isDialog;
+
 
     @SuppressLint({"SetTextI18n", "WrongViewCast"})
     @Override
@@ -52,7 +57,7 @@ public class LoginActivityWithOTP extends AppCompatActivity {
         MyApplication.applyNightMode();
 
         // Khởi tạo LoadingDialog
-        loadingDialog = LoadingDialog.getInstance(LoginActivityWithOTP.this);
+
 
 
         EditText otpInput = findViewById(R.id.edt_loginOTP);
@@ -64,7 +69,7 @@ public class LoginActivityWithOTP extends AppCompatActivity {
         FirebaseFirestore.getInstance().collection("phoneNumber");
         binding.btnLoginNextOTP.setEnabled(false);
 
-        loadingDialog.startLoading();
+        startLoading();
         sendOTP(phoneNumber,false);
         binding.btnLoginNextOTP.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -72,7 +77,7 @@ public class LoginActivityWithOTP extends AppCompatActivity {
                  String enteredOTP = otpInput.getText().toString();
                  PhoneAuthCredential credential= PhoneAuthProvider.getCredential(verificationCode,enteredOTP);
                  signIn(credential);
-                 loadingDialog.startLoading();
+                 startLoading();
             }
         });
 
@@ -96,7 +101,7 @@ public class LoginActivityWithOTP extends AppCompatActivity {
 
                             @Override
                             public void onVerificationFailed(@NonNull FirebaseException e) {
-                                loadingDialog.isDismiss();
+                               isDismiss();
                                 Functions.Toasty(LoginActivityWithOTP.this,"OTP verification failed!", Functions.error);
                             }
 
@@ -104,7 +109,7 @@ public class LoginActivityWithOTP extends AppCompatActivity {
                             @Override
                             public void onCodeSent(@NonNull String s, @NonNull PhoneAuthProvider.ForceResendingToken forceResendingToken) {
                                 super.onCodeSent(s, forceResendingToken);
-                                loadingDialog.isDismiss();
+                                isDismiss();
                                 binding.btnLoginNextOTP.setEnabled(true);
                                 verificationCode = s;
                                 reResendingToken = forceResendingToken;
@@ -120,7 +125,7 @@ public class LoginActivityWithOTP extends AppCompatActivity {
     }
     void signIn(PhoneAuthCredential phoneAuthCredential){
         mAuth.signInWithCredential(phoneAuthCredential).addOnCompleteListener(task -> {
-            loadingDialog.isDismiss();
+            isDismiss();
             if(task.isSuccessful()){
                 Intent intent = new Intent(LoginActivityWithOTP.this,CreateProfile.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
@@ -156,6 +161,27 @@ public class LoginActivityWithOTP extends AppCompatActivity {
             }
         }, 0, 1000);
     }
+
+    public void startLoading() {
+        // set view
+        android.view.LayoutInflater inflater = getLayoutInflater();
+        android.view.View dialogView = inflater.inflate(R.layout.loading_item, null);
+
+        // set dialog
+        Dialog builder = new Dialog(LoginActivityWithOTP.this);
+        builder.setContentView(dialogView);
+        builder.setCancelable(false);
+        builder.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        builder.show();
+        isDialog = builder;
+    }
+
+    public void isDismiss() {
+        if (isDialog != null && isDialog.isShowing()) {
+            isDialog.dismiss();
+        }
+    }
+
 
 
 }

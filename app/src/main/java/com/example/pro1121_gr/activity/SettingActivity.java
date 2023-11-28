@@ -8,21 +8,28 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 
+import com.example.pro1121_gr.Database.DBhelper;
 import com.example.pro1121_gr.R;
 import com.example.pro1121_gr.databinding.ActivitySettingBinding;
 import com.example.pro1121_gr.function.Functions;
 import com.example.pro1121_gr.model.userModel;
 import com.example.pro1121_gr.util.FirebaseUtil;
+import com.example.pro1121_gr.util.NetworkChangeReceiver;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.messaging.FirebaseMessaging;
 
 public class SettingActivity extends AppCompatActivity {
 
     private ActivitySettingBinding binding;
     private userModel userModel;
+    private NetworkChangeReceiver networkChangeReceiver;
+
+    String idUser;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,6 +41,8 @@ public class SettingActivity extends AppCompatActivity {
     }
 
     private void initView(){
+        idUser = FirebaseUtil.currentUserId();
+        networkChangeReceiver = Functions.getNetworkChangeReceiver(this);
         MyApplication.applyNightMode();
         binding.backFragmentMess.setOnClickListener(view -> onBackPressed());
 
@@ -99,6 +108,7 @@ public class SettingActivity extends AppCompatActivity {
         builder.setPositiveButton("Có", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+                FirebaseUtil.currentUserDetails().update("status",0);
                 // delete fcm token
                 FirebaseMessaging.getInstance().deleteToken().addOnCompleteListener(task -> {
                     if (task.isSuccessful()){
@@ -126,6 +136,17 @@ public class SettingActivity extends AppCompatActivity {
 
         AlertDialog dialog = builder.create();
         dialog.show();
+    }
+
+    protected void onDestroy() {
+        // Hủy đăng ký BroadcastReceiver khi hoạt động bị hủy
+        super.onDestroy();
+        if (networkChangeReceiver != null) {
+            unregisterReceiver(networkChangeReceiver);
+        }
+        DBhelper.getInstance(this).endUsageTracking();
+        Log.e(CreateProfile.class.getSimpleName(), "onDestroy: " + idUser );
+        FirebaseFirestore.getInstance().collection("users").document(idUser).update("status",0);
     }
 
 
