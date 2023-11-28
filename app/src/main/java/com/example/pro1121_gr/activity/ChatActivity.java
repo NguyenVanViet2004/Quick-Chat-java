@@ -43,16 +43,16 @@ import com.example.pro1121_gr.adapter.chatAdapter;
 import com.example.pro1121_gr.databinding.ActivityChatBinding;
 import com.example.pro1121_gr.databinding.BottomNavigationInChatBinding;
 import com.example.pro1121_gr.databinding.SelectFontBinding;
-import com.example.pro1121_gr.function.RequestPermission;
 import com.example.pro1121_gr.function.Functions;
+import com.example.pro1121_gr.function.RequestPermission;
 import com.example.pro1121_gr.function.VoiceRecordingUtil;
 import com.example.pro1121_gr.model.CustomTypefaceInfo;
 import com.example.pro1121_gr.model.chatMesseageModel;
 import com.example.pro1121_gr.model.chatRoomModel;
 import com.example.pro1121_gr.model.userModel;
 import com.example.pro1121_gr.util.DownloadReceiver;
-import com.example.pro1121_gr.util.NetworkChangeReceiver;
 import com.example.pro1121_gr.util.FirebaseUtil;
+import com.example.pro1121_gr.util.NetworkChangeReceiver;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.common.api.ResolvableApiException;
@@ -441,8 +441,18 @@ public class ChatActivity extends AppCompatActivity {
                     .setQuery(query, chatMesseageModel.class)
                     .build();
 
-            adapter = new chatAdapter(options, ChatActivity.this, uriOther, chatRoomID, uri -> {
-                DownloadReceiver.progressDownload(uri, ChatActivity.this, REQUEST_WRITE_EXTERNAL_STORAGE);
+            adapter = new chatAdapter(options, ChatActivity.this, uriOther, chatRoomID, new chatAdapter.Download() {
+                @Override
+                public void downloadImage(String uri) {
+                    DownloadReceiver.progressDownload(uri, ChatActivity.this, REQUEST_WRITE_EXTERNAL_STORAGE);
+                }
+
+                @Override
+                public void clickImage(String model) {
+                    Intent intent = new Intent(ChatActivity.this, DetailImageActivity.class);
+                    intent.putExtra("message", model);
+                    startActivity(intent);
+                }
             });
             LinearLayoutManager manager = new LinearLayoutManager(this);
             manager.setReverseLayout(true);
@@ -667,7 +677,6 @@ public class ChatActivity extends AppCompatActivity {
         // stop service
         ZegoUIKitPrebuiltCallInvitationService.unInit();
         DBhelper.getInstance(this).endUsageTracking();
-        FirebaseUtil.currentUserDetails().update("status",0);
     }
 
 }

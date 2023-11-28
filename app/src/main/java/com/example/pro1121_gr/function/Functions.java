@@ -41,6 +41,8 @@ public class Functions {
     public static final int success = 1;
     public static final int warning = 2;
 
+    public static boolean checkOnBackpress = false;
+
 
     public static void passUserModelAsIntent(Intent intent, userModel model){
         intent.putExtra("username",model.getUsername());

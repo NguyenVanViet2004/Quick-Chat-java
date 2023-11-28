@@ -92,6 +92,8 @@ dependencies {
     implementation ("com.github.ZEGOCLOUD:zego_uikit_signaling_plugin_android:+")
     // chart
     implementation("com.github.PhilJay:MPAndroidChart:v3.1.0")
+    // pinch-to-zoom
+    implementation("com.github.chrisbanes:PhotoView:2.3.0")
 
 
 }

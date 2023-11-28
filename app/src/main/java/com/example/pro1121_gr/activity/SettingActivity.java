@@ -146,7 +146,6 @@ public class SettingActivity extends AppCompatActivity {
         }
         DBhelper.getInstance(this).endUsageTracking();
         Log.e(CreateProfile.class.getSimpleName(), "onDestroy: " + idUser );
-        FirebaseFirestore.getInstance().collection("users").document(idUser).update("status",0);
     }
 
 
