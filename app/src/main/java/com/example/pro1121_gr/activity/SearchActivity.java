@@ -35,7 +35,6 @@ public class SearchActivity extends AppCompatActivity {
 
         setupClickEvents();
         setupSearchRecyclerView("");
-
         MyApplication.applyNightMode();
     }
 
@@ -93,6 +92,5 @@ public class SearchActivity extends AppCompatActivity {
             unregisterReceiver(networkChangeReceiver);
         }
         DBhelper.getInstance(this).endUsageTracking();
-        FirebaseUtil.currentUserDetails().update("status",0);
     }
 }

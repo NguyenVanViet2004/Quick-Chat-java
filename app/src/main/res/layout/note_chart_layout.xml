@@ -138,7 +138,7 @@
         android:layout_height="wrap_content"
         android:text="* Dữ liệu được thống kê trong 7 ngày gần nhất!"
         android:textSize="@dimen/_10ssp"
-        android:textColor="@color/red"
+        android:textColor="@color/redText"
         android:layout_marginTop="@dimen/_5sdp"
         />
 

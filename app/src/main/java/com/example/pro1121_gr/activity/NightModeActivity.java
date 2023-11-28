@@ -39,7 +39,6 @@ public class NightModeActivity extends AppCompatActivity {
                 unregisterReceiver(networkChangeReceiver);
             }
             DBhelper.getInstance(this).endUsageTracking();
-            FirebaseUtil.currentUserDetails().update("status", 0);
         }
     }
 

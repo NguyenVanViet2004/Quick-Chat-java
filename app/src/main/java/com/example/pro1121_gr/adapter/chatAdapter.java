@@ -60,6 +60,9 @@ public class chatAdapter extends FirestoreRecyclerAdapter<chatMesseageModel, cha
             setChatRightLayout(holder, model, documentId);
             // xử lý giao diện chat của đối phương
         else setChatLeftLayout(holder, model);
+
+        holder.otherSendImg.setOnClickListener(view -> download.clickImage(model.getMessage()));
+        holder.mySendImg.setOnClickListener(view -> download.clickImage(model.getMessage()));
     }
 
     @NonNull
@@ -90,7 +93,7 @@ public class chatAdapter extends FirestoreRecyclerAdapter<chatMesseageModel, cha
         }
     }
 
-    private void setChatRightLayout(ChatModelViewHolder holder, chatMesseageModel model, String documentId) {
+    /*private void setChatRightLayout(ChatModelViewHolder holder, chatMesseageModel model, String documentId) {
         if (Functions.isURL(model.getMessage())){
             holder.mySendImg.setVisibility(View.VISIBLE);
             holder.rightChatTextview.setVisibility(View.GONE);
@@ -152,7 +155,73 @@ public class chatAdapter extends FirestoreRecyclerAdapter<chatMesseageModel, cha
             return true;
         });
 
+    }*/
+
+    private void setChatRightLayout(ChatModelViewHolder holder, chatMesseageModel model, String documentId) {
+        boolean isUrl = Functions.isURL(model.getMessage());
+        holder.mySendImg.setVisibility(isUrl ? View.VISIBLE : View.GONE);
+        holder.rightChatTextview.setVisibility(isUrl ? View.GONE : View.VISIBLE);
+        if (isUrl) {
+            FirebaseUtil.loadImageInChat(context, model.getMessage(), holder.mySendImg);
+        } else {
+            holder.rightChatTextview.setText(model.getMessage());
+        }
+
+        model.setTypeface(model.getTypeface() != null ? model.getTypeface() : new CustomTypefaceInfo("RobotoLightTextView"));
+        Utils.setFontForTextView(holder.rightChatTextview, getTypeface(model.getTypeface().getTypefaceName()));
+
+        holder.leftChatLayout.setVisibility(View.GONE);
+        holder.otherAVT.setVisibility(View.GONE);
+        holder.rightChatLayout.setVisibility(View.VISIBLE);
+
+        holder.rightChatTextview.setOnLongClickListener(view -> {
+            showBottomDialog(holder, documentId, model, false);
+            return true;
+        });
+
+        holder.mySendImg.setOnLongClickListener(view -> {
+            showBottomDialog(holder, documentId, model, false);
+            return true;
+        });
     }
+
+    private void setChatLeftLayout(ChatModelViewHolder holder, chatMesseageModel model) {
+        FirebaseUtil.getCurrentProfileImageStorageReference().getDownloadUrl().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                FirebaseUtil.setAvatar(context, Uri.parse(uriOther), holder.otherAVT);
+            } else {
+                Log.e(TAG, "Download URL not successful");
+            }
+        });
+
+        boolean isUrl = Functions.isURL(model.getMessage());
+        holder.otherSendImg.setVisibility(isUrl ? View.VISIBLE : View.GONE);
+        holder.leftChatTextview.setVisibility(isUrl ? View.GONE : View.VISIBLE);
+        holder.otherAVT.setVisibility(View.VISIBLE);
+
+        if (isUrl) {
+            FirebaseUtil.loadImageInChat(context, model.getMessage(), holder.otherSendImg);
+        } else {
+            holder.leftChatTextview.setText(model.getMessage());
+        }
+
+        model.setTypeface(model.getTypeface() != null ? model.getTypeface() : new CustomTypefaceInfo("RobotoLightTextView"));
+        Utils.setFontForTextView(holder.leftChatTextview, getTypeface(model.getTypeface().getTypefaceName()));
+
+        holder.rightChatLayout.setVisibility(View.GONE);
+        holder.leftChatLayout.setVisibility(View.VISIBLE);
+
+        holder.leftChatTextview.setOnLongClickListener(view -> {
+            copyToClipboard(model);
+            return true;
+        });
+
+        holder.otherSendImg.setOnLongClickListener(view -> {
+            showBottomDialog(holder, "", model, true);
+            return true;
+        });
+    }
+
 
 
     private void showBottomDialog(ChatModelViewHolder holder, String documentId, chatMesseageModel model, boolean recallMessage) {
@@ -235,6 +304,7 @@ public class chatAdapter extends FirestoreRecyclerAdapter<chatMesseageModel, cha
 
     public interface Download{
         void downloadImage(String uri);
+        void clickImage(String model);
     }
 
 }

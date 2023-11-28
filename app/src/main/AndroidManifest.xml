@@ -28,6 +28,9 @@
         android:theme="@style/Theme.PRO1121GR"
         tools:targetApi="31">
         <activity
+            android:name=".activity.DetailImageActivity"
+            android:exported="false" />
+        <activity
             android:name=".activity.UsageTimeStatisticsActivity"
             android:exported="false" />
         <activity
