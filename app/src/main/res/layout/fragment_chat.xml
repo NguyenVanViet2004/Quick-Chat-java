@@ -70,6 +70,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_below="@id/searchView"
+                    android:background="@color/background"
+                    android:layout_marginHorizontal="@dimen/_10sdp"
+                    android:layout_marginVertical="@dimen/_10sdp"
                     tools:listitem="@layout/item_list_avatar"
                      />
 

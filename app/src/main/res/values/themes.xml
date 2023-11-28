@@ -18,7 +18,7 @@
 
     <!--Light mode-->
     <style name="SCREEN">
-        <item name="android:background">@color/white</item>
+        <item name="android:background">@color/background</item>
     </style>
 
     <style name="SCREEN_for_layout" parent="Base.Theme.PRO1121GR">
