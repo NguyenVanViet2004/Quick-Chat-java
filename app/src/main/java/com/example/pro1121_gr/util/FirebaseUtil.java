@@ -18,7 +18,7 @@ import com.google.firebase.storage.StorageReference;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
-public class firebaseUtil {
+public class FirebaseUtil {
     public static String currentUserId(){
         return FirebaseAuth.getInstance().getUid();
     }
@@ -56,7 +56,7 @@ public class firebaseUtil {
     }
 
     public static DocumentReference getOtherUserFromChatroom(List<String> userIds){
-        if(userIds.get(0).equals(firebaseUtil.currentUserId())){
+        if(userIds.get(0).equals(FirebaseUtil.currentUserId())){
             return allUserCollectionReference().document(userIds.get(1));
         }else{
             return allUserCollectionReference().document(userIds.get(0));
@@ -75,7 +75,7 @@ public class firebaseUtil {
 
     public static StorageReference getCurrentProfileImageStorageReference(){
         return FirebaseStorage.getInstance().getReference().child("profile_img")
-                .child(firebaseUtil.currentUserId());
+                .child(FirebaseUtil.currentUserId());
     }
 
     public static StorageReference  getCurrentOtherProfileImageStorageReference(String otherUserId){

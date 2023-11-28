@@ -9,9 +9,9 @@ import android.util.Log;
 
 import com.example.pro1121_gr.Database.DBhelper;
 import com.example.pro1121_gr.databinding.ActivitySplashScreenBinding;
-import com.example.pro1121_gr.function.StaticFunction;
+import com.example.pro1121_gr.function.Functions;
 import com.example.pro1121_gr.model.userModel;
-import com.example.pro1121_gr.util.firebaseUtil;
+import com.example.pro1121_gr.util.FirebaseUtil;
 
 public class SplashScreen extends AppCompatActivity {
 
@@ -27,11 +27,11 @@ public class SplashScreen extends AppCompatActivity {
         MyApplication.applyNightMode();
 
 
-        if (firebaseUtil.isLoggedIn() && getIntent().getExtras() != null){
+        if (FirebaseUtil.isLoggedIn() && getIntent().getExtras() != null){
             String userID = getIntent().getExtras().getString("userId");
             Log.e(TAG, "userID: " + userID );
             if (userID != null) {
-                firebaseUtil.allUserCollectionReference().document(userID).get().addOnCompleteListener(task -> {
+                FirebaseUtil.allUserCollectionReference().document(userID).get().addOnCompleteListener(task -> {
                     if (task.isSuccessful()){
                         userModel model = task.getResult().toObject(userModel.class);
                         Intent mainIntent = new Intent(this, homeActivity.class);
@@ -41,7 +41,7 @@ public class SplashScreen extends AppCompatActivity {
                         Intent intent = new Intent(this, ChatActivity.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         if (model != null) {
-                            StaticFunction.passUserModelAsIntent(intent, model);
+                            Functions.passUserModelAsIntent(intent, model);
                         }
                         startActivity(intent);
                         finish();
@@ -56,7 +56,7 @@ public class SplashScreen extends AppCompatActivity {
         new Handler().postDelayed(() ->{
             // bắt đầu tính thời gian sử dụng app
             DBhelper.getInstance(this).startUsageTracking();
-            if (firebaseUtil.isLoggedIn()){
+            if (FirebaseUtil.isLoggedIn()){
                 Log.e(TAG, "gotoHome: " + DBhelper.getInstance(this).getUsageTimeToday() );
                 startActivity(new Intent(this, homeActivity.class));
                 finish();

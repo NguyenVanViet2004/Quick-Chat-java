@@ -10,16 +10,17 @@ import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.DatePicker;
 
 import com.example.pro1121_gr.Database.DBhelper;
 import com.example.pro1121_gr.R;
 import com.example.pro1121_gr.databinding.ActivityEditProfileBinding;
-import com.example.pro1121_gr.function.StaticFunction;
+import com.example.pro1121_gr.function.Functions;
 import com.example.pro1121_gr.model.userModel;
 import com.example.pro1121_gr.util.NetworkChangeReceiver;
-import com.example.pro1121_gr.util.firebaseUtil;
+import com.example.pro1121_gr.util.FirebaseUtil;
 import com.github.dhaval2404.imagepicker.ImagePicker;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -52,7 +53,7 @@ public class EditProfileActivity extends AppCompatActivity {
 
 
     private void initView() {
-        networkChangeReceiver = StaticFunction.getNetworkChangeReceiver(this);
+        networkChangeReceiver = Functions.getNetworkChangeReceiver(this);
         editProfile();
         binding.backEdit.setOnClickListener(view -> {
             startActivity(new Intent(EditProfileActivity.this, SettingActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
@@ -79,7 +80,7 @@ public class EditProfileActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if (selectedImageUri != null) {
-                    firebaseUtil.getCurrentProfileImageStorageReference().putFile(selectedImageUri).addOnCompleteListener(task ->{
+                    FirebaseUtil.getCurrentProfileImageStorageReference().putFile(selectedImageUri).addOnCompleteListener(task ->{
                         if (editProfile()) setInformation();
                     });
                 }else {
@@ -99,7 +100,7 @@ public class EditProfileActivity extends AppCompatActivity {
         userModel.setUsername(binding.fullName.getText().toString().trim());
         userModel.setPhone(binding.phoneNumber.getText().toString().trim());
         userModel.setDate(binding.birthday.getText().toString().trim());
-        firebaseUtil.currentUserDetails().set(userModel).addOnCompleteListener(new OnCompleteListener<Void>() {
+        FirebaseUtil.currentUserDetails().set(userModel).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if (task.isSuccessful()) Toasty.success(EditProfileActivity.this, "Cập nhật thông tin thành công!", Toasty.LENGTH_LONG,true).show();
@@ -109,23 +110,23 @@ public class EditProfileActivity extends AppCompatActivity {
     }
 
     private boolean editProfile(){
-        StaticFunction.isEmpty(binding.fullName,0);
-        StaticFunction.isEmpty(binding.birthday,1);
-        StaticFunction.isEmpty(binding.phoneNumber,2);
+        Functions.isEmpty(binding.fullName,0);
+        Functions.isEmpty(binding.birthday,1);
+        Functions.isEmpty(binding.phoneNumber,2);
 
-        if (StaticFunction.isValidPhoneNumber(binding.phoneNumber.getText().toString())) return false;
-        else if(StaticFunction.isValidDateFormat(binding.birthday.getText().toString())) return false;
+        if (Functions.isValidPhoneNumber(binding.phoneNumber.getText().toString())) return false;
+        else if(Functions.isValidDateFormat(binding.birthday.getText().toString())) return false;
         else return binding.fullName.length() >= 5;
     }
 
     private void checkInformation(){
         // get avt
-        firebaseUtil.getCurrentProfileImageStorageReference().getDownloadUrl().addOnCompleteListener(this, task -> {
-            if (task.isSuccessful()) firebaseUtil.setAvatar(EditProfileActivity.this,task.getResult(), binding.itemAvatar);
+        FirebaseUtil.getCurrentProfileImageStorageReference().getDownloadUrl().addOnCompleteListener(this, task -> {
+            if (task.isSuccessful()) FirebaseUtil.setAvatar(EditProfileActivity.this,task.getResult(), binding.itemAvatar);
             else Toasty.error(EditProfileActivity.this, "Đã xảy ra lỗi!", Toasty.LENGTH_LONG, true).show();
         });
 
-        firebaseUtil.currentUserDetails().get().addOnCompleteListener(EditProfileActivity.this, task -> {
+        FirebaseUtil.currentUserDetails().get().addOnCompleteListener(EditProfileActivity.this, task -> {
             if (task.isSuccessful()){
                 userModel = task.getResult().toObject(userModel.class);
                 if (userModel != null) {
@@ -147,7 +148,7 @@ public class EditProfileActivity extends AppCompatActivity {
 
                 if (data != null && selectedImageUriTemp != null) {
                     selectedImageUri = selectedImageUriTemp;
-                    firebaseUtil.setAvatar(EditProfileActivity.this, selectedImageUri, binding.itemAvatar);
+                    FirebaseUtil.setAvatar(EditProfileActivity.this, selectedImageUri, binding.itemAvatar);
                 }
             }
         });
@@ -167,6 +168,7 @@ public class EditProfileActivity extends AppCompatActivity {
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
                 String formattedDate = selectedDate.format(formatter);
                 binding.birthday.setText(formattedDate);
+                Log.e("TAG", "onDateSet: "+formattedDate );
             }
         },
                 year, month, day

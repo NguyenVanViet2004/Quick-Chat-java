@@ -37,77 +37,85 @@
     </LinearLayout>
 
 
-    <ScrollView
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipeRefreshLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <LinearLayout
+        android:layout_height="match_parent"
+        android:layout_below="@id/searchView">
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
-
-            <include
-                android:id="@+id/note"
-                layout="@layout/note_chart_layout"/>
+            android:layout_height="match_parent">
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/_10sdp"
-                android:layout_marginTop="@dimen/_10sdp"
-                android:layout_marginEnd="@dimen/_10sdp"
-                android:background="@drawable/item_layout_home"
-                android:elevation="8dp"
-                android:orientation="vertical"
-                android:padding="@dimen/_10sdp">
+                android:layout_height="match_parent"
+                android:orientation="vertical">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:drawablePadding="@dimen/_8sdp"
-                    android:gravity="center_vertical"
-                    android:text="Thống kê thời gian sử dụng"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/_10ssp"
-                    app:drawableStartCompat="@drawable/icon_pie_chart" />
+                <include
+                    android:id="@+id/note"
+                    layout="@layout/note_chart_layout"/>
 
-                <com.github.mikephil.charting.charts.PieChart
-                    android:id="@+id/pieChart"
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/_200sdp" />
-            </LinearLayout>
-
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/_10sdp"
-                android:layout_marginTop="@dimen/_10sdp"
-                android:layout_marginEnd="@dimen/_10sdp"
-                android:layout_marginBottom="@dimen/_30sdp"
-                android:background="@drawable/item_layout_home"
-                android:elevation="8dp"
-                android:orientation="vertical"
-                android:padding="@dimen/_10sdp">
-
-                <TextView
-                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:drawablePadding="@dimen/_8sdp"
-                    android:gravity="center_vertical"
-                    android:text="Thống kê thời gian sử dụng"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/_10ssp"
-                    app:drawableStartCompat="@drawable/icon_chart" />
+                    android:layout_marginStart="@dimen/_10sdp"
+                    android:layout_marginTop="@dimen/_10sdp"
+                    android:layout_marginEnd="@dimen/_10sdp"
+                    style="@style/SCREEN_for_item"
+                    android:elevation="8dp"
+                    android:orientation="vertical"
+                    android:padding="@dimen/_10sdp">
 
-                <com.github.mikephil.charting.charts.BarChart
-                    android:id="@+id/barChart"
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:drawablePadding="@dimen/_8sdp"
+                        android:gravity="center_vertical"
+                        android:text="Thống kê thời gian sử dụng"
+                        style="@style/TEXT"
+                        android:textSize="@dimen/_10ssp"
+                        app:drawableStartCompat="@drawable/icon_pie_chart" />
+
+                    <com.github.mikephil.charting.charts.PieChart
+                        android:id="@+id/pieChart"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/_200sdp" />
+                </LinearLayout>
+
+
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/_300sdp"
-                    android:layout_marginTop="@dimen/_10sdp" />
-            </LinearLayout>
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_10sdp"
+                    android:layout_marginTop="@dimen/_10sdp"
+                    android:layout_marginEnd="@dimen/_10sdp"
+                    android:layout_marginBottom="@dimen/_30sdp"
+                    style="@style/SCREEN_for_item"
+                    android:elevation="8dp"
+                    android:orientation="vertical"
+                    android:padding="@dimen/_10sdp">
 
-        </LinearLayout>
-    </ScrollView>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:drawablePadding="@dimen/_8sdp"
+                        android:gravity="center_vertical"
+                        android:text="Thống kê thời gian sử dụng"
+                        style="@style/TEXT"
+                        android:textSize="@dimen/_10ssp"
+                        app:drawableStartCompat="@drawable/icon_chart2" />
+
+                    <com.github.mikephil.charting.charts.BarChart
+                        android:id="@+id/barChart"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/_300sdp"
+                        android:layout_marginTop="@dimen/_10sdp" />
+                </LinearLayout>
+
+            </LinearLayout>
+        </ScrollView>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+
 
 </LinearLayout>

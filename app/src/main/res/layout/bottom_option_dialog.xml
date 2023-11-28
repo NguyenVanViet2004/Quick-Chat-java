@@ -50,33 +50,68 @@
         android:orientation="horizontal"
         android:gravity="center_horizontal">
 
-
-        <TextView
-            android:id="@+id/copyText"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:drawablePadding="@dimen/_5sdp"
-            android:text="sao chép"
-            style="@style/TEXT"
-            android:textSize="16sp"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toLeftOf="@id/Fonts"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:ignore="HardcodedText"
-            android:layout_marginEnd="@dimen/_35sdp"
-            app:drawableTopCompat="@drawable/icon_copy" />
+            android:layout_weight="1"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/delete_message"
+            <TextView
+                android:id="@+id/copyText"
+                style="@style/TEXT"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawablePadding="@dimen/_5sdp"
+                android:text="sao chép"
+                android:textSize="16sp"
+                app:drawableTopCompat="@drawable/icon_copy"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toLeftOf="@id/Fonts"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:ignore="HardcodedText" />
+        </LinearLayout>
+
+
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:drawablePadding="@dimen/_5sdp"
-            android:text="Thu hồi tin nhắn"
-            style="@style/TEXT"
-            android:textSize="16sp"
-            android:layout_marginStart="@dimen/_35sdp"
-            app:drawableTopCompat="@drawable/icon_delete"
-            tools:ignore="HardcodedText" />
+            android:layout_weight="1"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/download_img"
+                style="@style/TEXT"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawablePadding="@dimen/_5sdp"
+                android:text="lưu ảnh"
+                android:textSize="16sp"
+                app:drawableTopCompat="@drawable/icon_download"
+                tools:ignore="HardcodedText" />
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/delete_message"
+                style="@style/TEXT"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawablePadding="@dimen/_5sdp"
+                android:text="Thu hồi tin nhắn"
+                android:textSize="16sp"
+                app:drawableTopCompat="@drawable/icon_delete"
+                tools:ignore="HardcodedText" />
+        </LinearLayout>
+
     </LinearLayout>
 
 

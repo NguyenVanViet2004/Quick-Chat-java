@@ -8,13 +8,12 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.view.View;
 
 import com.example.pro1121_gr.R;
 import com.example.pro1121_gr.databinding.ActivitySettingBinding;
-import com.example.pro1121_gr.function.StaticFunction;
+import com.example.pro1121_gr.function.Functions;
 import com.example.pro1121_gr.model.userModel;
-import com.example.pro1121_gr.util.firebaseUtil;
+import com.example.pro1121_gr.util.FirebaseUtil;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -55,7 +54,7 @@ public class SettingActivity extends AppCompatActivity {
             logOut(); // Gọi phương thức logout khi nút được nhấn
         });
 
-        binding.helpLayout.btnMessenger.setOnClickListener(view -> StaticFunction.openLink(SettingActivity.this));
+        binding.helpLayout.btnMessenger.setOnClickListener(view -> Functions.openLink(SettingActivity.this));
 
         binding.helpLayout.btnEmail.setOnClickListener(view -> {
             Intent intent = new Intent(Intent.ACTION_SENDTO);
@@ -71,7 +70,7 @@ public class SettingActivity extends AppCompatActivity {
 
 
     private void setInformation() {
-        firebaseUtil.currentUserDetails().get().addOnCompleteListener(this, new OnCompleteListener<DocumentSnapshot>() {
+        FirebaseUtil.currentUserDetails().get().addOnCompleteListener(this, new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if (task.isSuccessful()){
@@ -79,9 +78,9 @@ public class SettingActivity extends AppCompatActivity {
                     if (userModel != null){
                         binding.profile.fullName.setText(userModel.getUsername());
                         // xu ly avt
-                        firebaseUtil.getCurrentOtherProfileImageStorageReference(userModel.getUserId())
+                        FirebaseUtil.getCurrentOtherProfileImageStorageReference(userModel.getUserId())
                                 .getDownloadUrl().addOnCompleteListener(task1 ->{
-                                    if (task1.isSuccessful()) firebaseUtil.setAvatar(SettingActivity.this,task1.getResult(), binding.profile.itemAvatar);
+                                    if (task1.isSuccessful()) FirebaseUtil.setAvatar(SettingActivity.this,task1.getResult(), binding.profile.itemAvatar);
                         });
                     }
                 }
@@ -103,7 +102,7 @@ public class SettingActivity extends AppCompatActivity {
                 // delete fcm token
                 FirebaseMessaging.getInstance().deleteToken().addOnCompleteListener(task -> {
                     if (task.isSuccessful()){
-                        firebaseUtil.logout();
+                        FirebaseUtil.logout();
                         // Thêm hành động chuyển hướng đến màn hình đăng nhập sau khi đăng xuất .
                         Intent intent = new Intent(MyApplication.getInstance(), LoginActivity.class);
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP); // Xóa các activity trên đỉnh ngăn xếp

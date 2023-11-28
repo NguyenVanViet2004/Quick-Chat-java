@@ -18,7 +18,7 @@ import com.example.pro1121_gr.activity.SearchActivity;
 import com.example.pro1121_gr.adapter.chatListAdapter;
 import com.example.pro1121_gr.databinding.FragmentChatBinding;
 import com.example.pro1121_gr.model.chatRoomModel;
-import com.example.pro1121_gr.util.firebaseUtil;
+import com.example.pro1121_gr.util.FirebaseUtil;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.firebase.firestore.Query;
 
@@ -58,8 +58,8 @@ public class ChatFragment extends Fragment {
     }
 
     private void setLayoutChat() {
-        Query query = firebaseUtil.allChatroomCollectionReference()
-                .whereArrayContains("userIds", firebaseUtil.currentUserId())
+        Query query = FirebaseUtil.allChatroomCollectionReference()
+                .whereArrayContains("userIds", FirebaseUtil.currentUserId())
                 .orderBy("lastMessageSenderId", Query.Direction.DESCENDING);
 
         FirestoreRecyclerOptions<chatRoomModel> options =

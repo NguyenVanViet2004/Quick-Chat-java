@@ -24,7 +24,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="@dimen/_10ssp"
+            android:textSize="@dimen/_12ssp"
             android:text="Bạn cần trợ giúp"
             android:gravity="center_vertical"
             style="@style/TEXT"
@@ -34,7 +34,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="@dimen/_8ssp"
+        android:textSize="@dimen/_9ssp"
         android:layout_marginTop="@dimen/_3sdp"
         style="@style/TEXT"
         android:layout_marginStart="@dimen/_10sdp"
