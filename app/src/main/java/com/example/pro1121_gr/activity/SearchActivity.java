@@ -15,6 +15,7 @@ import com.example.pro1121_gr.Database.DBhelper;
 import com.example.pro1121_gr.adapter.searchUserAdapter;
 import com.example.pro1121_gr.databinding.ActivitySearchBinding;
 import com.example.pro1121_gr.function.Functions;
+import com.example.pro1121_gr.function.MyApplication;
 import com.example.pro1121_gr.model.userModel;
 import com.example.pro1121_gr.util.NetworkChangeReceiver;
 import com.example.pro1121_gr.util.FirebaseUtil;

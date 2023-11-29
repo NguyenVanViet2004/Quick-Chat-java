@@ -19,14 +19,12 @@ import androidx.annotation.NonNull;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.pro1121_gr.model.userModel;
+import com.example.pro1121_gr.util.FirebaseUtil;
 import com.example.pro1121_gr.util.NetworkChangeReceiver;
-import com.giphy.sdk.core.models.enums.RatingType;
-import com.giphy.sdk.core.models.enums.RenditionType;
-import com.giphy.sdk.ui.GPHContentType;
-import com.giphy.sdk.ui.GPHSettings;
-import com.giphy.sdk.ui.themes.GPHTheme;
-import com.giphy.sdk.ui.views.GiphyDialogFragment;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.zegocloud.uikit.prebuilt.call.config.ZegoNotificationConfig;
 import com.zegocloud.uikit.prebuilt.call.invite.ZegoUIKitPrebuiltCallInvitationConfig;
 import com.zegocloud.uikit.prebuilt.call.invite.ZegoUIKitPrebuiltCallInvitationService;
@@ -49,14 +47,24 @@ public class Functions {
     public static final int success = 1;
     public static final int warning = 2;
 
+    private static String idUser = null;
+
+    public static String getIdUser() {
+        if (idUser == null) idUser = FirebaseUtil.currentUserId();
+        return idUser;
+    }
+
+    public static void setIdUser(String newId) {
+        idUser = newId;
+    }
 
 
 
-    public static void passUserModelAsIntent(Intent intent, userModel model){
-        intent.putExtra("username",model.getUsername());
-        intent.putExtra("phone",model.getPhone());
-        intent.putExtra("userId",model.getUserId());
-        intent.putExtra("FCMtoken",model.getFMCToken());
+    public static void passUserModelAsIntent(Intent intent, userModel model) {
+        intent.putExtra("username", model.getUsername());
+        intent.putExtra("phone", model.getPhone());
+        intent.putExtra("userId", model.getUserId());
+        intent.putExtra("FCMtoken", model.getFMCToken());
     }
 
     public static userModel getUserModelFromIntent(Intent intent){
@@ -194,9 +202,9 @@ public class Functions {
 
     public static void Toasty(Context context,String message, int type){
         switch (type){
-            case 0: Toasty.error(context, message, Toasty.LENGTH_LONG, true); break;
-            case 1: Toasty.success(context, message, Toasty.LENGTH_LONG, true); break;
-            case 2: Toasty.warning(context, message, Toasty.LENGTH_LONG, true); break;
+            case 0: Toasty.error(context, message, Toasty.LENGTH_SHORT, true); break;
+            case 1: Toasty.success(context, message, Toasty.LENGTH_SHORT, true); break;
+            case 2: Toasty.warning(context, message, Toasty.LENGTH_SHORT, true); break;
         }
     }
 }

@@ -13,7 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.pro1121_gr.activity.MyApplication;
+import com.example.pro1121_gr.function.MyApplication;
 import com.example.pro1121_gr.activity.SearchActivity;
 import com.example.pro1121_gr.adapter.ChatListAvatarAdapter;
 import com.example.pro1121_gr.adapter.chatListAdapter;

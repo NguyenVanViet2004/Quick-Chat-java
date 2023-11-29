@@ -44,6 +44,7 @@ import com.example.pro1121_gr.databinding.ActivityChatBinding;
 import com.example.pro1121_gr.databinding.BottomNavigationInChatBinding;
 import com.example.pro1121_gr.databinding.SelectFontBinding;
 import com.example.pro1121_gr.function.Functions;
+import com.example.pro1121_gr.function.MyApplication;
 import com.example.pro1121_gr.function.RequestPermission;
 import com.example.pro1121_gr.function.VoiceRecordingUtil;
 import com.example.pro1121_gr.model.CustomTypefaceInfo;

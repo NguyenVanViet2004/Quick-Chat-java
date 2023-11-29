@@ -1,42 +1,29 @@
 package com.example.pro1121_gr.activity;
 
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.net.Uri;
+import android.os.Bundle;
+import android.view.View;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-
-import android.content.ClipData;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
-
-import android.content.SharedPreferences;
-import android.content.res.Configuration;
-import android.content.res.Resources;
-
-import android.net.Uri;
-import android.os.Bundle;
-
-import android.util.Log;
-import android.preference.PreferenceManager;
-import android.view.View;
-import android.widget.Button;
-import android.widget.TextView;
-
 
 import com.example.pro1121_gr.Database.DBhelper;
 import com.example.pro1121_gr.R;
 import com.example.pro1121_gr.databinding.ActivitySettingBinding;
 import com.example.pro1121_gr.function.Functions;
+import com.example.pro1121_gr.function.MyApplication;
 import com.example.pro1121_gr.model.userModel;
 import com.example.pro1121_gr.util.FirebaseUtil;
 import com.example.pro1121_gr.util.NetworkChangeReceiver;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.messaging.FirebaseMessaging;
-
-import java.util.Locale;
 
 public class SettingActivity extends AppCompatActivity {
 
@@ -67,7 +54,7 @@ public class SettingActivity extends AppCompatActivity {
         networkChangeReceiver = Functions.getNetworkChangeReceiver(this);
         MyApplication.applyNightMode();
         binding.backFragmentMess.setOnClickListener(view -> {
-            startActivity(new Intent(SettingActivity.this, homeActivity.class));
+            onBackPressed();
         });
 
         binding.option.btnNightMode.setOnClickListener(view -> {
@@ -137,6 +124,7 @@ public class SettingActivity extends AppCompatActivity {
 
 
     private void setInformation() {
+        // xu ly avt
         FirebaseUtil.currentUserDetails().get().addOnCompleteListener(this, new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -146,30 +134,38 @@ public class SettingActivity extends AppCompatActivity {
                         binding.profile.fullName.setText(userModel.getUsername());
                         // xu ly avt
                         FirebaseUtil.getCurrentOtherProfileImageStorageReference(userModel.getUserId())
-                                .getDownloadUrl().addOnCompleteListener(task1 ->{
-                                    if (task1.isSuccessful()) FirebaseUtil.setAvatar(SettingActivity.this,task1.getResult(), binding.profile.itemAvatar);
-                        });
+                                .getDownloadUrl().addOnCompleteListener(task1 -> {
+                                    if (task1.isSuccessful())
+                                        FirebaseUtil.setAvatar(SettingActivity.this, task1.getResult(), binding.profile.itemAvatar);
+                                });
                     }
                 }
             }
+
+
         });
     }
 
 
-    private void logOut() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Bạn có chắc chắn muốn đăng xuất không?");
-        builder.setIcon(R.drawable.baseline_warning_24);
+        private void logOut () {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("Bạn có chắc chắn muốn đăng xuất không?");
+            builder.setIcon(R.drawable.baseline_warning_24);
 
-        // Nút "Có"
+            // Nút "Có"
         builder.setPositiveButton("Có", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                FirebaseUtil.currentUserDetails().update("status",0);
+                FirebaseFirestore.getInstance().collection("users").document(Functions.getIdUser()).update("status", 0).addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void unused) {
+                        Functions.setIdUser("");
+                    }
+                });
                 // delete fcm token
                 FirebaseMessaging.getInstance().deleteToken().addOnCompleteListener(task -> {
 
-                    if (task.isSuccessful()){
+                    if (task.isSuccessful()) {
                         FirebaseUtil.logout();
                         // Thêm hành động chuyển hướng đến màn hình đăng nhập sau khi đăng xuất .
                         Intent intent = new Intent(MyApplication.getInstance(), LoginActivity.class);
@@ -203,7 +199,6 @@ public class SettingActivity extends AppCompatActivity {
             unregisterReceiver(networkChangeReceiver);
         }
         DBhelper.getInstance(this).endUsageTracking();
-        Log.e(CreateProfile.class.getSimpleName(), "onDestroy: " + idUser );
     }
 
 
