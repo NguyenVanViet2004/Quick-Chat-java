@@ -31,7 +31,7 @@ import com.example.pro1121_gr.fragments.ChatFragment;
 import com.example.pro1121_gr.fragments.ContactsFragment;
 import com.example.pro1121_gr.function.ReplaceFragment;
 import com.example.pro1121_gr.util.NetworkChangeReceiver;
-import com.example.pro1121_gr.util.firebaseUtil;
+import com.example.pro1121_gr.util.FirebaseUtil;
 import com.google.android.material.navigation.NavigationBarView;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.qamar.curvedbottomnaviagtion.CurvedBottomNavigation;
@@ -134,7 +134,7 @@ public class home extends AppCompatActivity {
     private void getFMCtoken() {
         FirebaseMessaging.getInstance().getToken().addOnCompleteListener(task -> {
             if (task.isSuccessful()) Log.e(home.class.getSimpleName(), "getFMCtoken: " + task.getResult() );
-            firebaseUtil.currentUserDetails().update("fmctoken",task.getResult());
+            FirebaseUtil.currentUserDetails().update("fmctoken",task.getResult());
         });
     }
 

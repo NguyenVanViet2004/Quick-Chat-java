@@ -28,11 +28,10 @@
         android:theme="@style/Theme.PRO1121GR"
         tools:targetApi="31">
         <activity
-<<<<<<< HEAD
-            android:name=".activity.DetailImageActivity"
-=======
             android:name=".activity.ChangeLanguageActivity"
->>>>>>> 40e9c24 (save)
+            android:exported="false" />
+        <activity
+            android:name=".activity.DetailImageActivity"
             android:exported="false" />
         <activity
             android:name=".activity.UsageTimeStatisticsActivity"

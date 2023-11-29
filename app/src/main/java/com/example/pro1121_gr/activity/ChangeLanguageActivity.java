@@ -26,7 +26,6 @@ public class ChangeLanguageActivity extends AppCompatActivity {
     public ActivityChangeLanguageBinding binding;
     private SharedPreferences sharedPreferences;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,7 +33,6 @@ public class ChangeLanguageActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         sharedPreferences = getSharedPreferences("language", Context.MODE_PRIVATE);
-
 
 // Load saved language state
         boolean isEnglish = sharedPreferences.getBoolean("isEnglish", false);
@@ -46,7 +44,6 @@ public class ChangeLanguageActivity extends AppCompatActivity {
         boolean isVietnamese = sharedPreferences.getBoolean("isVietnamese", false);
         binding.Switch.setChecked(isVietnamese);
 
-// ... Your other code
 
         binding.Switch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -81,16 +78,12 @@ public class ChangeLanguageActivity extends AppCompatActivity {
             }
         });
 
-
-
         binding.backSetting.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(ChangeLanguageActivity.this, SettingActivity.class));
             }
         });
-        // ... Your other code
-
     }
 
     private void setLocale(String languageCode) {
@@ -107,7 +100,6 @@ public class ChangeLanguageActivity extends AppCompatActivity {
         editor.putBoolean("isVietnamese", languageCode.equals("vi"));
         editor.apply();
 
-        // Reload the activity to apply the language changes
         recreate();
     }
 }

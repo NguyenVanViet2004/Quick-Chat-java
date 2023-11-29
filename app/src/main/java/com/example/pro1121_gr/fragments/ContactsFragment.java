@@ -18,7 +18,7 @@ import com.example.pro1121_gr.activity.SearchActivity;
 import com.example.pro1121_gr.adapter.searchUserAdapter;
 import com.example.pro1121_gr.databinding.FragmentContactsBinding;
 import com.example.pro1121_gr.model.userModel;
-import com.example.pro1121_gr.util.firebaseUtil;
+import com.example.pro1121_gr.util.FirebaseUtil;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.firebase.firestore.Query;
 
@@ -57,7 +57,7 @@ public class ContactsFragment extends Fragment {
 
     @SuppressLint("NotifyDataSetChanged")
     private void setupSearchRecyclerView(String searchName) {
-        Query query = firebaseUtil.allUserCollectionReference()
+        Query query = FirebaseUtil.allUserCollectionReference()
                 .whereGreaterThanOrEqualTo("username", searchName)
                 .whereLessThanOrEqualTo("username", searchName + '\uf8ff');
         FirestoreRecyclerOptions<userModel> options = new FirestoreRecyclerOptions.Builder<userModel>()

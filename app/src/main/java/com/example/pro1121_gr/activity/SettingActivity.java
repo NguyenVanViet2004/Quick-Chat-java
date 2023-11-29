@@ -15,14 +15,13 @@ import android.content.res.Resources;
 
 import android.net.Uri;
 import android.os.Bundle;
-<<<<<<< HEAD
+
 import android.util.Log;
-=======
 import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
->>>>>>> 05a00a6 (save)
+
 
 import com.example.pro1121_gr.Database.DBhelper;
 import com.example.pro1121_gr.R;
@@ -43,14 +42,12 @@ public class SettingActivity extends AppCompatActivity {
 
     private ActivitySettingBinding binding;
     private userModel userModel;
-<<<<<<< HEAD
+
     private NetworkChangeReceiver networkChangeReceiver;
 
     String idUser;
     private String currentLanguage = ""; // Ngôn ngữ hiện tại, mặc định là tiếng Anh ("en")
-=======
 
->>>>>>> 40e9c24 (save)
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
