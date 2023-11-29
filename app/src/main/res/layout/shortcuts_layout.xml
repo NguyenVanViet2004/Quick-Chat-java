@@ -26,8 +26,8 @@
 
         <LinearLayout
             android:id="@+id/btnNightMode"
-            android:layout_width="@dimen/_100sdp"
-            android:layout_height="@dimen/_100sdp"
+            android:layout_width="@dimen/_110sdp"
+            android:layout_height="@dimen/_110sdp"
             android:layout_gravity="center"
             style="@style/SCREEN_for_layout"
             android:gravity="center_horizontal"
@@ -50,8 +50,8 @@
 
         <LinearLayout
             android:id="@+id/btnUsedTime"
-            android:layout_width="@dimen/_100sdp"
-            android:layout_height="@dimen/_100sdp"
+            android:layout_width="@dimen/_110sdp"
+            android:layout_height="@dimen/_110sdp"
             android:layout_marginStart="@dimen/_10sdp"
             android:layout_marginEnd="@dimen/_10sdp"
             style="@style/SCREEN_for_layout"
@@ -87,8 +87,8 @@
 
         <LinearLayout
             android:id="@+id/editProfile"
-            android:layout_width="@dimen/_100sdp"
-            android:layout_height="@dimen/_100sdp"
+            android:layout_width="@dimen/_110sdp"
+            android:layout_height="@dimen/_110sdp"
             style="@style/SCREEN_for_layout"
             android:gravity="center_horizontal"
             android:orientation="vertical">
@@ -104,14 +104,15 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/_5sdp"
+                android:layout_marginHorizontal="@dimen/_5sdp"
                 android:text="Chỉnh sửa hồ sơ cá nhân"
                 android:textSize="@dimen/_10ssp" />
         </LinearLayout>
 
         <LinearLayout
             android:id="@+id/customerCategory"
-            android:layout_width="@dimen/_100sdp"
-            android:layout_height="@dimen/_100sdp"
+            android:layout_width="@dimen/_110sdp"
+            android:layout_height="@dimen/_110sdp"
             android:layout_marginStart="@dimen/_10sdp"
             android:layout_marginEnd="@dimen/_10sdp"
             style="@style/SCREEN_for_layout"

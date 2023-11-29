@@ -54,6 +54,14 @@ import com.example.pro1121_gr.util.DownloadReceiver;
 import com.example.pro1121_gr.util.FirebaseUtil;
 import com.example.pro1121_gr.util.NetworkChangeReceiver;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.giphy.sdk.core.models.Media;
+import com.giphy.sdk.core.models.enums.RatingType;
+import com.giphy.sdk.core.models.enums.RenditionType;
+import com.giphy.sdk.ui.GPHContentType;
+import com.giphy.sdk.ui.GPHSettings;
+import com.giphy.sdk.ui.Giphy;
+import com.giphy.sdk.ui.themes.GPHTheme;
+import com.giphy.sdk.ui.views.GiphyDialogFragment;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.common.api.ResolvableApiException;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -110,7 +118,7 @@ public class ChatActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        Giphy.INSTANCE.configure(ChatActivity.this, "eZKFz6B7ffPcLHRVL01lXnHHSrQB1yED", false);
         binding = ActivityChatBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         // đăng ký sự kiện cuộc gọi voice call và video call
@@ -235,6 +243,22 @@ public class ChatActivity extends AppCompatActivity {
 
         binding.like.setOnClickListener(view -> sendMessToOther("https://firebasestorage.googleapis.com/v0/b/du-an-1-197e4.appspot.com/o/like_icon%2Flike_icon.png?alt=media&token=63213f37-2681-412d-b096-177b20373976"));
 
+        binding.gif.setOnClickListener(view -> show(true, new GiphyDialogFragment.GifSelectionListener() {
+            @Override
+            public void onGifSelected(@NonNull Media media, @Nullable String s, @NonNull GPHContentType gphContentType) {
+                sendMessToOther(Objects.requireNonNull(media.getImages().getOriginal()).getGifUrl());
+            }
+
+            @Override
+            public void onDismissed(@NonNull GPHContentType gphContentType) {
+
+            }
+
+            @Override
+            public void didSearchTerm(@NonNull String s) {
+
+            }
+        }));
     }
 
     @Override
@@ -641,6 +665,36 @@ public class ChatActivity extends AppCompatActivity {
             }else Functions.showSnackBar(binding.getRoot(), "Download failed");
         }
     };
+
+    @NonNull
+    public GiphyDialogFragment show(final  boolean withDarkTheme, @NonNull final  GiphyDialogFragment.GifSelectionListener listener)
+    {
+        final GPHTheme theme = (withDarkTheme)
+                ? GPHTheme.Dark
+                : GPHTheme.Light;
+
+        final GPHSettings settings = new GPHSettings();
+        settings.setTheme(theme);
+        settings.setRating(RatingType.pg13);
+        settings.setRenditionType(RenditionType.fixedWidth);
+        settings.setShowCheckeredBackground(false);
+
+        final GPHContentType[] contentTypes = new GPHContentType[5];
+        contentTypes[3] = GPHContentType.sticker;
+        contentTypes[2] = GPHContentType.gif;
+        contentTypes[4] = GPHContentType.text;
+        contentTypes[1] = GPHContentType.emoji;
+        contentTypes[0] = GPHContentType.recents;
+        settings.setMediaTypeConfig(contentTypes);
+        settings.setSelectedContentType(GPHContentType.emoji);
+
+        settings.setStickerColumnCount(3);
+        final GiphyDialogFragment dialog = GiphyDialogFragment.Companion.newInstance(settings);
+        dialog.setGifSelectionListener(listener);
+        dialog.show(getSupportFragmentManager(), "giphy_dialog");
+
+        return dialog;
+    }
 
     @Override
     protected void onStart() {
