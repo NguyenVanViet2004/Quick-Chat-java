@@ -56,8 +56,7 @@ public class EditProfileActivity extends AppCompatActivity {
         networkChangeReceiver = Functions.getNetworkChangeReceiver(this);
         editProfile();
         binding.backEdit.setOnClickListener(view -> {
-            startActivity(new Intent(EditProfileActivity.this, SettingActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
-            finish();
+            onBackPressed();
         });
 
         binding.itemAvatar.setOnClickListener(view -> ImagePicker.with(EditProfileActivity.this).cropSquare().compress(512).maxResultSize(512,512)

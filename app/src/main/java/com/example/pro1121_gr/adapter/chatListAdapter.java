@@ -48,7 +48,16 @@ public class chatListAdapter extends FirestoreRecyclerAdapter<chatRoomModel,chat
                             FirebaseUtil.setAvatar(context,uri,holder.avatar);
                         }
                     });
-                    holder.usernameText.setText(otherUserModel.getUsername());
+                    if (otherUserModel != null) {
+                        holder.usernameText.setText(otherUserModel.getUsername());
+                        if (otherUserModel.getStatus() == 0) {
+                            holder.img_Circle_offline.setVisibility(View.VISIBLE);
+                            holder.img_Circle_online.setVisibility(View.GONE);
+                        } else {
+                            holder.img_Circle_offline.setVisibility(View.GONE);
+                            holder.img_Circle_online.setVisibility(View.VISIBLE);
+                        }
+                    }
 
                     if (lastMessageSendByMe) holder.lastMessageText.setText("Bạn : " + model.getLastMessage());
                     else holder.lastMessageText.setText(model.getLastMessage());
@@ -82,7 +91,7 @@ public class chatListAdapter extends FirestoreRecyclerAdapter<chatRoomModel,chat
         TextView usernameText;
         TextView lastMessageText;
         TextView lastMessageTime;
-        ImageView avatar;
+        ImageView avatar, img_Circle_online, img_Circle_offline;
 
         public chatListAdapterViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -90,6 +99,8 @@ public class chatListAdapter extends FirestoreRecyclerAdapter<chatRoomModel,chat
             lastMessageText = itemView.findViewById(R.id.last_chat);
             lastMessageTime = itemView.findViewById(R.id.timeSend);
             avatar = itemView.findViewById(R.id.item_avatar);
+            img_Circle_online = itemView.findViewById(R.id.img_Circle_online);
+            img_Circle_offline = itemView.findViewById(R.id.img_Circle_offline);
         }
     }
 }

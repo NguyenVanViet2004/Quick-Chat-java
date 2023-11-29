@@ -14,10 +14,18 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 
+import androidx.annotation.NonNull;
+
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.pro1121_gr.model.userModel;
 import com.example.pro1121_gr.util.NetworkChangeReceiver;
+import com.giphy.sdk.core.models.enums.RatingType;
+import com.giphy.sdk.core.models.enums.RenditionType;
+import com.giphy.sdk.ui.GPHContentType;
+import com.giphy.sdk.ui.GPHSettings;
+import com.giphy.sdk.ui.themes.GPHTheme;
+import com.giphy.sdk.ui.views.GiphyDialogFragment;
 import com.google.android.material.snackbar.Snackbar;
 import com.zegocloud.uikit.prebuilt.call.config.ZegoNotificationConfig;
 import com.zegocloud.uikit.prebuilt.call.invite.ZegoUIKitPrebuiltCallInvitationConfig;
@@ -41,7 +49,7 @@ public class Functions {
     public static final int success = 1;
     public static final int warning = 2;
 
-    public static boolean checkOnBackpress = false;
+
 
 
     public static void passUserModelAsIntent(Intent intent, userModel model){
