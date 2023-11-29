@@ -1,7 +1,6 @@
 package com.example.pro1121_gr.activity;
 
 import android.os.Bundle;
-import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
@@ -9,7 +8,7 @@ import androidx.appcompat.app.AppCompatDelegate;
 import com.example.pro1121_gr.Database.DBhelper;
 import com.example.pro1121_gr.databinding.ActivityNightModeBinding;
 import com.example.pro1121_gr.function.Functions;
-import com.example.pro1121_gr.util.FirebaseUtil;
+import com.example.pro1121_gr.function.MyApplication;
 import com.example.pro1121_gr.util.NetworkChangeReceiver;
 
 public class NightModeActivity extends AppCompatActivity {

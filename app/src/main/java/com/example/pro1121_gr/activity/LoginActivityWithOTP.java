@@ -4,7 +4,6 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Color;
@@ -12,16 +11,12 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.example.pro1121_gr.R;
 import com.example.pro1121_gr.databinding.ActivityLoginWithOtpBinding;
 import com.example.pro1121_gr.function.Functions;
-import com.example.pro1121_gr.function.LoadingDialog;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
+import com.example.pro1121_gr.function.MyApplication;
 import com.google.firebase.FirebaseException;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthOptions;
@@ -31,8 +26,6 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
-
-import es.dmoral.toasty.Toasty;
 
 public class LoginActivityWithOTP extends AppCompatActivity {
 

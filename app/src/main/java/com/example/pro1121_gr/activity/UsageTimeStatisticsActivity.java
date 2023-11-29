@@ -10,7 +10,6 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.example.pro1121_gr.Database.DBhelper;
 import com.example.pro1121_gr.databinding.ActivityUsageTimeStatisticsBinding;
 import com.example.pro1121_gr.function.Functions;
-import com.example.pro1121_gr.util.FirebaseUtil;
 import com.example.pro1121_gr.util.NetworkChangeReceiver;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
@@ -165,6 +164,5 @@ public class UsageTimeStatisticsActivity extends AppCompatActivity {
             unregisterReceiver(networkChangeReceiver);
         }
         DBhelper.getInstance(this).endUsageTracking();
-        FirebaseUtil.currentUserDetails().update("status",0);
     }
 }

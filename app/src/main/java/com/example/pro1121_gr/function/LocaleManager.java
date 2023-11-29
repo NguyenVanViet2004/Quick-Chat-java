@@ -1,4 +1,4 @@
-package com.example.pro1121_gr.activity;
+package com.example.pro1121_gr.function;
 
 import android.content.Context;
 import android.content.SharedPreferences;
