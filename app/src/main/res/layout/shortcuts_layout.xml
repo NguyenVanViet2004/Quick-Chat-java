@@ -110,9 +110,9 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/customerCategory"
             android:layout_width="@dimen/_110sdp"
             android:layout_height="@dimen/_110sdp"
+            android:id="@+id/changeLanguage"
             android:layout_marginStart="@dimen/_10sdp"
             android:layout_marginEnd="@dimen/_10sdp"
             style="@style/SCREEN_for_layout"

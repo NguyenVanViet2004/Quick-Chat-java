@@ -1,0 +1,35 @@
+<resources>
+    <string name="app_name">Ứng dụng chat 1-1</string>
+    <string name="author">Ứng dụng chat 1-1</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="network_comeback">kết nối mạng đã quay trở lại</string>
+    <string name="error_network">Kết nối internet không ổn định hoặc không có internet. Vui lòng kiểm tra lại kết nối.</string>
+    <string name="bottom_nav_message">Tin nhắn</string>
+    <string name="bottom_nav_contact">Danh bạ</string>
+    <string name="bottom_nav_option">Tùy chọn</string>
+    <string name="bottom_nav_setting">Cài đặt</string>
+    <!-- TODO: Trang chu -->
+    <string name="tin_nhan">Tin nhắn</string>
+    <string name="tim_kiem">Tìm kiếm bạn bè ...</string>
+    <!-- TODO: Chat -->
+    <string name="chat_input">Tin nhắn...</string>
+    <!-- TODO: tim kiem -->
+    <string name="tim_kiem_nav">Tìm kiếm bạn bè</string>
+    <!-- TODO: Danh ba -->
+    <string name="danh_ba">Danh bạ</string>
+
+    <!-- TODO: Cai dat -->
+    <string name="tuy_chinh_ho_so">Tùy chỉnh hồ sơ</string>
+    <string name="che_do_toi">Chế độ tối</string>
+    <string name="chinh_sua_thong_tin">Chỉnh sửa thông tin cá nhân</string>
+    <string name="ban_can_ho_tro">Bạn cần hỗ trợ?</string>
+    <string name="ngon_ngu">Ngôn ngữ</string>
+    <string name="change_to_vietnamese">Việt Nam</string>
+    <string name="change_to_english"> Tiếng Anh</string>
+    <string name="dang_xuat">Đăng xuất</string>
+    <string name="search_friend">Tìm kiếm bạn bè ...</string>
+    <string name="message">Tin nhắn</string>
+
+
+</resources>

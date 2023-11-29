@@ -131,6 +131,7 @@ public class ChatActivity extends AppCompatActivity {
             } else Functions.showSnackBar(binding.getRoot(), "Error, please try again");
         });
         initView();
+
     }
 
     @SuppressLint("UnspecifiedRegisterReceiverFlag")

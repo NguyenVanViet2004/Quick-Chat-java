@@ -6,6 +6,29 @@
     <string name="network_comeback">kết nối mạng đã quay trở lại</string>
     <string name="error_network">Kết nối internet không ổn định hoặc không có internet. Vui lòng kiểm tra lại kết nối.</string>
     <string name="bottom_nav_message">Tin nhắn</string>
+    <string name="bottom_nav_contact">Danh bạ</string>
     <string name="bottom_nav_option">Tùy chọn</string>
     <string name="bottom_nav_setting">Cài đặt</string>
+    <!-- TODO: Trang chu -->
+    <string name="tin_nhan">Messeage</string>
+    <string name="tim_kiem">Search for friends ...</string>
+    <!-- TODO: Chat -->
+    <string name="chat_input">Message ...</string>
+    <!-- TODO: tim kiem -->
+    <string name="tim_kiem_nav">Search for friends</string>
+    <!-- TODO: Danh ba -->
+    <string name="danh_ba">Contact list</string>
+
+    <!-- TODO: Cai dat -->
+    <string name="tuy_chinh_ho_so">Customize profile</string>
+    <string name="che_do_toi">Dark mode</string>
+    <string name="chinh_sua_thong_tin">Edit personal information</string>
+    <string name="ban_can_ho_tro">Do you need assistance?</string>
+    <string name="dang_xuat">Log out</string>
+    <string name="ngon_ngu">Language</string>
+    <string name="change_to_vietnamese">VietNamese</string>
+    <string name="change_to_english"> English</string>
+    <string name="search_friend">Search</string>
+    <string name="message">Chat</string>
+
 </resources>

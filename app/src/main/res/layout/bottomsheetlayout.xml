@@ -24,7 +24,7 @@
         android:layout_height="wrap_content"
         android:textAlignment="viewStart"
         android:layout_weight="2"
-        android:text="Create"
+        android:text="Tùy chọn"
         android:padding="@dimen/_6sdp"
         android:textColor="@color/lavender"
         android:layout_marginStart="@dimen/_10sdp"
