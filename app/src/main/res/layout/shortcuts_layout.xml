@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/_10sdp"
         android:gravity="center_horizontal"
-        android:text="Lối tắt"
+        android:text="@string/loi_tat"
         style="@style/TEXT"
         android:textSize="@dimen/_17ssp" />
 
@@ -44,7 +44,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/_5sdp"
-                android:text="Chế độ tối"
+                android:text="@string/che_do_toi"
                 android:textSize="@dimen/_13ssp" />
         </LinearLayout>
 
@@ -70,7 +70,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/_5sdp"
                 android:gravity="center_horizontal"
-                android:text="Thời gian sử dụng"
+                android:text="@string/thoi_gian_su_dung"
                 android:textSize="@dimen/_10ssp" />
         </LinearLayout>
 
@@ -105,7 +105,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/_5sdp"
                 android:layout_marginHorizontal="@dimen/_5sdp"
-                android:text="Chỉnh sửa hồ sơ cá nhân"
+                android:text="@string/chinh_sua_ho_so"
                 android:textSize="@dimen/_10ssp" />
         </LinearLayout>
 
@@ -131,7 +131,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/_5sdp"
                 android:gravity="center_horizontal"
-                android:text="Đổi ngôn ngữ"
+                android:text="@string/doi_ngon_ngu"
                 android:textSize="@dimen/_10ssp" />
         </LinearLayout>
 

@@ -24,7 +24,7 @@
             android:id="@+id/tvTinNhan"
             android:layout_width="0sp"
             android:layout_height="wrap_content"
-            android:text="@string/message"
+            android:text="@string/tin_nhan_home"
             android:textSize="@dimen/_15sdp"
             android:textColor="@color/white"
             android:textStyle="bold"
@@ -35,20 +35,20 @@
 
     <TextView
         android:id="@+id/searchView"
+        style="@style/item_search"
         android:layout_width="match_parent"
         android:layout_height="@dimen/_40sdp"
-        app:layout_constraintHorizontal_weight="1"
+        android:layout_below="@id/line1"
         android:layout_marginHorizontal="@dimen/_20sdp"
         android:layout_marginVertical="@dimen/_10sdp"
-        style="@style/item_search"
-        android:text="@string/search_friend"
+        android:layout_marginTop="13dp"
+        android:clickable="false"
+        android:focusable="false"
+        android:padding="@dimen/_9sdp"
+        android:text="@string/tim_kiem_home"
         android:textColor="@color/black"
         android:textSize="@dimen/_15sdp"
-        android:padding="@dimen/_9sdp"
-        android:focusable="false"
-        android:clickable="false"
-        android:layout_below="@id/line1"
-        />
+        app:layout_constraintHorizontal_weight="1" />
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipeRefreshLayout"

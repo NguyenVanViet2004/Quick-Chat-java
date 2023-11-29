@@ -26,7 +26,7 @@
             android:layout_marginTop="@dimen/_5sdp"
             android:layout_weight="2"
             android:padding="@dimen/_6sdp"
-            android:text="Danh sách font chữ có sẵn"
+            android:text="@string/danh_sach_font_chu"
             android:textAlignment="viewStart"
             android:textColor="@color/lavender"
             android:textSize="@dimen/_15sdp" />

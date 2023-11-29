@@ -29,7 +29,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:paddingHorizontal="@dimen/_20sdp"
-            android:text="@string/tim_kiem_nav"
+            android:text="@string/tim_kiem_o_day"
             android:textColor="@color/white"
             android:textSize="@dimen/_15sdp"
             android:textStyle="bold" />
@@ -44,7 +44,7 @@
         android:layout_marginVertical="@dimen/_10sdp"
         android:background="@drawable/radius_item"
         android:padding="@dimen/_5sdp"
-        android:queryHint="Tìm kiếm ở đây..."
+        android:queryHint="@string/tim_kiem_search"
         android:layout_below="@id/line1" />
 
     <androidx.recyclerview.widget.RecyclerView

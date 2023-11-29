@@ -39,14 +39,18 @@ import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.util.Locale;
 
-public class SettingActivity extends BaseActivity {
+public class SettingActivity extends AppCompatActivity {
 
     private ActivitySettingBinding binding;
     private userModel userModel;
+<<<<<<< HEAD
     private NetworkChangeReceiver networkChangeReceiver;
 
     String idUser;
     private String currentLanguage = ""; // Ngôn ngữ hiện tại, mặc định là tiếng Anh ("en")
+=======
+
+>>>>>>> 40e9c24 (save)
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,7 +69,9 @@ public class SettingActivity extends BaseActivity {
         idUser = FirebaseUtil.currentUserId();
         networkChangeReceiver = Functions.getNetworkChangeReceiver(this);
         MyApplication.applyNightMode();
-        binding.backFragmentMess.setOnClickListener(view -> onBackPressed());
+        binding.backFragmentMess.setOnClickListener(view -> {
+            startActivity(new Intent(SettingActivity.this, homeActivity.class));
+        });
 
         binding.option.btnNightMode.setOnClickListener(view -> {
             startActivity(new Intent(SettingActivity.this, NightModeActivity.class));
@@ -82,19 +88,7 @@ public class SettingActivity extends BaseActivity {
         binding.option.changeLanguage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                /*
-                SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(SettingActivity.this);
-        String currentLang = preferences.getString("lang", "vi");
-
-        String newLang = currentLang.equals("vi") ? "en" : "vi";
-
-        SharedPreferences.Editor editor = preferences.edit();
-        editor.putString("lang", newLang);
-        editor.apply();
-
-        setLocale(); // Cập nhật ngôn ngữ ngay lập tức
-        recreate(); // Khởi động lại activity để áp dụng ngôn ngữ mới
-                * */
+                startActivity(new Intent(SettingActivity.this, ChangeLanguageActivity.class));
             }
         });
 
@@ -116,33 +110,33 @@ public class SettingActivity extends BaseActivity {
 
     }
 
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        // Save any necessary data here, including language settings
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-        preferences.edit().putString("lang", getCurrentLanguage()).apply();
-    }
-
-    private String getCurrentLanguage() {
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-        return preferences.getString("lang", "");
-    }
-
-    protected void setLocale() {
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-        String language = preferences.getString("lang", "");
-
-        // Cập nhật ngôn ngữ ngay sau khi SharedPreferences thay đổi
-        Locale locale = new Locale(language);
-        Locale.setDefault(locale);
-
-        Resources resources = getResources();
-        Configuration configuration = resources.getConfiguration();
-        configuration.setLocale(locale);
-
-        resources.updateConfiguration(configuration, resources.getDisplayMetrics());
-    }
+//    @Override
+//    protected void onSaveInstanceState(Bundle outState) {
+//        super.onSaveInstanceState(outState);
+//        // Save any necessary data here, including language settings
+//        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+//        preferences.edit().putString("lang", getCurrentLanguage()).apply();
+//    }
+//
+//    private String getCurrentLanguage() {
+//        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+//        return preferences.getString("lang", "");
+//    }
+//
+//    protected void setLocale() {
+//        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+//        String language = preferences.getString("lang", "");
+//
+//        // Cập nhật ngôn ngữ ngay sau khi SharedPreferences thay đổi
+//        Locale locale = new Locale(language);
+//        Locale.setDefault(locale);
+//
+//        Resources resources = getResources();
+//        Configuration configuration = resources.getConfiguration();
+//        configuration.setLocale(locale);
+//
+//        resources.updateConfiguration(configuration, resources.getDisplayMetrics());
+//    }
 
 
     private void setInformation() {

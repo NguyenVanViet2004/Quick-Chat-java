@@ -32,7 +32,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:paddingHorizontal="@dimen/_20sdp"
-            android:text="Chế độ tối"
+            android:text="@string/che_do_toi"
             android:textColor="@color/white"
             android:textSize="@dimen/_15sdp"
             android:textStyle="bold" />
@@ -48,7 +48,7 @@
         android:layout_marginTop="@dimen/_30sdp"
         android:background="@drawable/onclickitem"
         android:padding="@dimen/_10sdp"
-        android:text="Chế độ tối"
+        android:text="@string/che_do_toi_switch"
         android:textSize="@dimen/_15sdp"
         app:layout_constraintRight_toRightOf="@id/nightSwitch"
         app:layout_constraintStart_toStartOf="parent"

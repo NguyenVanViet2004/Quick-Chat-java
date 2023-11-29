@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        tools:context=".activity.ChangeLanguageActivity"
+        >
+
+        <LinearLayout
+            android:id="@+id/line1"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_50sdp"
+            android:layout_gravity="top"
+            android:background="@color/lavender"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toTopOf="@id/scrollView"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent">
+
+            <ImageView
+                android:id="@+id/backSetting"
+                android:layout_width="@dimen/_24sdp"
+                android:layout_height="@dimen/_24sdp"
+                android:layout_marginLeft="@dimen/_15sdp"
+                android:layout_weight="0"
+                android:scaleType="fitXY"
+                android:src="@drawable/baseline_arrow_back_ios_24"
+                app:tint="@color/white" />
+
+            <TextView
+                android:layout_width="0sp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:paddingHorizontal="@dimen/_20sdp"
+                android:text="@string/ngon_ngu"
+                android:textColor="@color/white"
+                android:textSize="@dimen/_15sdp"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/tvViet"
+                style="@style/TEXT"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/_20sdp"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="@dimen/_20sdp"
+                android:background="@drawable/onclickitem"
+                android:padding="@dimen/_10sdp"
+                android:text="@string/tieng_viet"
+                android:textSize="@dimen/_15sdp"
+                app:layout_constraintRight_toRightOf="@id/Switch"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:ignore="HardcodedText,RtlHardcoded" />
+
+            <Switch
+                android:id="@+id/Switch"
+                android:layout_width="@dimen/_50sdp"
+                android:layout_height="@dimen/_50sdp"
+                android:layout_marginTop="@dimen/_20sdp"
+                android:layout_marginRight="27dp"
+                android:padding="@dimen/_10sdp"
+                android:textOff="Off"
+                android:textOn="On"
+                android:checked="false"
+                android:thumb="@drawable/thumb"
+                android:track="@drawable/track"
+                app:layout_constraintHorizontal_weight="0"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:ignore="HardcodedText,UseSwitchCompatOrMaterialXml" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/tvAnh"
+                style="@style/TEXT"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/_20sdp"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="@dimen/_20sdp"
+                android:background="@drawable/onclickitem"
+                android:padding="@dimen/_10sdp"
+                android:text="@string/tieng_anh"
+                android:textSize="@dimen/_15sdp"
+                app:layout_constraintRight_toRightOf="@id/Switch2"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:ignore="HardcodedText,RtlHardcoded" />
+
+            <Switch
+                android:id="@+id/Switch2"
+                android:checked="true"
+                android:layout_width="@dimen/_50sdp"
+                android:layout_height="@dimen/_50sdp"
+                android:layout_marginTop="24dp"
+                android:layout_marginRight="27dp"
+                android:padding="@dimen/_10sdp"
+                android:textOff="Off"
+                android:textOn="On"
+                android:thumb="@drawable/thumb"
+                android:track="@drawable/track"
+                app:layout_constraintHorizontal_weight="0"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:ignore="HardcodedText,UseSwitchCompatOrMaterialXml" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="83dp">
+
+            <TextView
+                android:id="@+id/tvDuc"
+                style="@style/TEXT"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/_20sdp"
+
+                android:layout_marginStart="25dp"
+                android:layout_marginEnd="25dp"
+                android:background="@drawable/onclickitem"
+                android:padding="@dimen/_10sdp"
+                android:text="@string/tieng_duc"
+                android:textSize="@dimen/_15sdp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Switch
+                android:id="@+id/Switch3"
+                android:checked="false"
+                android:layout_width="@dimen/_50sdp"
+                android:layout_height="@dimen/_50sdp"
+                android:padding="@dimen/_10sdp"
+                android:textOff="Off"
+                android:textOn="On"
+                android:thumb="@drawable/thumb"
+                android:track="@drawable/track"
+                app:layout_constraintBaseline_toBaselineOf="@+id/tvDuc"
+                app:layout_constraintEnd_toEndOf="@+id/tvDuc" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+</LinearLayout>
+

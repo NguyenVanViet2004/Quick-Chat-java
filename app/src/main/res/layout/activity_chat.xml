@@ -46,7 +46,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:paddingHorizontal="@dimen/_20sdp"
-            android:text="Tin nhắn"
+            android:text="@string/tin_nhan_chat"
             android:textColor="@color/white"
             android:textSize="@dimen/_13sdp"
             android:textStyle="bold" />
@@ -130,7 +130,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/_10sdp"
                 android:layout_weight="5"
-                android:hint="Tin nhắn"
+                android:hint="@string/tin_nhan_input"
                 android:paddingVertical="@dimen/_10sdp"
                 android:paddingRight="@dimen/_40sdp"
                 android:paddingLeft="@dimen/_10sdp"
@@ -152,6 +152,7 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:tint="@color/lavender" />
         </androidx.constraintlayout.widget.ConstraintLayout>
+
 
         <ImageView
             android:id="@+id/sendMess"

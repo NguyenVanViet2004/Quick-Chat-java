@@ -1,34 +1,78 @@
 <resources>
-    <string name="app_name">Ứng dụng chat 1-1</string>
-    <string name="author">Ứng dụng chat 1-1</string>
+    <string name="app_name">1-1 Chat App</string>
+    <string name="author">1-1 Chat App</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="network_comeback">kết nối mạng đã quay trở lại</string>
-    <string name="error_network">Kết nối internet không ổn định hoặc không có internet. Vui lòng kiểm tra lại kết nối.</string>
-    <string name="bottom_nav_message">Tin nhắn</string>
-    <string name="bottom_nav_contact">Danh bạ</string>
-    <string name="bottom_nav_option">Tùy chọn</string>
-    <string name="bottom_nav_setting">Cài đặt</string>
-    <!-- TODO: Trang chu -->
-    <string name="tin_nhan">Messeage</string>
-    <string name="tim_kiem">Search for friends ...</string>
-    <!-- TODO: Chat -->
-    <string name="chat_input">Message ...</string>
-    <!-- TODO: tim kiem -->
-    <string name="tim_kiem_nav">Search for friends</string>
-    <!-- TODO: Danh ba -->
-    <string name="danh_ba">Contact list</string>
+    <string name="network_comeback">Network connection has returned</string>
+    <string name="error_network">Internet connection is unstable or unavailable. Please check your connection.</string>
+    <string name="bottom_nav_message">Messages</string>
+    <string name="bottom_nav_contact">Contacts</string>
+    <string name="bottom_nav_option">Options</string>
+    <string name="bottom_nav_setting">Settings</string>
+    <!-- TODO: Homepage -->
 
-    <!-- TODO: Cai dat -->
-    <string name="tuy_chinh_ho_so">Customize profile</string>
-    <string name="che_do_toi">Dark mode</string>
-    <string name="chinh_sua_thong_tin">Edit personal information</string>
-    <string name="ban_can_ho_tro">Do you need assistance?</string>
-    <string name="dang_xuat">Log out</string>
+
+    <!-- TODO: Chat -->
+    <string name="chat_input">Message...</string>
+    <!-- TODO: Search -->
+    <string name="tim_kiem_nav">Search for friends</string>
+    <!-- TODO: Contacts -->
+
+
+    <!-- TODO: Settings -->
+
+
+    <string name="search_friend">Search for friends...</string>
+    <string name="message">Messages</string>
+    <string name="tieng_viet">Vietnamese</string>
+    <string name="tieng_anh">English</string>
+    <string name="tieng_duc">German</string>
+    <string name="tieng_phap">French</string>
     <string name="ngon_ngu">Language</string>
-    <string name="change_to_vietnamese">VietNamese</string>
-    <string name="change_to_english"> English</string>
-    <string name="search_friend">Search</string>
-    <string name="message">Chat</string>
+    <string name="tuy_chinh_ho_so">Profile settings</string>
+    <string name="loi_tat">Shortcuts</string>
+    <string name="che_do_toi">Dark mode</string>
+    <string name="thoi_gian_su_dung">Usage time</string>
+    <string name="chinh_sua_ho_so">Edit profile</string>
+    <string name="doi_ngon_ngu">Change language</string>
+    <string name="dang_xuat">Log out</string>
+    <string name="giai_dap_hoac_bao_cao">Answer any questions you have or report issues to us</string>
+    <string name="ban_can_tro_giup">You need assistance</string>
+    <string name="tin_nhan_chat">Messages</string>
+    <string name="tin_nhan_input">Messages</string>
+    <string name="danh_sach_font_chu">List of available fonts</string>
+    <string name="chu_thich">Note:</string>
+    <string name="ngay_1">Day 1</string>
+    <string name="ngay_2">Day 2</string>
+    <string name="ngay_3">Day 3</string>
+    <string name="ngay_4">Day 4</string>
+    <string name="ngay_5">Day 5</string>
+    <string name="ngay_6">Day 6</string>
+    <string name="ngay_7">Day 7</string>
+    <string name="du_lieu_duoc_thong_ke">* Data has been compiled over the last 7 days!</string>
+    <string name="tim_kiem_home">Search</string>
+    <string name="tin_nhan_home">Messages</string>
+    <string name="upload_a_video">Upload a video</string>
+    <string name="create_a_short">Create a short</string>
+    <string name="go_live">Go live</string>
+    <string name="tuy_chon">Options</string>
+    <string name="tuy_chon_chat">Chat Options</string>
+    <string name="chia_se_vi_tri">Share Location</string>
+    <string name="font_ch">Font</string>
+    <string name="giong_noi">Voice</string>
+    <string name="che_do_toi_switch">Dark mode</string>
+    <string name="thong_ke_thoi_gian">Time Usage Statistics</string>
+    <string name="thong_ke_thoi_gian_item">Time Usage Statistics</string>
+    <string name="thong_ke_thoi_gian_2">Time Usage Statistics</string>
+    <string name="chinh_sua_thong_gtin">Edit Information</string>
+    <string name="sdt">Phone number</string>
+    <string name="ngay_tháng_nam_edit">Date-Month-Year</string>
+    <string name="cap_nhat">Update</string>
+    <string name="ho_va_ten_edit">Full name</string>
+    <string name="tim_kiem_o_day">Search here</string>
+    <string name="tim_kiem_search">Search</string>
+
+
+
 
 </resources>

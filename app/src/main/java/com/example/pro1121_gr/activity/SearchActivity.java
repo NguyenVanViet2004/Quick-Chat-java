@@ -21,7 +21,7 @@ import com.example.pro1121_gr.util.FirebaseUtil;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.firebase.firestore.Query;
 
-public class SearchActivity extends BaseActivity {
+public class SearchActivity extends AppCompatActivity {
 
     private ActivitySearchBinding binding;
     private searchUserAdapter adapter;

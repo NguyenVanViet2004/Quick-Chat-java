@@ -42,7 +42,7 @@ import es.dmoral.toasty.Toasty;
 import kotlin.Unit;
 import kotlin.jvm.functions.Function1;
 
-public class home extends BaseActivity {
+public class home extends AppCompatActivity {
 
     private ActivityHomeBinding binding;
     private NetworkChangeReceiver networkChangeReceiver;
@@ -112,7 +112,8 @@ public class home extends BaseActivity {
                         new ChatFragment(),
                         false
                 );
-            }else if (item.getItemId() == R.id.bottomNavOption){
+            }/*
+            else if (item.getItemId() == R.id.bottomNavOption){
                 showBottomDialog();
             }else  if (item.getItemId() == R.id.bottomNavContact){
                 ReplaceFragment.replaceFragment(
@@ -122,6 +123,7 @@ public class home extends BaseActivity {
                         false
                 );
             }
+            */
             else {
                 startActivity(new Intent(home.this, SettingActivity.class));
             }
