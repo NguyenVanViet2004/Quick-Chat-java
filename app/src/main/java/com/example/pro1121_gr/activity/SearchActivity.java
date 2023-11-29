@@ -4,7 +4,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import android.annotation.SuppressLint;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.SearchView;
@@ -85,6 +87,7 @@ public class SearchActivity extends AppCompatActivity {
         adapter.notifyDataSetChanged();
     }
 
+
     protected void onDestroy() {
         // Hủy đăng ký BroadcastReceiver khi hoạt động bị hủy
         super.onDestroy();
@@ -92,5 +95,18 @@ public class SearchActivity extends AppCompatActivity {
             unregisterReceiver(networkChangeReceiver);
         }
         DBhelper.getInstance(this).endUsageTracking();
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        // Save any necessary data here, including language settings
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        preferences.edit().putString("lang", getCurrentLanguage()).apply();
+    }
+
+    private String getCurrentLanguage() {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        return preferences.getString("lang", "vi");
     }
 }

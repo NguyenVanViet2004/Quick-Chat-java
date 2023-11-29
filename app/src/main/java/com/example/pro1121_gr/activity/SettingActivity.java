@@ -4,11 +4,24 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.ClipData;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+
+import android.content.SharedPreferences;
+import android.content.res.Configuration;
+import android.content.res.Resources;
+
 import android.net.Uri;
 import android.os.Bundle;
+
 import android.util.Log;
+import android.preference.PreferenceManager;
+import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
+
 
 import com.example.pro1121_gr.Database.DBhelper;
 import com.example.pro1121_gr.R;
@@ -23,28 +36,39 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.messaging.FirebaseMessaging;
 
+import java.util.Locale;
+
 public class SettingActivity extends AppCompatActivity {
 
     private ActivitySettingBinding binding;
     private userModel userModel;
+
     private NetworkChangeReceiver networkChangeReceiver;
 
     String idUser;
+    private String currentLanguage = ""; // Ngôn ngữ hiện tại, mặc định là tiếng Anh ("en")
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+//        LanguageHelper.loadLocale(this);
         binding = ActivitySettingBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         initView();
         setInformation();
 
+
     }
+
 
     private void initView(){
         idUser = FirebaseUtil.currentUserId();
         networkChangeReceiver = Functions.getNetworkChangeReceiver(this);
         MyApplication.applyNightMode();
-        binding.backFragmentMess.setOnClickListener(view -> onBackPressed());
+        binding.backFragmentMess.setOnClickListener(view -> {
+            startActivity(new Intent(SettingActivity.this, homeActivity.class));
+        });
 
         binding.option.btnNightMode.setOnClickListener(view -> {
             startActivity(new Intent(SettingActivity.this, NightModeActivity.class));
@@ -52,11 +76,18 @@ public class SettingActivity extends AppCompatActivity {
 
 
         binding.option.btnUsedTime.setOnClickListener(view -> {
-            startActivity(new Intent(SettingActivity.this,UsageTimeStatisticsActivity.class));
+            startActivity(new Intent(SettingActivity.this, UsageTimeStatisticsActivity.class));
         });
         //nút chỉnh sửa thông tin cá nhân
         binding.option.editProfile.setOnClickListener(view ->
-                startActivity(new Intent(SettingActivity.this,EditProfileActivity.class)));
+                startActivity(new Intent(SettingActivity.this, EditProfileActivity.class)));
+
+        binding.option.changeLanguage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(SettingActivity.this, ChangeLanguageActivity.class));
+            }
+        });
 
         //nút đăng xuất
         binding.logout.setOnClickListener(view -> {
@@ -76,15 +107,42 @@ public class SettingActivity extends AppCompatActivity {
 
     }
 
+//    @Override
+//    protected void onSaveInstanceState(Bundle outState) {
+//        super.onSaveInstanceState(outState);
+//        // Save any necessary data here, including language settings
+//        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+//        preferences.edit().putString("lang", getCurrentLanguage()).apply();
+//    }
+//
+//    private String getCurrentLanguage() {
+//        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+//        return preferences.getString("lang", "");
+//    }
+//
+//    protected void setLocale() {
+//        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+//        String language = preferences.getString("lang", "");
+//
+//        // Cập nhật ngôn ngữ ngay sau khi SharedPreferences thay đổi
+//        Locale locale = new Locale(language);
+//        Locale.setDefault(locale);
+//
+//        Resources resources = getResources();
+//        Configuration configuration = resources.getConfiguration();
+//        configuration.setLocale(locale);
+//
+//        resources.updateConfiguration(configuration, resources.getDisplayMetrics());
+//    }
 
 
     private void setInformation() {
         FirebaseUtil.currentUserDetails().get().addOnCompleteListener(this, new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()){
+                if (task.isSuccessful()) {
                     userModel = task.getResult().toObject(userModel.class);
-                    if (userModel != null){
+                    if (userModel != null) {
                         binding.profile.fullName.setText(userModel.getUsername());
                         // xu ly avt
                         FirebaseUtil.getCurrentOtherProfileImageStorageReference(userModel.getUserId())
@@ -96,7 +154,6 @@ public class SettingActivity extends AppCompatActivity {
             }
         });
     }
-
 
 
     private void logOut() {
@@ -111,6 +168,7 @@ public class SettingActivity extends AppCompatActivity {
                 FirebaseUtil.currentUserDetails().update("status",0);
                 // delete fcm token
                 FirebaseMessaging.getInstance().deleteToken().addOnCompleteListener(task -> {
+
                     if (task.isSuccessful()){
                         FirebaseUtil.logout();
                         // Thêm hành động chuyển hướng đến màn hình đăng nhập sau khi đăng xuất .
@@ -147,8 +205,6 @@ public class SettingActivity extends AppCompatActivity {
         DBhelper.getInstance(this).endUsageTracking();
         Log.e(CreateProfile.class.getSimpleName(), "onDestroy: " + idUser );
     }
-
-
 
 
 }

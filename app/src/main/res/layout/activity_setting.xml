@@ -33,7 +33,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:paddingHorizontal="@dimen/_20sdp"
-            android:text="Tùy chỉnh hồ sơ"
+            android:text="@string/tuy_chinh_ho_so"
             android:textColor="@color/white"
             android:textSize="@dimen/_15sdp"
             android:textStyle="bold" />
@@ -79,7 +79,7 @@
                 android:layout_marginTop="@dimen/_25sdp"
                 android:layout_marginBottom="@dimen/_50sdp"
                 android:background="@drawable/login_button_background"
-                android:text="LOG OUT"
+                android:text="@string/dang_xuat"
                 android:textColor="@color/white"
                 app:cornerRadius="@dimen/_20sdp"
                 app:layout_constraintBottom_toBottomOf="parent"

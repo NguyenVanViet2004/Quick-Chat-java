@@ -1,0 +1,79 @@
+<resources>
+    <string name="app_name">Ứng dụng chat 1-1</string>
+    <string name="author">Ứng dụng chat 1-1</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="network_comeback">kết nối mạng đã quay trở lại</string>
+    <string name="error_network">Kết nối internet không ổn định hoặc không có internet. Vui lòng kiểm tra lại kết nối.</string>
+    <string name="bottom_nav_message">Tin nhắn</string>
+    <string name="bottom_nav_contact">Danh bạ</string>
+    <string name="bottom_nav_option">Tùy chọn</string>
+    <string name="bottom_nav_setting">Cài đặt</string>
+    <!-- TODO: Trang chu -->
+
+
+    <!-- TODO: Chat -->
+    <string name="chat_input">Tin nhắn...</string>
+    <!-- TODO: tim kiem -->
+    <string name="tim_kiem_nav">Tìm kiếm bạn bè</string>
+    <!-- TODO: Danh ba -->
+
+
+    <!-- TODO: Cai dat -->
+
+
+
+
+
+    <string name="search_friend">Tìm kiếm bạn bè ...</string>
+    <string name="message">Tin nhắn</string>
+    <string name="tieng_viet">Tiếng Việt</string>
+    <string name="tieng_anh">Tiếng Anh</string>
+    <string name="tieng_duc">Tiếng Đức</string>
+    <string name="tieng_phap">Tiếng Pháp</string>
+    <string name="ngon_ngu">Ngôn ngữ</string>
+    <string name="tuy_chinh_ho_so">Tùy chỉnh hồ sơ</string>
+    <string name="loi_tat">Lối tắt</string>
+    <string name="che_do_toi">Chế độ tối</string>
+    <string name="thoi_gian_su_dung">Thời gian sử dung</string>
+    <string name="chinh_sua_ho_so">Chỉnh sửa hồ sơ</string>
+    <string name="doi_ngon_ngu">Đổi ngôn ngữ</string>
+    <string name="dang_xuat">Đăng xuất</string>
+    <string name="giai_dap_hoac_bao_cao">Giải đáp mọi thắc mắc của bạn hoặc báo cáo sự cố cho chúng tôi</string>
+    <string name="ban_can_tro_giup">Bạn cần trợ giúp</string>
+    <string name="tin_nhan_chat">Tin nhắn</string>
+    <string name="tin_nhan_input">Tin nhắn</string>
+    <string name="danh_sach_font_chu">Danh sách font chữ có sẵn</string>
+    <string name="chu_thich">Chú thích :</string>
+    <string name="ngay_1">Ngày 1</string>
+    <string name="ngay_2">Ngày 2</string>
+    <string name="ngay_3">Ngày 3</string>
+    <string name="ngay_4">Ngày 4</string>
+    <string name="ngay_5">Ngày 5</string>
+    <string name="ngay_6">Ngày 6</string>
+    <string name="ngay_7">Ngày 7</string>
+    <string name="du_lieu_duoc_thong_ke">* Dữ liệu được thống kê trong 7 ngày gần nhất!</string>
+    <string name="tim_kiem_home">Tìm kiếm</string>
+    <string name="tin_nhan_home">Tin nhắn</string>
+    <string name="upload_a_video">Tải lên video</string>
+    <string name="create_a_short">Tạo video ngắn</string>
+    <string name="go_live">Phát trực tiếp</string>
+    <string name="tuy_chon">Tùy chọn</string>
+    <string name="tuy_chon_chat">Tùy chọn</string>
+    <string name="chia_se_vi_tri">Chia sẻ vị trí</string>
+    <string name="font_ch">Font chữ</string>
+    <string name="giong_noi">Giọng nói</string>
+    <string name="che_do_toi_switch">Chế độ tối</string>
+    <string name="thong_ke_thoi_gian">Thống kê thời gian sử dụng</string>
+    <string name="thong_ke_thoi_gian_item">Thống kê thời gian sử dụng</string>
+    <string name="thong_ke_thoi_gian_2">Thống kê thời gian sử dụng</string>
+    <string name="chinh_sua_thong_gtin">Chỉnh sửa thông tin</string>
+    <string name="sdt">Số điện thoại</string>
+    <string name="ngay_tháng_nam_edit">Ngày-Tháng-Năm sinh</string>
+    <string name="cap_nhat">Cập nhật</string>
+    <string name="ho_va_ten_edit">Họ và tên</string>
+    <string name="tim_kiem_o_day">Tìm kiếm ở đây</string>
+    <string name="tim_kiem_search">Tìm kiếm</string>
+
+
+</resources>

@@ -131,6 +131,7 @@ public class ChatActivity extends AppCompatActivity {
             } else Functions.showSnackBar(binding.getRoot(), "Error, please try again");
         });
         initView();
+
     }
 
     @SuppressLint("UnspecifiedRegisterReceiverFlag")
@@ -155,7 +156,7 @@ public class ChatActivity extends AppCompatActivity {
     @SuppressLint("ClickableViewAccessibility")
     private void setUpCLickEvents(){
         binding.backFragmentMess.setOnClickListener(view -> {
-            onBackPressed();
+            startActivity(new Intent(ChatActivity.this,homeActivity.class));
         });
 
         binding.usernameMess.setText(userModel.getUsername().trim());

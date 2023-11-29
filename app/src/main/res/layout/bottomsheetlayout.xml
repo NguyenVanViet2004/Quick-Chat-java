@@ -24,7 +24,7 @@
         android:layout_height="wrap_content"
         android:textAlignment="viewStart"
         android:layout_weight="2"
-        android:text="Create"
+        android:text="@string/tuy_chon"
         android:padding="@dimen/_6sdp"
         android:textColor="@color/lavender"
         android:layout_marginStart="@dimen/_10sdp"
@@ -62,7 +62,7 @@
             android:layout_weight="10"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Upload a video"
+            android:text="@string/upload_a_video"
             android:textColor="@color/lavender"
 
             android:textSize="16sp"/>
@@ -88,7 +88,7 @@
             android:layout_weight="10"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Create a short"
+            android:text="@string/create_a_short"
             android:textColor="@color/lavender"
             android:textSize="16sp"/>
 
@@ -117,7 +117,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginRight="@dimen/_10sdp"
-            android:text="Go live"
+            android:text="@string/go_live"
             android:textColor="@color/lavender"
             android:textSize="16sp"/>
 

@@ -101,4 +101,5 @@ public class ChatFragment extends Fragment {
         if (listAvatarAdapter != null) listAvatarAdapter.notifyDataSetChanged();
     }
 
+
 }
