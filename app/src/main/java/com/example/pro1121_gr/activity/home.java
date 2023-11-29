@@ -170,6 +170,7 @@ public class home extends AppCompatActivity {
         }
     }
 
+
     protected void onDestroy() {
         // Hủy đăng ký BroadcastReceiver khi hoạt động bị hủy
         super.onDestroy();
