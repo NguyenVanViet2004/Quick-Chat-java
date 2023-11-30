@@ -1,94 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_width="@dimen/_200sdp"
+    android:layout_height="@dimen/_100sdp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     style="@style/botttom_dialog"
+    android:gravity="center"
     android:orientation="vertical">
 
-    <ImageView
-        android:layout_width="@dimen/_70sdp"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center|top"
-        android:scaleType="centerCrop"
-        android:src="@drawable/ic_round_remove_24" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <TextView
-            android:id="@+id/createText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/_10sdp"
-            android:layout_marginTop="@dimen/_5sdp"
-            android:layout_weight="2"
-            android:padding="@dimen/_6sdp"
-            android:text="@string/tuy_chon_chat"
-            android:textAlignment="viewStart"
-            android:textColor="@color/lavender"
-            android:textSize="@dimen/_20sdp" />
-
-        <ImageView
-            android:id="@+id/cancelButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_margin="@dimen/_5sdp"
-            android:layout_weight="0"
-            android:src="@drawable/ic_baseline_clear_24" />
-
-    </LinearLayout>
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="@dimen/_10sdp"
-        android:orientation="horizontal">
-
-
-        <TextView
+        <LinearLayout
             android:id="@+id/GPS"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:drawablePadding="@dimen/_5sdp"
-            android:text="@string/chia_se_vi_tri"
-            style="@style/TEXT"
-            android:textSize="16sp"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toLeftOf="@id/Fonts"
-            app:layout_constraintTop_toTopOf="parent"
-            app:drawableTopCompat="@drawable/gps_icon" />
+            android:orientation="horizontal">
 
-        <TextView
+                <ImageView
+                    android:layout_width="@dimen/_24sdp"
+                    android:layout_height="@dimen/_24sdp"
+                    android:src="@drawable/gps_icon" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/chia_se_vi_tri"
+                    style="@style/TEXT"
+                    android:textSize="16sp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginStart="@dimen/_10sdp"/>
+
+        </LinearLayout>
+
+
+        <LinearLayout
             android:id="@+id/Fonts"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/_10sdp"
-            android:drawablePadding="@dimen/_5sdp"
-            android:text="@string/font_ch"
-            style="@style/TEXT"
-            android:textSize="16sp"
-            app:layout_constraintLeft_toRightOf="@id/GPS"
-            app:layout_constraintTop_toTopOf="parent"
-            app:drawableTopCompat="@drawable/fonts_icon" />
+            android:layout_marginTop="@dimen/_10sdp"
+            android:orientation="horizontal">
 
-        <TextView
-            android:id="@+id/Voice"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/_10sdp"
-            android:drawablePadding="@dimen/_5sdp"
-            android:text="@string/giong_noi"
-            style="@style/TEXT"
-            android:textSize="16sp"
-            app:layout_constraintLeft_toRightOf="@id/Fonts"
-            app:layout_constraintTop_toTopOf="parent"
-            app:drawableTopCompat="@drawable/icon_voice" />
+                <ImageView
+                    android:layout_width="@dimen/_24sdp"
+                    android:layout_height="@dimen/_24sdp"
+                    android:src="@drawable/fonts_icon" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/font_ch"
+                    style="@style/TEXT"
+                    android:textSize="16sp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginStart="@dimen/_10sdp"/>
+
+        </LinearLayout>
 
 
 </LinearLayout>

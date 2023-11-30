@@ -3,7 +3,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     style="@style/botttom_dialog"
-
     android:orientation="vertical">
 
     <ImageView
@@ -54,7 +53,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Blackjack"
-            android:textColor="@color/black"
             android:background="@drawable/onclickitem"
             android:textSize="@dimen/_17ssp" />
 
@@ -64,7 +62,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Allura"
-            android:textColor="@color/black"
             android:background="@drawable/onclickitem"
             android:textSize="@dimen/_17ssp"
             android:layout_marginTop="@dimen/_10sdp"/>
@@ -75,7 +72,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Roboto bold"
-            android:textColor="@color/black"
             android:background="@drawable/onclickitem"
             android:textSize="@dimen/_17ssp"
             android:layout_marginTop="@dimen/_10sdp"/>
@@ -86,7 +82,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Roboto italic"
-            android:textColor="@color/black"
             android:background="@drawable/onclickitem"
             android:textSize="@dimen/_17ssp"
             android:layout_marginTop="@dimen/_10sdp"/>
@@ -97,7 +92,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Roboto light"
-            android:textColor="@color/black"
             android:background="@drawable/onclickitem"
             android:textSize="@dimen/_17ssp"
             android:layout_marginTop="@dimen/_10sdp"/>

@@ -30,6 +30,11 @@ public class ChangeLanguageActivity extends AppCompatActivity {
         binding = ActivityChangeLanguageBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+        initView();
+        setupClickEvents();
+    }
+
+    private void initView() {
         sharedPreferences = getSharedPreferences("language", Context.MODE_PRIVATE);
 
         // Load saved language state
@@ -41,12 +46,16 @@ public class ChangeLanguageActivity extends AppCompatActivity {
         // Load Vietnamese language state
         boolean isVietnamese = sharedPreferences.getBoolean("isVietnamese", false);
         binding.Switch.setChecked(isVietnamese);
-
-
-
+        //
+        if (!isEnglish && !isGermany && !isVietnamese){
+            binding.Switch.setChecked(true);
+            binding.Switch.setClickable(false);
+        }
         setClickableForLanguageSwitch(isEnglish, isGermany, isVietnamese);
+    }
 
 
+    private void setupClickEvents(){
         binding.Switch.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
                 handleSwitchChecked("vi", binding.Switch2, binding.Switch3);
