@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Intent;
 import android.speech.RecognizerIntent;
 
+import com.example.pro1121_gr.R;
+
 import java.util.ArrayList;
 
 import es.dmoral.toasty.Toasty;
@@ -19,7 +21,7 @@ public class VoiceRecordingUtil {
         try {
             activity.startActivityForResult(intent, REQUEST_CODE_SPEECH_INPUT);
         } catch (Exception e) {
-            Toasty.warning(activity,"Thiết bị của bạn không hỗ trợ chức năng nhận diện giọng nói.", Toasty.LENGTH_LONG, true).show();
+            Toasty.warning(activity, R.string.voiceRes, Toasty.LENGTH_LONG, true).show();
         }
     }
 

@@ -74,6 +74,7 @@
     <string name="ho_va_ten_edit">Họ và tên</string>
     <string name="tim_kiem_o_day">Tìm kiếm ở đây</string>
     <string name="tim_kiem_search">Tìm kiếm</string>
+    <string name="voiceRes">Thiết bị của bạn không hỗ trợ chức năng nhận diện giọng nói.</string>
 
 
 </resources>

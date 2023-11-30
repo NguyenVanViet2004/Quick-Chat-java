@@ -2,6 +2,7 @@ package com.example.pro1121_gr.activity;
 
 
 import android.Manifest;
+import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
@@ -240,7 +241,7 @@ public class ChatActivity extends AppCompatActivity {
 
 
         binding.optionInMess.setOnClickListener(view -> {
-            showBottomDialog();
+            hiddenItem(false);
         });
 
         binding.like.setOnClickListener(view -> sendMessToOther("https://firebasestorage.googleapis.com/v0/b/du-an-1-197e4.appspot.com/o/like_icon%2Flike_icon.png?alt=media&token=63213f37-2681-412d-b096-177b20373976"));
@@ -261,6 +262,20 @@ public class ChatActivity extends AppCompatActivity {
 
             }
         }));
+
+        binding.voice.setOnClickListener(view -> {
+            if (RequestPermission.checkPermission(ChatActivity.this, Manifest.permission.RECORD_AUDIO)) {
+                VoiceRecordingUtil.startVoiceRecognitionActivity(ChatActivity.this);
+            } else {
+                RequestPermission.requestRecordAudio(ChatActivity.this, REQUEST_CODE_SPEECH_INPUT);
+            }
+        });
+        binding.option.setOnClickListener(view -> {
+            ObjectAnimator.ofFloat(view, "rotation", 0f, 45f)
+                    .setDuration(500)
+                    .start();
+            view.postDelayed(() -> showBottomDialog(), 500);
+        });
     }
 
     @Override
@@ -289,6 +304,7 @@ public class ChatActivity extends AppCompatActivity {
         }
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -337,8 +353,10 @@ public class ChatActivity extends AppCompatActivity {
         } else if (requestCode == REQUEST_CODE_SPEECH_INPUT) {
             VoiceRecordingUtil.processVoiceInput(requestCode, resultCode, data, text -> {
                 if (!text.isEmpty()) {
-                    sendNotification(text);
-                    sendMessToOther(text);
+                    if (!binding.TextMESS.getText().toString().trim().isEmpty()) binding.TextMESS.setText(binding.TextMESS.getText() + " " +text);
+                    else binding.TextMESS.setText(text);
+                    //sendNotification(text);
+                    //sendMessToOther(text);
                 }
             });
         }
@@ -413,10 +431,14 @@ public class ChatActivity extends AppCompatActivity {
             binding.optionInMess.setVisibility(View.VISIBLE);
             binding.imageMess.setVisibility(View.GONE);
             binding.cameraMess.setVisibility(View.GONE);
+            binding.voice.setVisibility(View.GONE);
+            binding.option.setVisibility(View.GONE);
         } else {
             binding.optionInMess.setVisibility(View.GONE);
             binding.imageMess.setVisibility(View.VISIBLE);
             binding.cameraMess.setVisibility(View.VISIBLE);
+            binding.voice.setVisibility(View.VISIBLE);
+            binding.option.setVisibility(View.VISIBLE);
         }
     }
 
@@ -501,12 +523,12 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     private void showBottomDialog() {
-        BottomNavigationInChatBinding binding = BottomNavigationInChatBinding.inflate(getLayoutInflater());
+        BottomNavigationInChatBinding bottomBinding = BottomNavigationInChatBinding.inflate(getLayoutInflater());
         Dialog dialog = new Dialog(this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setContentView(binding.getRoot());
+        dialog.setContentView(bottomBinding.getRoot());
 
-        binding.GPS.setOnClickListener(view -> {
+        bottomBinding.GPS.setOnClickListener(view -> {
             // Xử lý khi nhấn nút GPS
             if (RequestPermission.checkPermission(ChatActivity.this, Manifest.permission.ACCESS_FINE_LOCATION)) {
                 // Quyền đã được cấp
@@ -516,21 +538,16 @@ public class ChatActivity extends AppCompatActivity {
                 RequestPermission.requestLocationPermission(ChatActivity.this, LOCATION_PERMISSION_REQUEST_CODE);
         });
 
-        binding.Fonts.setOnClickListener(view -> {
+        bottomBinding.Fonts.setOnClickListener(view -> {
             dialog.dismiss();
             showFont();
         });
 
-        binding.Voice.setOnClickListener(view -> {
-            if (RequestPermission.checkPermission(ChatActivity.this, Manifest.permission.RECORD_AUDIO)) {
-                VoiceRecordingUtil.startVoiceRecognitionActivity(ChatActivity.this);
-                dialog.dismiss();
-            } else {
-                RequestPermission.requestRecordAudio(ChatActivity.this, REQUEST_CODE_SPEECH_INPUT);
-            }
-        });
+        dialog.setOnDismissListener(dialogInterface ->
+                ObjectAnimator.ofFloat(binding.option, "rotation", 0f, -45f)
+                .setDuration(500)
+                .start());
 
-        binding.cancelButton.setOnClickListener(view -> dialog.dismiss());
 
         dialog.show();
         Window window = dialog.getWindow();

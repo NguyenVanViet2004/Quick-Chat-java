@@ -94,16 +94,28 @@
             android:id="@+id/optionInMess"
             android:layout_width="@dimen/_24sdp"
             android:layout_height="@dimen/_24sdp"
-            android:layout_marginStart="@dimen/_15sdp"
+            android:layout_marginStart="@dimen/_5sdp"
             android:scaleType="fitXY"
-            android:src="@drawable/option_in_chat_message"
-            android:visibility="gone" />
+            android:src="@drawable/baseline_arrow_back_ios_24"
+            android:rotation="180"
+            android:visibility="gone"
+             />
+
+
+        <ImageView
+            android:id="@+id/option"
+            android:layout_width="@dimen/_20sdp"
+            android:layout_height="@dimen/_20sdp"
+            android:layout_marginStart="@dimen/_10sdp"
+            android:scaleType="fitXY"
+            android:src="@drawable/icon_circle_option"
+            app:tint="@color/lavender" />
 
         <ImageView
             android:id="@+id/cameraMess"
             android:layout_width="@dimen/_24sdp"
             android:layout_height="@dimen/_24sdp"
-            android:layout_marginStart="@dimen/_15sdp"
+            android:layout_marginStart="@dimen/_10sdp"
             android:scaleType="fitXY"
             android:src="@drawable/baseline_photo_camera_24"
             app:tint="@color/lavender" />
@@ -112,10 +124,21 @@
             android:id="@+id/imageMess"
             android:layout_width="@dimen/_24sdp"
             android:layout_height="@dimen/_24sdp"
-            android:layout_marginStart="@dimen/_15sdp"
+            android:layout_marginStart="@dimen/_10sdp"
             android:scaleType="fitXY"
             android:src="@drawable/baseline_image_24"
             app:tint="@color/lavender" />
+
+
+        <ImageView
+            android:id="@+id/voice"
+            android:layout_width="@dimen/_24sdp"
+            android:layout_height="@dimen/_24sdp"
+            android:layout_marginStart="@dimen/_10sdp"
+            android:scaleType="fitXY"
+            android:src="@drawable/icon_voice"
+            app:tint="@color/lavender" />
+
 
 
         <androidx.constraintlayout.widget.ConstraintLayout
