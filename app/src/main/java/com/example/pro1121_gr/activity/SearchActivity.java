@@ -4,7 +4,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import android.annotation.SuppressLint;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.SearchView;
@@ -13,6 +15,7 @@ import com.example.pro1121_gr.Database.DBhelper;
 import com.example.pro1121_gr.adapter.searchUserAdapter;
 import com.example.pro1121_gr.databinding.ActivitySearchBinding;
 import com.example.pro1121_gr.function.Functions;
+import com.example.pro1121_gr.function.MyApplication;
 import com.example.pro1121_gr.model.userModel;
 import com.example.pro1121_gr.util.NetworkChangeReceiver;
 import com.example.pro1121_gr.util.FirebaseUtil;
@@ -35,7 +38,6 @@ public class SearchActivity extends AppCompatActivity {
 
         setupClickEvents();
         setupSearchRecyclerView("");
-
         MyApplication.applyNightMode();
     }
 
@@ -86,6 +88,7 @@ public class SearchActivity extends AppCompatActivity {
         adapter.notifyDataSetChanged();
     }
 
+
     protected void onDestroy() {
         // Hủy đăng ký BroadcastReceiver khi hoạt động bị hủy
         super.onDestroy();
@@ -93,5 +96,18 @@ public class SearchActivity extends AppCompatActivity {
             unregisterReceiver(networkChangeReceiver);
         }
         DBhelper.getInstance(this).endUsageTracking();
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        // Save any necessary data here, including language settings
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        preferences.edit().putString("lang", getCurrentLanguage()).apply();
+    }
+
+    private String getCurrentLanguage() {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        return preferences.getString("lang", "vi");
     }
 }

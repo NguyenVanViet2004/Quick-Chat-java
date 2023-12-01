@@ -4,7 +4,16 @@
         android:id="@+id/bottomNavMessage"
         android:icon="@drawable/baseline_message_24"
         android:title="@string/bottom_nav_message" />
+
     <!--<item
+=======
+    <item
+        android:id="@+id/bottomNavContact"
+        android:icon="@drawable/baseline_people_24"
+        android:title="@string/bottom_nav_contact" />
+
+    <item
+>>>>>>> 66e7244 (save data)
         android:id="@+id/bottomNavOption"
         android:icon="@drawable/baseline_add_24"
         android:title="@string/bottom_nav_option" />-->

@@ -1,0 +1,81 @@
+<resources>
+    <string name="app_name">1-zu-1 Chat-App</string>
+    <string name="author">1-zu-1 Chat-App</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hallo leeres Fragment</string>
+    <string name="network_comeback">Netzwerkverbindung ist zurück</string>
+    <string name="error_network">Internetverbindung ist instabil oder nicht verfügbar. Bitte überprüfen Sie Ihre Verbindung.</string>
+    <string name="bottom_nav_message">Nachrichten</string>
+    <string name="bottom_nav_contact">Kontakte</string>
+    <string name="bottom_nav_option">Optionen</string>
+    <string name="bottom_nav_setting">Einstellungen</string>
+    <!-- TODO: Homepage -->
+
+
+    <!-- TODO: Chat -->
+    <string name="chat_input">Nachricht...</string>
+    <!-- TODO: Search -->
+    <string name="tim_kiem_nav">Freunde suchen</string>
+    <!-- TODO: Contacts -->
+
+
+    <!-- TODO: Settings -->
+
+
+    <string name="search_friend">Freunde suchen...</string>
+    <string name="message">Nachrichten</string>
+    <string name="tieng_viet">Vietnamesisch</string>
+    <string name="tieng_anh">Englisch</string>
+    <string name="tieng_duc">Deutsch</string>
+    <string name="tieng_phap">Französisch</string>
+    <string name="ngon_ngu">Sprache</string>
+    <string name="tuy_chinh_ho_so">Profil-Einstellungen</string>
+    <string name="loi_tat">Verknüpfungen</string>
+    <string name="che_do_toi">Dunkler Modus</string>
+    <string name="thoi_gian_su_dung">Nutzungszeit</string>
+    <string name="chinh_sua_ho_so">Profil bearbeiten</string>
+    <string name="doi_ngon_ngu">Sprache ändern</string>
+    <string name="dang_xuat">Abmelden</string>
+    <string name="giai_dap_hoac_bao_cao">Beantworten Sie Ihre Fragen oder melden Sie Probleme an uns</string>
+    <string name="ban_can_tro_giup">Sie benötigen Hilfe</string>
+    <string name="tin_nhan_chat">Nachrichten</string>
+    <string name="tin_nhan_input">Nachrichten</string>
+    <string name="danh_sach_font_chu">Liste der verfügbaren Schriftarten</string>
+    <string name="chu_thich">Anmerkung:</string>
+    <string name="ngay_1">Tag 1</string>
+    <string name="ngay_2">Tag 2</string>
+    <string name="ngay_3">Tag 3</string>
+    <string name="ngay_4">Tag 4</string>
+    <string name="ngay_5">Tag 5</string>
+    <string name="ngay_6">Tag 6</string>
+    <string name="ngay_7">Tag 7</string>
+    <string name="du_lieu_duoc_thong_ke">* Daten wurden in den letzten 7 Tagen zusammengestellt!</string>
+    <string name="tim_kiem_home">Suche</string>
+    <string name="tin_nhan_home">Nachrichten</string>
+    <string name="upload_a_video">Video hochladen</string>
+    <string name="create_a_short">Kurzes erstellen</string>
+    <string name="go_live">Live gehen</string>
+
+    <string name="tuy_chon">Options</string>
+    <string name="tuy_chon_chat">Chat Options</string>
+    <string name="chia_se_vi_tri">Share Location</string>
+    <string name="font_ch">Font</string>
+    <string name="giong_noi">Voice</string>
+    <string name="che_do_toi_switch">Dunkler Modus</string>
+    <string name="thong_ke_thoi_gian">Nutzungsstatistiken</string>
+    <string name="thong_ke_thoi_gian_item">Nutzungsstatistiken</string>
+    <string name="thong_ke_thoi_gian_2">Nutzungsstatistiken</string>
+    <string name="chinh_sua_thong_gtin">Informationen bearbeiten</string>
+    <string name="sdt">Telefonnummer</string>
+    <string name="ngay_tháng_nam_edit">Datum-Monat-Jahr</string>
+    <string name="cap_nhat">Aktualisieren</string>
+    <string name="ho_va_ten_edit">Vollständiger Name</string>
+    <string name="tim_kiem_o_day">Hier suchen</string>
+    <string name="tim_kiem_search">Suche</string>
+    <string name="voiceRes">Ihr Gerät unterstützt keine Spracherkennung.</string>
+
+
+
+
+
+</resources>

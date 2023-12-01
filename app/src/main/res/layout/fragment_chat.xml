@@ -21,9 +21,10 @@
         android:gravity="center_vertical">
 
         <TextView
+            android:id="@+id/tvTinNhan"
             android:layout_width="0sp"
             android:layout_height="wrap_content"
-            android:text="Tin nhắn"
+            android:text="@string/tin_nhan_home"
             android:textSize="@dimen/_15sdp"
             android:textColor="@color/white"
             android:textStyle="bold"
@@ -34,19 +35,20 @@
 
     <TextView
         android:id="@+id/searchView"
+        style="@style/item_search"
         android:layout_width="match_parent"
         android:layout_height="@dimen/_40sdp"
-        app:layout_constraintHorizontal_weight="1"
+        android:layout_below="@id/line1"
         android:layout_marginHorizontal="@dimen/_20sdp"
         android:layout_marginVertical="@dimen/_10sdp"
-        android:text="Tìm kiếm bạn bè ..."
-        style="@style/item_search"
-        android:textSize="@dimen/_15sdp"
-        android:padding="@dimen/_9sdp"
-        android:focusable="false"
+        android:layout_marginTop="13dp"
         android:clickable="false"
-        android:layout_below="@id/line1"
-        />
+        android:focusable="false"
+        android:padding="@dimen/_9sdp"
+        android:text="@string/tim_kiem_home"
+        android:textColor="@color/black"
+        android:textSize="@dimen/_15sdp"
+        app:layout_constraintHorizontal_weight="1" />
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipeRefreshLayout"
@@ -54,12 +56,37 @@
         android:layout_height="match_parent"
         android:layout_below="@id/searchView">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rcv_listChat"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:padding="@dimen/_10sdp"
-            android:layout_below="@id/searchView"/>
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_90sdp"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rcv_listAvt"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_below="@id/searchView"
+                    android:background="@color/background"
+                    android:layout_marginHorizontal="@dimen/_10sdp"
+                    android:layout_marginVertical="@dimen/_10sdp"
+                    tools:listitem="@layout/item_list_avatar"
+                     />
+
+            </LinearLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rcv_listChat"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@id/searchView"
+                android:padding="@dimen/_10sdp" />
+        </LinearLayout>
 
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 

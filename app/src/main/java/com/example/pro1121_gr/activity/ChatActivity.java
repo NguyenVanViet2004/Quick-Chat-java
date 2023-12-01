@@ -2,6 +2,7 @@ package com.example.pro1121_gr.activity;
 
 
 import android.Manifest;
+import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
@@ -43,17 +44,26 @@ import com.example.pro1121_gr.adapter.chatAdapter;
 import com.example.pro1121_gr.databinding.ActivityChatBinding;
 import com.example.pro1121_gr.databinding.BottomNavigationInChatBinding;
 import com.example.pro1121_gr.databinding.SelectFontBinding;
-import com.example.pro1121_gr.function.RequestPermission;
 import com.example.pro1121_gr.function.Functions;
+import com.example.pro1121_gr.function.MyApplication;
+import com.example.pro1121_gr.function.RequestPermission;
 import com.example.pro1121_gr.function.VoiceRecordingUtil;
 import com.example.pro1121_gr.model.CustomTypefaceInfo;
 import com.example.pro1121_gr.model.chatMesseageModel;
 import com.example.pro1121_gr.model.chatRoomModel;
 import com.example.pro1121_gr.model.userModel;
 import com.example.pro1121_gr.util.DownloadReceiver;
-import com.example.pro1121_gr.util.NetworkChangeReceiver;
 import com.example.pro1121_gr.util.FirebaseUtil;
+import com.example.pro1121_gr.util.NetworkChangeReceiver;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.giphy.sdk.core.models.Media;
+import com.giphy.sdk.core.models.enums.RatingType;
+import com.giphy.sdk.core.models.enums.RenditionType;
+import com.giphy.sdk.ui.GPHContentType;
+import com.giphy.sdk.ui.GPHSettings;
+import com.giphy.sdk.ui.Giphy;
+import com.giphy.sdk.ui.themes.GPHTheme;
+import com.giphy.sdk.ui.views.GiphyDialogFragment;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.common.api.ResolvableApiException;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -110,7 +120,7 @@ public class ChatActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        Giphy.INSTANCE.configure(ChatActivity.this, "eZKFz6B7ffPcLHRVL01lXnHHSrQB1yED", false);
         binding = ActivityChatBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         // đăng ký sự kiện cuộc gọi voice call và video call
@@ -123,6 +133,7 @@ public class ChatActivity extends AppCompatActivity {
             } else Functions.showSnackBar(binding.getRoot(), "Error, please try again");
         });
         initView();
+
     }
 
     @SuppressLint("UnspecifiedRegisterReceiverFlag")
@@ -147,7 +158,7 @@ public class ChatActivity extends AppCompatActivity {
     @SuppressLint("ClickableViewAccessibility")
     private void setUpCLickEvents(){
         binding.backFragmentMess.setOnClickListener(view -> {
-            onBackPressed();
+            startActivity(new Intent(ChatActivity.this,homeActivity.class));
         });
 
         binding.usernameMess.setText(userModel.getUsername().trim());
@@ -230,11 +241,41 @@ public class ChatActivity extends AppCompatActivity {
 
 
         binding.optionInMess.setOnClickListener(view -> {
-            showBottomDialog();
+            hiddenItem(false);
         });
 
         binding.like.setOnClickListener(view -> sendMessToOther("https://firebasestorage.googleapis.com/v0/b/du-an-1-197e4.appspot.com/o/like_icon%2Flike_icon.png?alt=media&token=63213f37-2681-412d-b096-177b20373976"));
 
+        binding.gif.setOnClickListener(view -> show(true, new GiphyDialogFragment.GifSelectionListener() {
+            @Override
+            public void onGifSelected(@NonNull Media media, @Nullable String s, @NonNull GPHContentType gphContentType) {
+                sendMessToOther(Objects.requireNonNull(media.getImages().getOriginal()).getGifUrl());
+            }
+
+            @Override
+            public void onDismissed(@NonNull GPHContentType gphContentType) {
+
+            }
+
+            @Override
+            public void didSearchTerm(@NonNull String s) {
+
+            }
+        }));
+
+        binding.voice.setOnClickListener(view -> {
+            if (RequestPermission.checkPermission(ChatActivity.this, Manifest.permission.RECORD_AUDIO)) {
+                VoiceRecordingUtil.startVoiceRecognitionActivity(ChatActivity.this);
+            } else {
+                RequestPermission.requestRecordAudio(ChatActivity.this, REQUEST_CODE_SPEECH_INPUT);
+            }
+        });
+        binding.option.setOnClickListener(view -> {
+            ObjectAnimator.ofFloat(view, "rotation", 0f, 45f)
+                    .setDuration(500)
+                    .start();
+            view.postDelayed(() -> showBottomDialog(), 500);
+        });
     }
 
     @Override
@@ -263,6 +304,7 @@ public class ChatActivity extends AppCompatActivity {
         }
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -311,8 +353,10 @@ public class ChatActivity extends AppCompatActivity {
         } else if (requestCode == REQUEST_CODE_SPEECH_INPUT) {
             VoiceRecordingUtil.processVoiceInput(requestCode, resultCode, data, text -> {
                 if (!text.isEmpty()) {
-                    sendNotification(text);
-                    sendMessToOther(text);
+                    if (!binding.TextMESS.getText().toString().trim().isEmpty()) binding.TextMESS.setText(binding.TextMESS.getText() + " " +text);
+                    else binding.TextMESS.setText(text);
+                    //sendNotification(text);
+                    //sendMessToOther(text);
                 }
             });
         }
@@ -387,10 +431,14 @@ public class ChatActivity extends AppCompatActivity {
             binding.optionInMess.setVisibility(View.VISIBLE);
             binding.imageMess.setVisibility(View.GONE);
             binding.cameraMess.setVisibility(View.GONE);
+            binding.voice.setVisibility(View.GONE);
+            binding.option.setVisibility(View.GONE);
         } else {
             binding.optionInMess.setVisibility(View.GONE);
             binding.imageMess.setVisibility(View.VISIBLE);
             binding.cameraMess.setVisibility(View.VISIBLE);
+            binding.voice.setVisibility(View.VISIBLE);
+            binding.option.setVisibility(View.VISIBLE);
         }
     }
 
@@ -441,8 +489,18 @@ public class ChatActivity extends AppCompatActivity {
                     .setQuery(query, chatMesseageModel.class)
                     .build();
 
-            adapter = new chatAdapter(options, ChatActivity.this, uriOther, chatRoomID, uri -> {
-                DownloadReceiver.progressDownload(uri, ChatActivity.this, REQUEST_WRITE_EXTERNAL_STORAGE);
+            adapter = new chatAdapter(options, ChatActivity.this, uriOther, chatRoomID, new chatAdapter.Download() {
+                @Override
+                public void downloadImage(String uri) {
+                    DownloadReceiver.progressDownload(uri, ChatActivity.this, REQUEST_WRITE_EXTERNAL_STORAGE);
+                }
+
+                @Override
+                public void clickImage(String model) {
+                    Intent intent = new Intent(ChatActivity.this, DetailImageActivity.class);
+                    intent.putExtra("message", model);
+                    startActivity(intent);
+                }
             });
             LinearLayoutManager manager = new LinearLayoutManager(this);
             manager.setReverseLayout(true);
@@ -465,12 +523,12 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     private void showBottomDialog() {
-        BottomNavigationInChatBinding binding = BottomNavigationInChatBinding.inflate(getLayoutInflater());
+        BottomNavigationInChatBinding bottomBinding = BottomNavigationInChatBinding.inflate(getLayoutInflater());
         Dialog dialog = new Dialog(this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setContentView(binding.getRoot());
+        dialog.setContentView(bottomBinding.getRoot());
 
-        binding.GPS.setOnClickListener(view -> {
+        bottomBinding.GPS.setOnClickListener(view -> {
             // Xử lý khi nhấn nút GPS
             if (RequestPermission.checkPermission(ChatActivity.this, Manifest.permission.ACCESS_FINE_LOCATION)) {
                 // Quyền đã được cấp
@@ -480,21 +538,16 @@ public class ChatActivity extends AppCompatActivity {
                 RequestPermission.requestLocationPermission(ChatActivity.this, LOCATION_PERMISSION_REQUEST_CODE);
         });
 
-        binding.Fonts.setOnClickListener(view -> {
+        bottomBinding.Fonts.setOnClickListener(view -> {
             dialog.dismiss();
             showFont();
         });
 
-        binding.Voice.setOnClickListener(view -> {
-            if (RequestPermission.checkPermission(ChatActivity.this, Manifest.permission.RECORD_AUDIO)) {
-                VoiceRecordingUtil.startVoiceRecognitionActivity(ChatActivity.this);
-                dialog.dismiss();
-            } else {
-                RequestPermission.requestRecordAudio(ChatActivity.this, REQUEST_CODE_SPEECH_INPUT);
-            }
-        });
+        dialog.setOnDismissListener(dialogInterface ->
+                ObjectAnimator.ofFloat(binding.option, "rotation", 0f, -45f)
+                .setDuration(500)
+                .start());
 
-        binding.cancelButton.setOnClickListener(view -> dialog.dismiss());
 
         dialog.show();
         Window window = dialog.getWindow();
@@ -631,6 +684,36 @@ public class ChatActivity extends AppCompatActivity {
             }else Functions.showSnackBar(binding.getRoot(), "Download failed");
         }
     };
+
+    @NonNull
+    public GiphyDialogFragment show(final  boolean withDarkTheme, @NonNull final  GiphyDialogFragment.GifSelectionListener listener)
+    {
+        final GPHTheme theme = (withDarkTheme)
+                ? GPHTheme.Dark
+                : GPHTheme.Light;
+
+        final GPHSettings settings = new GPHSettings();
+        settings.setTheme(theme);
+        settings.setRating(RatingType.pg13);
+        settings.setRenditionType(RenditionType.fixedWidth);
+        settings.setShowCheckeredBackground(false);
+
+        final GPHContentType[] contentTypes = new GPHContentType[5];
+        contentTypes[3] = GPHContentType.sticker;
+        contentTypes[2] = GPHContentType.gif;
+        contentTypes[4] = GPHContentType.text;
+        contentTypes[1] = GPHContentType.emoji;
+        contentTypes[0] = GPHContentType.recents;
+        settings.setMediaTypeConfig(contentTypes);
+        settings.setSelectedContentType(GPHContentType.emoji);
+
+        settings.setStickerColumnCount(3);
+        final GiphyDialogFragment dialog = GiphyDialogFragment.Companion.newInstance(settings);
+        dialog.setGifSelectionListener(listener);
+        dialog.show(getSupportFragmentManager(), "giphy_dialog");
+
+        return dialog;
+    }
 
     @Override
     protected void onStart() {

@@ -4,8 +4,7 @@
 
 
     <corners
-        android:topLeftRadius="@dimen/_40sdp"
-        android:topRightRadius="@dimen/_40sdp" />
+        android:radius="@dimen/_10sdp" />
     <padding
         android:left="@dimen/_10sdp"
         android:right="@dimen/_10sdp"
@@ -15,6 +14,6 @@
     <stroke
         android:width="2dp"
         android:color="@color/lavender" />
-    <solid android:color="@color/white" />
+    <solid android:color="@color/background_card" />
 
 </shape>

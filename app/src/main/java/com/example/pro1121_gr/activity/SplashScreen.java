@@ -10,6 +10,7 @@ import android.util.Log;
 import com.example.pro1121_gr.Database.DBhelper;
 import com.example.pro1121_gr.databinding.ActivitySplashScreenBinding;
 import com.example.pro1121_gr.function.Functions;
+import com.example.pro1121_gr.function.MyApplication;
 import com.example.pro1121_gr.model.userModel;
 import com.example.pro1121_gr.util.FirebaseUtil;
 
@@ -57,7 +58,6 @@ public class SplashScreen extends AppCompatActivity {
             // bắt đầu tính thời gian sử dụng app
             DBhelper.getInstance(this).startUsageTracking();
             if (FirebaseUtil.isLoggedIn()){
-                Log.e(TAG, "gotoHome: " + DBhelper.getInstance(this).getUsageTimeToday() );
                 startActivity(new Intent(this, homeActivity.class));
                 finish();
             }else {

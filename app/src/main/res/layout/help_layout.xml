@@ -25,7 +25,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="@dimen/_12ssp"
-            android:text="Bạn cần trợ giúp"
+            android:text="@string/ban_can_tro_giup"
             android:gravity="center_vertical"
             style="@style/TEXT"
             />
@@ -38,7 +38,7 @@
         android:layout_marginTop="@dimen/_3sdp"
         style="@style/TEXT"
         android:layout_marginStart="@dimen/_10sdp"
-        android:text="Giải đáp mọi thắc mắc của bạn hoặc báo cáo sự cố cho chúng tôi"/>
+        android:text="@string/giai_dap_hoac_bao_cao"/>
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">

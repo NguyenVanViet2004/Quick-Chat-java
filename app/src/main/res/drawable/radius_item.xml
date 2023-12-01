@@ -2,8 +2,11 @@
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
     android:shape="rectangle">
 
+    <solid android:color="#FFFFFF"/> <!-- Thêm màu trắng vào đây -->
     <corners android:radius="@dimen/_10sdp"/>
-    <stroke android:color="@color/colorPrimaryNight"
+    <stroke android:color="@color/black_icon"
         android:width="@dimen/_1sdp" />
+    <solid android:color="@color/background_card"/>
+
 
 </shape>

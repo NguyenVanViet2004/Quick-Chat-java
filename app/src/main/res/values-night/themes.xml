@@ -8,7 +8,7 @@
     <!--Dark mode-->
     <!-- màu nền background sẽ chuyển nếu dark mode on-->
     <style name="SCREEN">
-        <item name="android:background">@color/colorPrimaryNight</item>
+        <item name="android:background">@color/background</item>
     </style>
 
     <style name="SCREEN_for_layout" parent="Base.Theme.PRO1121GR">
@@ -34,6 +34,7 @@
     <!-- màu chữ-->
     <style name="TEXT">
         <item name="android:textColor">#FFFFFF</item>
+
     </style>
 
     <!-- nút bấm-->

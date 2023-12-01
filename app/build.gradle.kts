@@ -7,6 +7,7 @@ android {
     namespace = "com.example.pro1121_gr"
     compileSdk = 34
 
+
     defaultConfig {
         applicationId = "com.example.pro1121_gr"
         minSdk = 26
@@ -33,6 +34,7 @@ android {
     viewBinding {
         enable = true
     }
+
     buildFeatures{
         dataBinding = true
     }
@@ -47,6 +49,7 @@ dependencies {
     implementation("com.google.firebase:firebase-storage:20.3.0")
     implementation("com.google.firebase:firebase-auth:22.2.0")
     implementation("com.google.firebase:firebase-messaging:23.3.1")
+    implementation("androidx.emoji2:emoji2-emojipicker:1.4.0")
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
@@ -91,7 +94,11 @@ dependencies {
     implementation ("com.github.ZEGOCLOUD:zego_uikit_prebuilt_call_android:+")
     implementation ("com.github.ZEGOCLOUD:zego_uikit_signaling_plugin_android:+")
     // chart
-    implementation("com.github.PhilJay:MPAndroidChart:v3.1.0")
 
+    implementation("com.github.PhilJay:MPAndroidChart:v3.1.0")
+    // pinch-to-zoom
+    implementation("com.github.chrisbanes:PhotoView:2.3.0")
+    // icon
+    implementation("com.giphy.sdk:ui:2.3.13")
 
 }
