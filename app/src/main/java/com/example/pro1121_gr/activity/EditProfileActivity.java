@@ -104,8 +104,8 @@ public class EditProfileActivity extends AppCompatActivity {
         UserDAO.currentUserDetails().set(userModel).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
-                if (task.isSuccessful()) Toasty.success(EditProfileActivity.this, "Cập nhật thông tin thành công!", Toasty.LENGTH_LONG,true).show();
-                else Toasty.error(EditProfileActivity.this, "Cập nhật thông tin thất bại!", Toasty.LENGTH_LONG, true).show();
+                if (task.isSuccessful()) Toasty.success(EditProfileActivity.this, R.string.update_profile_status, Toasty.LENGTH_LONG,true).show();
+                else Toasty.error(EditProfileActivity.this, R.string.update_profile_status_failed, Toasty.LENGTH_LONG, true).show();
             }
         });
     }
@@ -124,7 +124,7 @@ public class EditProfileActivity extends AppCompatActivity {
         // get avt
         UserDAO.getCurrentProfileImageStorageReference().getDownloadUrl().addOnCompleteListener(this, task -> {
             if (task.isSuccessful()) UserDAO.setAvatar(EditProfileActivity.this,task.getResult(), binding.itemAvatar);
-            else Toasty.error(EditProfileActivity.this, "Đã xảy ra lỗi!", Toasty.LENGTH_LONG, true).show();
+            else Toasty.error(EditProfileActivity.this, R.string.error, Toasty.LENGTH_LONG, true).show();
         });
 
         UserDAO.currentUserDetails().get().addOnCompleteListener(EditProfileActivity.this, task -> {
@@ -164,8 +164,8 @@ public class EditProfileActivity extends AppCompatActivity {
 
         DatePickerDialog datePickerDialog = new DatePickerDialog(this,new DatePickerDialog.OnDateSetListener() {
             @Override
-            public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
-                LocalDate selectedDate = LocalDate.of(year, month + 1, day);
+            public void onDateSet(DatePicker datePicker, int selectedYear, int selectedMonth, int selectedDay) {
+                LocalDate selectedDate = LocalDate.of(selectedYear, selectedMonth + 1, selectedDay);
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
                 String formattedDate = selectedDate.format(formatter);
                 binding.birthday.setText(formattedDate);

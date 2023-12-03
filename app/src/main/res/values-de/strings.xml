@@ -87,6 +87,10 @@
     <string name="recall_succ">Nachrichtenabruf erfolgreich!</string>
     <string name="recall_failed">Nachrichtenrückruf fehlgeschlagen!</string>
     <string name="time_used">Letzte 7 Tage der Nutzung</string>
+    <string name="update_profile_status">Erfolgreich aktualisiert!</string>
+    <string name="update_profile_status_failed">Die Aktualisierung der Informationen ist fehlgeschlagen</string>
+
+
 
 
 
