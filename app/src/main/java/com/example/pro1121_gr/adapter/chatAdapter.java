@@ -21,6 +21,9 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.pro1121_gr.DAO.ChatDAO;
+import com.example.pro1121_gr.DAO.ChatRoomsDAO;
+import com.example.pro1121_gr.DAO.UserDAO;
 import com.example.pro1121_gr.R;
 import com.example.pro1121_gr.custom_textview.Utils;
 import com.example.pro1121_gr.databinding.BottomOptionDialogBinding;
@@ -56,7 +59,7 @@ public class chatAdapter extends FirestoreRecyclerAdapter<chatMesseageModel, cha
     @Override
     protected void onBindViewHolder(@NonNull ChatModelViewHolder holder, int position, @NonNull chatMesseageModel model) {
         String documentId = getSnapshots().getSnapshot(position).getId();
-        if (model.getSenderId().equals(FirebaseUtil.currentUserId()))
+        if (model.getSenderId().equals(UserDAO.currentUserId()))
             setChatRightLayout(holder, model, documentId);
             // xử lý giao diện chat của đối phương
         else setChatLeftLayout(holder, model);
@@ -162,7 +165,7 @@ public class chatAdapter extends FirestoreRecyclerAdapter<chatMesseageModel, cha
         holder.mySendImg.setVisibility(isUrl ? View.VISIBLE : View.GONE);
         holder.rightChatTextview.setVisibility(isUrl ? View.GONE : View.VISIBLE);
         if (isUrl) {
-            FirebaseUtil.loadImageInChat(context, model.getMessage(), holder.mySendImg);
+            ChatDAO.loadImageInChat(context, model.getMessage(), holder.mySendImg);
         } else {
             holder.rightChatTextview.setText(model.getMessage());
         }
@@ -186,9 +189,9 @@ public class chatAdapter extends FirestoreRecyclerAdapter<chatMesseageModel, cha
     }
 
     private void setChatLeftLayout(ChatModelViewHolder holder, chatMesseageModel model) {
-        FirebaseUtil.getCurrentProfileImageStorageReference().getDownloadUrl().addOnCompleteListener(task -> {
+        UserDAO.getCurrentProfileImageStorageReference().getDownloadUrl().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
-                FirebaseUtil.setAvatar(context, Uri.parse(uriOther), holder.otherAVT);
+                UserDAO.setAvatar(context, Uri.parse(uriOther), holder.otherAVT);
             } else {
                 Log.e(TAG, "Download URL not successful");
             }
@@ -200,7 +203,7 @@ public class chatAdapter extends FirestoreRecyclerAdapter<chatMesseageModel, cha
         holder.otherAVT.setVisibility(View.VISIBLE);
 
         if (isUrl) {
-            FirebaseUtil.loadImageInChat(context, model.getMessage(), holder.otherSendImg);
+            ChatDAO.loadImageInChat(context, model.getMessage(), holder.otherSendImg);
         } else {
             holder.leftChatTextview.setText(model.getMessage());
         }
@@ -238,7 +241,7 @@ public class chatAdapter extends FirestoreRecyclerAdapter<chatMesseageModel, cha
             bottomOptionDialogBinding.copyText.setVisibility(View.VISIBLE);
         }
         bottomOptionDialogBinding.deleteMessage.setOnClickListener(view ->
-                FirebaseUtil.getChatRoomReference(chatRoomID)
+                ChatRoomsDAO.getChatRoomReference(chatRoomID)
                         .collection("chats")
                         .document(documentId)
                         .update("message", R.string.recall_message).addOnSuccessListener(aVoid -> {

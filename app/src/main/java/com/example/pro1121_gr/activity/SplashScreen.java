@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 
+import com.example.pro1121_gr.DAO.UserDAO;
 import com.example.pro1121_gr.Database.DBhelper;
 import com.example.pro1121_gr.databinding.ActivitySplashScreenBinding;
 import com.example.pro1121_gr.function.Functions;
@@ -28,11 +29,11 @@ public class SplashScreen extends AppCompatActivity {
         MyApplication.applyNightMode();
 
 
-        if (FirebaseUtil.isLoggedIn() && getIntent().getExtras() != null){
+        if (UserDAO.isLoggedIn() && getIntent().getExtras() != null){
             String userID = getIntent().getExtras().getString("userId");
             Log.e(TAG, "userID: " + userID );
             if (userID != null) {
-                FirebaseUtil.allUserCollectionReference().document(userID).get().addOnCompleteListener(task -> {
+                UserDAO.allUserCollectionReference().document(userID).get().addOnCompleteListener(task -> {
                     if (task.isSuccessful()){
                         userModel model = task.getResult().toObject(userModel.class);
                         Intent mainIntent = new Intent(this, homeActivity.class);
@@ -57,7 +58,7 @@ public class SplashScreen extends AppCompatActivity {
         new Handler().postDelayed(() ->{
             // bắt đầu tính thời gian sử dụng app
             DBhelper.getInstance(this).startUsageTracking();
-            if (FirebaseUtil.isLoggedIn()){
+            if (UserDAO.isLoggedIn()){
                 startActivity(new Intent(this, homeActivity.class));
                 finish();
             }else {

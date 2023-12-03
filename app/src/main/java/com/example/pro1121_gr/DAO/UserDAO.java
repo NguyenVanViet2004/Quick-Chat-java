@@ -1,6 +1,12 @@
 package com.example.pro1121_gr.DAO;
 
-import com.example.pro1121_gr.util.FirebaseUtil;
+import android.content.Context;
+import android.net.Uri;
+import android.widget.ImageView;
+
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
+import com.example.pro1121_gr.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
@@ -25,7 +31,7 @@ public class UserDAO {
     }
 
     public static DocumentReference getOtherUserFromChatroom(List<String> userIds){
-        if(userIds.get(0).equals(FirebaseUtil.currentUserId())){
+        if(userIds.get(0).equals(UserDAO.currentUserId())){
             return allUserCollectionReference().document(userIds.get(1));
         }else{
             return allUserCollectionReference().document(userIds.get(0));
@@ -38,11 +44,19 @@ public class UserDAO {
 
     public static StorageReference getCurrentProfileImageStorageReference(){
         return FirebaseStorage.getInstance().getReference().child("profile_img")
-                .child(FirebaseUtil.currentUserId());
+                .child(UserDAO.currentUserId());
     }
 
     public static StorageReference  getCurrentOtherProfileImageStorageReference(String otherUserId){
         return FirebaseStorage.getInstance().getReference().child("profile_img")
                 .child(otherUserId);
+    }
+
+    public static void setAvatar(Context context, Uri uri, ImageView image) {
+        Glide.with(context)
+                .load(uri)
+                .error(R.drawable.img_5) // Đặt hình ảnh mặc định khi có lỗi
+                .apply(RequestOptions.circleCropTransform())
+                .into(image);
     }
 }

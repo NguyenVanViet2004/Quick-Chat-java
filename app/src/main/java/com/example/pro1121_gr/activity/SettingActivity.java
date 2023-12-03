@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.pro1121_gr.DAO.UserDAO;
 import com.example.pro1121_gr.Database.DBhelper;
 import com.example.pro1121_gr.R;
 import com.example.pro1121_gr.databinding.ActivitySettingBinding;
@@ -50,7 +51,7 @@ public class SettingActivity extends AppCompatActivity {
 
 
     private void initView(){
-        idUser = FirebaseUtil.currentUserId();
+        idUser = UserDAO.currentUserId();
         networkChangeReceiver = Functions.getNetworkChangeReceiver(this);
         MyApplication.applyNightMode();
         binding.backFragmentMess.setOnClickListener(view -> {
@@ -125,7 +126,7 @@ public class SettingActivity extends AppCompatActivity {
 
     private void setInformation() {
         // xu ly avt
-        FirebaseUtil.currentUserDetails().get().addOnCompleteListener(this, new OnCompleteListener<DocumentSnapshot>() {
+        UserDAO.currentUserDetails().get().addOnCompleteListener(this, new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if (task.isSuccessful()) {
@@ -133,10 +134,10 @@ public class SettingActivity extends AppCompatActivity {
                     if (userModel != null) {
                         binding.profile.fullName.setText(userModel.getUsername());
                         // xu ly avt
-                        FirebaseUtil.getCurrentOtherProfileImageStorageReference(userModel.getUserId())
+                        UserDAO.getCurrentOtherProfileImageStorageReference(userModel.getUserId())
                                 .getDownloadUrl().addOnCompleteListener(task1 -> {
                                     if (task1.isSuccessful())
-                                        FirebaseUtil.setAvatar(SettingActivity.this, task1.getResult(), binding.profile.itemAvatar);
+                                        UserDAO.setAvatar(SettingActivity.this, task1.getResult(), binding.profile.itemAvatar);
                                 });
                     }
                 }
@@ -166,7 +167,7 @@ public class SettingActivity extends AppCompatActivity {
                 FirebaseMessaging.getInstance().deleteToken().addOnCompleteListener(task -> {
 
                     if (task.isSuccessful()) {
-                        FirebaseUtil.logout();
+                        UserDAO.logout();
                         // Thêm hành động chuyển hướng đến màn hình đăng nhập sau khi đăng xuất .
                         Intent intent = new Intent(MyApplication.getInstance(), LoginActivity.class);
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP); // Xóa các activity trên đỉnh ngăn xếp

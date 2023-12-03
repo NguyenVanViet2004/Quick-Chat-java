@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.DatePicker;
 
+import com.example.pro1121_gr.DAO.UserDAO;
 import com.example.pro1121_gr.Database.DBhelper;
 import com.example.pro1121_gr.R;
 import com.example.pro1121_gr.databinding.ActivityEditProfileBinding;
@@ -80,7 +81,7 @@ public class EditProfileActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if (selectedImageUri != null) {
-                    FirebaseUtil.getCurrentProfileImageStorageReference().putFile(selectedImageUri).addOnCompleteListener(task ->{
+                    UserDAO.getCurrentProfileImageStorageReference().putFile(selectedImageUri).addOnCompleteListener(task ->{
                         if (editProfile()) setInformation();
                     });
                 }else {
@@ -100,7 +101,7 @@ public class EditProfileActivity extends AppCompatActivity {
         userModel.setUsername(binding.fullName.getText().toString().trim());
         userModel.setPhone(binding.phoneNumber.getText().toString().trim());
         userModel.setDate(binding.birthday.getText().toString().trim());
-        FirebaseUtil.currentUserDetails().set(userModel).addOnCompleteListener(new OnCompleteListener<Void>() {
+        UserDAO.currentUserDetails().set(userModel).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if (task.isSuccessful()) Toasty.success(EditProfileActivity.this, "Cập nhật thông tin thành công!", Toasty.LENGTH_LONG,true).show();
@@ -121,12 +122,12 @@ public class EditProfileActivity extends AppCompatActivity {
 
     private void checkInformation(){
         // get avt
-        FirebaseUtil.getCurrentProfileImageStorageReference().getDownloadUrl().addOnCompleteListener(this, task -> {
-            if (task.isSuccessful()) FirebaseUtil.setAvatar(EditProfileActivity.this,task.getResult(), binding.itemAvatar);
+        UserDAO.getCurrentProfileImageStorageReference().getDownloadUrl().addOnCompleteListener(this, task -> {
+            if (task.isSuccessful()) UserDAO.setAvatar(EditProfileActivity.this,task.getResult(), binding.itemAvatar);
             else Toasty.error(EditProfileActivity.this, "Đã xảy ra lỗi!", Toasty.LENGTH_LONG, true).show();
         });
 
-        FirebaseUtil.currentUserDetails().get().addOnCompleteListener(EditProfileActivity.this, task -> {
+        UserDAO.currentUserDetails().get().addOnCompleteListener(EditProfileActivity.this, task -> {
             if (task.isSuccessful()){
                 userModel = task.getResult().toObject(userModel.class);
                 if (userModel != null) {
@@ -148,7 +149,7 @@ public class EditProfileActivity extends AppCompatActivity {
 
                 if (data != null && selectedImageUriTemp != null) {
                     selectedImageUri = selectedImageUriTemp;
-                    FirebaseUtil.setAvatar(EditProfileActivity.this, selectedImageUri, binding.itemAvatar);
+                    UserDAO.setAvatar(EditProfileActivity.this, selectedImageUri, binding.itemAvatar);
                 }
             }
         });
