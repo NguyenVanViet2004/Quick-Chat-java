@@ -3,6 +3,7 @@ package com.example.pro1121_gr.activity;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -139,11 +140,12 @@ public class CreateProfile extends AppCompatActivity {
 
         DatePickerDialog datePickerDialog = new DatePickerDialog(this,new DatePickerDialog.OnDateSetListener() {
             @Override
-            public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
-                LocalDate selectedDate = LocalDate.of(year, month + 1, day);
+            public void onDateSet(DatePicker datePicker, int selectedYear, int selectedMonth, int selectedDay) {
+                LocalDate selectedDate = LocalDate.of(selectedYear, selectedMonth + 1, selectedDay);
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
                 String formattedDate = selectedDate.format(formatter);
                 binding.edtAge.setText(formattedDate);
+                Log.e("TAG", "onDateSet: "+formattedDate );
             }
         },
                 year, month, day

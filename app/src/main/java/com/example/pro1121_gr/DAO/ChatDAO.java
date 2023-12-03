@@ -21,6 +21,4 @@ public class ChatDAO {
                 )
                 .into(image); // ImageView để hiển thị ảnh
     }
-
-
 }

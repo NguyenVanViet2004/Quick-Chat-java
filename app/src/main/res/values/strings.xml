@@ -86,6 +86,10 @@
     <string name="recall_succ">Message recall successful!</string>
     <string name="recall_failed">Message recall failed!</string>
     <string name="time_used">Last 7 days of use</string>
+    <string name="update_profile_status">Successfully updated!</string>
+    <string name="update_profile_status_failed">Update information failed</string>
+
+
 
 
 

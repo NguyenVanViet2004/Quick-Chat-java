@@ -89,6 +89,8 @@
     <string name="recall_succ">Thu hồi tin nhắn thành công!</string>
     <string name="recall_failed">Thu hồi tin nhắn thất bại!</string>
     <string name="time_used">Thời gian sử dụng 7 ngày gần nhất</string>
+    <string name="update_profile_status">Cập nhật thông tin thành công!</string>
+    <string name="update_profile_status_failed">Cập nhật thông tin thất bại</string>
 
 
 

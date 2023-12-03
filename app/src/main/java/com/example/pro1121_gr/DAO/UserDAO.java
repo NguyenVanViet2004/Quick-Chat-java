@@ -31,7 +31,7 @@ public class UserDAO {
     }
 
     public static DocumentReference getOtherUserFromChatroom(List<String> userIds){
-        if(userIds.get(0).equals(UserDAO.currentUserId())){
+        if(userIds.get(0).equals(currentUserId())){
             return allUserCollectionReference().document(userIds.get(1));
         }else{
             return allUserCollectionReference().document(userIds.get(0));
@@ -44,7 +44,7 @@ public class UserDAO {
 
     public static StorageReference getCurrentProfileImageStorageReference(){
         return FirebaseStorage.getInstance().getReference().child("profile_img")
-                .child(UserDAO.currentUserId());
+                .child(currentUserId());
     }
 
     public static StorageReference  getCurrentOtherProfileImageStorageReference(String otherUserId){
