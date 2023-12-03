@@ -72,6 +72,32 @@
     <string name="tim_kiem_o_day">Search here</string>
     <string name="tim_kiem_search">Search</string>
     <string name="voiceRes">Your device does not support voice recognition..</string>
+    <string name="change_language_titile">Switch language?</string>
+    <string name="change_language_message">The system will reboot to update new changes!</string>
+    <string name="change_language_option2">Later</string>
+    <string name="change_language_option">Yes</string>
+    <string name="change_language_errorReload">Your device does not support it, please exit manually!</string>
+    <string name="error">Error, please try again</string>
+    <string name="error_load_image">Image processing error</string>
+    <string name="download_successfully">Downloaded successfully</string>
+    <string name="download_failed">Download failed</string>
+    <string name="get_location_failed">Your location cannot be determined!</string>
+    <string name="recall_message">Message has been recall!</string>
+    <string name="recall_succ">Message recall successful!</string>
+    <string name="recall_failed">Message recall failed!</string>
+    <string name="time_used">Last 7 days of use</string>
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -38,6 +38,9 @@ import androidx.core.app.ActivityCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.pro1121_gr.DAO.ChatDAO;
+import com.example.pro1121_gr.DAO.ChatRoomsDAO;
+import com.example.pro1121_gr.DAO.UserDAO;
 import com.example.pro1121_gr.Database.DBhelper;
 import com.example.pro1121_gr.R;
 import com.example.pro1121_gr.adapter.chatAdapter;
@@ -53,7 +56,6 @@ import com.example.pro1121_gr.model.chatMesseageModel;
 import com.example.pro1121_gr.model.chatRoomModel;
 import com.example.pro1121_gr.model.userModel;
 import com.example.pro1121_gr.util.DownloadReceiver;
-import com.example.pro1121_gr.util.FirebaseUtil;
 import com.example.pro1121_gr.util.NetworkChangeReceiver;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.giphy.sdk.core.models.Media;
@@ -72,7 +74,6 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsResponse;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.Query;
@@ -124,13 +125,13 @@ public class ChatActivity extends AppCompatActivity {
         binding = ActivityChatBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         // đăng ký sự kiện cuộc gọi voice call và video call
-        FirebaseUtil.currentUserDetails().get().addOnCompleteListener(ChatActivity.this, task -> {
+        UserDAO.currentUserDetails().get().addOnCompleteListener(ChatActivity.this, task -> {
             if (task.isSuccessful()){
                 userModel MyUserModel = task.getResult().toObject(userModel.class);
                 if (MyUserModel != null) {
                     Functions.startService(MyUserModel.getUserId(), MyUserModel.getUsername(), this);
-                } else Functions.showSnackBar(binding.getRoot(), "Error, please try again");
-            } else Functions.showSnackBar(binding.getRoot(), "Error, please try again");
+                } else Functions.showSnackBar(binding.getRoot(), getString(R.string.error));
+            } else Functions.showSnackBar(binding.getRoot(), getString(R.string.error));
         });
         initView();
 
@@ -148,7 +149,7 @@ public class ChatActivity extends AppCompatActivity {
         registerReceiver(downloadReceiver, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
         //get UserModel
         userModel = Functions.getUserModelFromIntent(getIntent());
-        chatRoomID = FirebaseUtil.getChatroomId(FirebaseUtil.currentUserId(), userModel.getUserId());
+        chatRoomID = ChatRoomsDAO.getChatroomId(UserDAO.currentUserId(), userModel.getUserId());
         Functions.setVoiceCall(userModel.getUserId(), userModel.getUsername(), binding.call);
         Functions.setVideoCall(userModel.getUserId(), userModel.getUsername(), binding.videoCall);
         setUpCLickEvents();
@@ -158,7 +159,10 @@ public class ChatActivity extends AppCompatActivity {
     @SuppressLint("ClickableViewAccessibility")
     private void setUpCLickEvents(){
         binding.backFragmentMess.setOnClickListener(view -> {
-            startActivity(new Intent(ChatActivity.this,homeActivity.class));
+            startActivity(new Intent(ChatActivity.this,homeActivity.class)
+                    .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                    .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+            finish();
         });
 
         binding.usernameMess.setText(userModel.getUsername().trim());
@@ -349,7 +353,7 @@ public class ChatActivity extends AppCompatActivity {
                     sendMessToOther(imageUrl);
                     setChatLayout();
                 });
-            }).addOnFailureListener(exception -> Functions.showSnackBar( binding.getRoot(), "Lỗi xử lý ảnh"));
+            }).addOnFailureListener(exception -> Functions.showSnackBar( binding.getRoot(), getString(R.string.error_load_image)));
         } else if (requestCode == REQUEST_CODE_SPEECH_INPUT) {
             VoiceRecordingUtil.processVoiceInput(requestCode, resultCode, data, text -> {
                 if (!text.isEmpty()) {
@@ -365,22 +369,22 @@ public class ChatActivity extends AppCompatActivity {
     @SuppressLint("NotifyDataSetChanged")
     private void sendMessToOther(String message) {
         chatRoomModel.setLastMessageTimestamp(Timestamp.now());
-        chatRoomModel.setLastMessageSenderId(FirebaseUtil.currentUserId());
+        chatRoomModel.setLastMessageSenderId(UserDAO.currentUserId());
         chatRoomModel.setLastMessage(message);
 
-        FirebaseUtil.getChatRoomReference(chatRoomID).set(chatRoomModel);
+        ChatRoomsDAO.getChatRoomReference(chatRoomID).set(chatRoomModel);
 
         chatMesseageModel chatMesseageModel =
-                new chatMesseageModel(message, FirebaseUtil.currentUserId(), Timestamp.now(), new CustomTypefaceInfo(customTypeFace));
+                new chatMesseageModel(message, UserDAO.currentUserId(), Timestamp.now(), new CustomTypefaceInfo(customTypeFace));
 
-        FirebaseUtil.getChatroomMessageReference(chatRoomID).add(chatMesseageModel);
+        ChatDAO.getChatroomMessageReference(chatRoomID).add(chatMesseageModel);
         if (Functions.isURL(message)) sendNotification("[Link]");
         else sendNotification(message);
         binding.TextMESS.setText("");
     }
 
     private void sendNotification(String message) {
-        FirebaseUtil.currentUserDetails().get().addOnCompleteListener(task -> {
+        UserDAO.currentUserDetails().get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 userModel userModel1 = task.getResult().toObject(userModel.class);
                 try {
@@ -447,30 +451,27 @@ public class ChatActivity extends AppCompatActivity {
             // Lấy đối tượng userModel
             userModel = Functions.getUserModelFromIntent(getIntent());
 
-            chatRoomID = FirebaseUtil.getChatroomId(FirebaseUtil.currentUserId(), userModel.getUserId());
+            chatRoomID = ChatRoomsDAO.getChatroomId(UserDAO.currentUserId(), userModel.getUserId());
 
             // Lấy avatar
-            FirebaseUtil.getCurrentOtherProfileImageStorageReference(userModel.getUserId()).getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
-                @Override
-                public void onComplete(@NonNull Task<Uri> task) {
-                    if (task.isSuccessful()) {
-                        Uri uri = task.getResult();
-                        uriOther = uri.toString();
-                        FirebaseUtil.setAvatar(ChatActivity.this, uri, binding.avatarChat);
-                        setChatLayout();
-                    }
+            UserDAO.getCurrentOtherProfileImageStorageReference(userModel.getUserId()).getDownloadUrl().addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    Uri uri = task.getResult();
+                    uriOther = uri.toString();
+                    UserDAO.setAvatar(ChatActivity.this, uri, binding.avatarChat);
+                    setChatLayout();
                 }
             });
-            FirebaseUtil.getChatRoomReference(chatRoomID).get().addOnCompleteListener(task -> {
+            ChatRoomsDAO.getChatRoomReference(chatRoomID).get().addOnCompleteListener(task -> {
                 chatRoomModel = task.getResult().toObject(chatRoomModel.class);
                 if (chatRoomModel == null) {
                     chatRoomModel = new chatRoomModel();
                     chatRoomModel.setChatroomId(chatRoomID);
-                    chatRoomModel.setUserIds(Arrays.asList(FirebaseUtil.currentUserId(), userModel.getUserId()));
+                    chatRoomModel.setUserIds(Arrays.asList(UserDAO.currentUserId(), userModel.getUserId()));
                     chatRoomModel.setLastMessageTimestamp(Timestamp.now());
                     chatRoomModel.setLastMessageSenderId("");
                 }
-                FirebaseUtil.getChatRoomReference(chatRoomID).set(chatRoomModel);
+                ChatRoomsDAO.getChatRoomReference(chatRoomID).set(chatRoomModel);
             });
 
         } catch (Exception e) {
@@ -482,7 +483,7 @@ public class ChatActivity extends AppCompatActivity {
     @SuppressLint("UnspecifiedRegisterReceiverFlag")
     private void setChatLayout() {
         try {
-            Query query = FirebaseUtil.getChatroomMessageReference(chatRoomID)
+            Query query = ChatDAO.getChatroomMessageReference(chatRoomID)
                     .orderBy("timestamp", Query.Direction.DESCENDING);
 
             FirestoreRecyclerOptions<chatMesseageModel> options = new FirestoreRecyclerOptions.Builder<chatMesseageModel>()
@@ -637,7 +638,7 @@ public class ChatActivity extends AppCompatActivity {
                     }
                 } else {
                     // GPS đã bị tắt hoặc có lỗi khác
-                    Functions.showSnackBar(binding.getRoot(), "Error, please try again");
+                    Functions.showSnackBar(binding.getRoot(), getString(R.string.error));
                 }
             }
         });
@@ -660,15 +661,15 @@ public class ChatActivity extends AppCompatActivity {
                         String addressString = addresses.get(0).getAddressLine(0);
                         sendMessToOther(addressString);
                     } else {
-                        Functions.Toasty(ChatActivity.this,"Không thể định vị!", Functions.warning);
+                        Functions.Toasty(ChatActivity.this,getString(R.string.get_location_failed), Functions.warning);
                         Log.e(TAG, "getUserLocation: Addresses is null or empty");
                     }
                 } catch (IOException e) {
-                    Functions.Toasty(ChatActivity.this,"Không thể định vị!", Functions.warning);
+                    Functions.Toasty(ChatActivity.this,getString(R.string.get_location_failed), Functions.warning);
                     Log.e(TAG, "getUserLocation: IOException - " + e.getMessage());
                 }
             } else {
-                Toasty.warning(ChatActivity.this,"Không thể định vị!", Toasty.LENGTH_LONG, true).show();
+                Toasty.warning(ChatActivity.this,getString(R.string.get_location_failed), Toasty.LENGTH_LONG, true).show();
                 Log.e(TAG, "getUserLocation: Unable to get location - " + task.getException());
             }
         });
@@ -680,8 +681,8 @@ public class ChatActivity extends AppCompatActivity {
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
             if ("DOWNLOAD_COMPLETE".equals(action)) {
-                Functions.showSnackBar(binding.getRoot(), "Downloaded successfully");
-            }else Functions.showSnackBar(binding.getRoot(), "Download failed");
+                Functions.showSnackBar(binding.getRoot(), getString(R.string.download_successfully));
+            }else Functions.showSnackBar(binding.getRoot(), getString(R.string.download_failed));
         }
     };
 

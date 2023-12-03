@@ -10,6 +10,8 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.pro1121_gr.DAO.UserDAO;
+import com.example.pro1121_gr.R;
 import com.example.pro1121_gr.activity.ChatActivity;
 import com.example.pro1121_gr.activity.EditProfileActivity;
 import com.example.pro1121_gr.databinding.ItemListAvatarBinding;
@@ -35,17 +37,17 @@ public class ChatListAvatarAdapter extends FirestoreRecyclerAdapter<chatRoomMode
 
     @Override
     protected void onBindViewHolder(@NonNull ChatListAvatarAdapterViewHolder holder, int position, @NonNull chatRoomModel model) {
-        FirebaseUtil.getOtherUserFromChatroom(model.getUserIds()).get().addOnCompleteListener(task -> {
+        UserDAO.getOtherUserFromChatroom(model.getUserIds()).get().addOnCompleteListener(task -> {
             if (task.isSuccessful()){
                 userModel otherUserModel = task.getResult().toObject(userModel.class);
                 int status = 0;
                 if (otherUserModel != null) {
                     status = otherUserModel.getStatus();
                 }
-                FirebaseUtil.getCurrentOtherProfileImageStorageReference(otherUserModel != null ? otherUserModel.getUserId() : null).getDownloadUrl().addOnCompleteListener(task1 -> {
+                UserDAO.getCurrentOtherProfileImageStorageReference(otherUserModel != null ? otherUserModel.getUserId() : null).getDownloadUrl().addOnCompleteListener(task1 -> {
                     if (task1.isSuccessful()){
                         Uri uri = task1.getResult();
-                        FirebaseUtil.setAvatar(context, uri, holder.listAvatarBinding.itemAvatar);
+                        UserDAO.setAvatar(context, uri, holder.listAvatarBinding.itemAvatar);
                     }
                 });
                 if (otherUserModel != null) {
@@ -63,7 +65,9 @@ public class ChatListAvatarAdapter extends FirestoreRecyclerAdapter<chatRoomMode
                 holder.itemView.setOnClickListener(v -> {
                     //navigate to chat activity
                     Intent intent = new Intent(context, ChatActivity.class);
-                    Functions.passUserModelAsIntent(intent,otherUserModel);
+                    if (otherUserModel != null) {
+                        Functions.passUserModelAsIntent(intent,otherUserModel);
+                    } else Functions.Toasty(context, context.getString(R.string.error), Functions.error);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     context.startActivity(intent);
                 });

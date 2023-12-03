@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.SearchView;
 
+import com.example.pro1121_gr.DAO.UserDAO;
 import com.example.pro1121_gr.Database.DBhelper;
 import com.example.pro1121_gr.adapter.searchUserAdapter;
 import com.example.pro1121_gr.databinding.ActivitySearchBinding;
@@ -66,7 +67,7 @@ public class SearchActivity extends AppCompatActivity {
 
     @SuppressLint("NotifyDataSetChanged")
     private void setupSearchRecyclerView(String searchName) {
-        Query query = FirebaseUtil.allUserCollectionReference()
+        Query query = UserDAO.allUserCollectionReference()
                 .whereGreaterThanOrEqualTo("username", searchName)
                 .whereLessThanOrEqualTo("username", searchName + '\uf8ff');
         FirestoreRecyclerOptions<userModel> options = new FirestoreRecyclerOptions.Builder<userModel>()

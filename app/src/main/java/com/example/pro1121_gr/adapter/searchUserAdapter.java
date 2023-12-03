@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.pro1121_gr.DAO.UserDAO;
 import com.example.pro1121_gr.activity.ChatActivity;
 import com.example.pro1121_gr.databinding.SearchUserBinding;
 import com.example.pro1121_gr.function.Functions;
@@ -30,16 +31,16 @@ public class searchUserAdapter extends FirestoreRecyclerAdapter<userModel, searc
     @Override
     protected void onBindViewHolder(@NonNull UserModelViewHolder holder, int position, @NonNull userModel model) {
         // Kiểm tra nếu là tài khoản của người dùng hiện tại, không hiển thị
-        if (model.getUserId().equals(FirebaseUtil.currentUserId())) {
+        if (model.getUserId().equals(UserDAO.currentUserId())) {
             holder.itemView.setVisibility(View.GONE);
             holder.itemView.setLayoutParams(new RecyclerView.LayoutParams(0, 0));
             return;
         }
 
-        FirebaseUtil.getCurrentOtherProfileImageStorageReference(model.getUserId()).getDownloadUrl().addOnCompleteListener(task ->{
+        UserDAO.getCurrentOtherProfileImageStorageReference(model.getUserId()).getDownloadUrl().addOnCompleteListener(task ->{
             if (task.isSuccessful()){
                 Uri uri = task.getResult();
-                FirebaseUtil.setAvatar(context, uri, holder.binding.itemAvatar);
+                UserDAO.setAvatar(context, uri, holder.binding.itemAvatar);
             }
         });
 

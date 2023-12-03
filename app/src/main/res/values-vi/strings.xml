@@ -75,6 +75,21 @@
     <string name="tim_kiem_o_day">Tìm kiếm ở đây</string>
     <string name="tim_kiem_search">Tìm kiếm</string>
     <string name="voiceRes">Thiết bị của bạn không hỗ trợ chức năng nhận diện giọng nói.</string>
+    <string name="change_language_titile">Chuyển đổi ngôn ngữ?</string>
+    <string name="change_language_message">Hệ thống sẽ khởi động lại để cập nhật thay đổi mới!</string>
+    <string name="change_language_option">Đồng ý</string>
+    <string name="change_language_option2">Để sau</string>
+    <string name="change_language_errorReload">Thiết bị của bạn không hỗ trợ, vui lòng thoát thủ công!</string>
+    <string name="error">Đã xảy ra lỗi, vui lòng thử lại!</string>
+    <string name="error_load_image">Lỗi xử lý ảnh</string>
+    <string name="download_successfully">Tải thành công!</string>
+    <string name="download_failed">Tải thất bại!</string>
+    <string name="get_location_failed">Không thể định vị!</string>
+    <string name="recall_message">Tin nhắn đã bị thu hồi!</string>
+    <string name="recall_succ">Thu hồi tin nhắn thành công!</string>
+    <string name="recall_failed">Thu hồi tin nhắn thất bại!</string>
+    <string name="time_used">Thời gian sử dụng 7 ngày gần nhất</string>
+
 
 
 </resources>
