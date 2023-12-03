@@ -241,12 +241,11 @@ public class chatAdapter extends FirestoreRecyclerAdapter<chatMesseageModel, cha
                 FirebaseUtil.getChatRoomReference(chatRoomID)
                         .collection("chats")
                         .document(documentId)
-                        .update("message", "Tin nhắn đã bị thu hồi!").addOnSuccessListener(aVoid -> {
+                        .update("message", R.string.recall_message).addOnSuccessListener(aVoid -> {
                             dialog.dismiss();
-                            Toasty.success(context, "Thu hồi tin nhắn thành công!", Toasty.LENGTH_LONG, true).show();
+                            Toasty.success(context, R.string.recall_succ, Toasty.LENGTH_LONG, true).show();
                         }).addOnFailureListener(e -> {
-                            Log.e(TAG, "onLongClick: " + e.getMessage());
-                            Toasty.error(context, "Thu hồi tin nhắn thất bại!", Toasty.LENGTH_LONG, true).show();
+                            Toasty.error(context, R.string.recall_failed, Toasty.LENGTH_LONG, true).show();
                         }));
 
         bottomOptionDialogBinding.copyText.setOnClickListener(view -> {

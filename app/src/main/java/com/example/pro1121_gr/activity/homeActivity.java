@@ -16,6 +16,7 @@ import com.example.pro1121_gr.fragments.ChatFragment;
 import com.example.pro1121_gr.function.MyApplication;
 import com.example.pro1121_gr.function.ReplaceFragment;
 import com.example.pro1121_gr.function.Functions;
+import com.example.pro1121_gr.util.ExitAppEvent;
 import com.example.pro1121_gr.util.NetworkChangeReceiver;
 import com.example.pro1121_gr.util.FirebaseUtil;
 import com.google.firebase.firestore.FirebaseFirestore;

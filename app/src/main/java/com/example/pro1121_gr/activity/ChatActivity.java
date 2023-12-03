@@ -129,8 +129,8 @@ public class ChatActivity extends AppCompatActivity {
                 userModel MyUserModel = task.getResult().toObject(userModel.class);
                 if (MyUserModel != null) {
                     Functions.startService(MyUserModel.getUserId(), MyUserModel.getUsername(), this);
-                } else Functions.showSnackBar(binding.getRoot(), "Error, please try again");
-            } else Functions.showSnackBar(binding.getRoot(), "Error, please try again");
+                } else Functions.showSnackBar(binding.getRoot(), getString(R.string.error));
+            } else Functions.showSnackBar(binding.getRoot(), getString(R.string.error));
         });
         initView();
 
@@ -349,7 +349,7 @@ public class ChatActivity extends AppCompatActivity {
                     sendMessToOther(imageUrl);
                     setChatLayout();
                 });
-            }).addOnFailureListener(exception -> Functions.showSnackBar( binding.getRoot(), "Lỗi xử lý ảnh"));
+            }).addOnFailureListener(exception -> Functions.showSnackBar( binding.getRoot(), getString(R.string.error_load_image)));
         } else if (requestCode == REQUEST_CODE_SPEECH_INPUT) {
             VoiceRecordingUtil.processVoiceInput(requestCode, resultCode, data, text -> {
                 if (!text.isEmpty()) {
@@ -637,7 +637,7 @@ public class ChatActivity extends AppCompatActivity {
                     }
                 } else {
                     // GPS đã bị tắt hoặc có lỗi khác
-                    Functions.showSnackBar(binding.getRoot(), "Error, please try again");
+                    Functions.showSnackBar(binding.getRoot(), getString(R.string.error));
                 }
             }
         });
@@ -660,15 +660,15 @@ public class ChatActivity extends AppCompatActivity {
                         String addressString = addresses.get(0).getAddressLine(0);
                         sendMessToOther(addressString);
                     } else {
-                        Functions.Toasty(ChatActivity.this,"Không thể định vị!", Functions.warning);
+                        Functions.Toasty(ChatActivity.this,getString(R.string.get_location_failed), Functions.warning);
                         Log.e(TAG, "getUserLocation: Addresses is null or empty");
                     }
                 } catch (IOException e) {
-                    Functions.Toasty(ChatActivity.this,"Không thể định vị!", Functions.warning);
+                    Functions.Toasty(ChatActivity.this,getString(R.string.get_location_failed), Functions.warning);
                     Log.e(TAG, "getUserLocation: IOException - " + e.getMessage());
                 }
             } else {
-                Toasty.warning(ChatActivity.this,"Không thể định vị!", Toasty.LENGTH_LONG, true).show();
+                Toasty.warning(ChatActivity.this,getString(R.string.get_location_failed), Toasty.LENGTH_LONG, true).show();
                 Log.e(TAG, "getUserLocation: Unable to get location - " + task.getException());
             }
         });
@@ -680,8 +680,8 @@ public class ChatActivity extends AppCompatActivity {
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
             if ("DOWNLOAD_COMPLETE".equals(action)) {
-                Functions.showSnackBar(binding.getRoot(), "Downloaded successfully");
-            }else Functions.showSnackBar(binding.getRoot(), "Download failed");
+                Functions.showSnackBar(binding.getRoot(), getString(R.string.download_successfully));
+            }else Functions.showSnackBar(binding.getRoot(), getString(R.string.download_failed));
         }
     };
 

@@ -87,7 +87,7 @@ public class FirebaseUtil {
         Glide.with(context)
                 .load(message)
                 .apply(new RequestOptions()
-                        .override(500, 500) // Điều chỉnh kích thước ảnh tại đây
+                        .override(500, 500) // Điều chỉnh kích thước ảnh
                         .fitCenter() // Giữ tỷ lệ và hiển thị trong khung
                 )
                 .into(image); // ImageView để hiển thị ảnh

@@ -105,7 +105,7 @@ public class CreateProfile extends AppCompatActivity {
                     finish();
                 }else{
                     loadingDialog.isDismiss();
-                    Functions.showSnackBar(binding.getRoot(), "Error, please try again!");
+                    Functions.showSnackBar(binding.getRoot(), getString(R.string.error));
                 }
             }
         });
@@ -120,7 +120,9 @@ public class CreateProfile extends AppCompatActivity {
                         && !model.getDate().isEmpty()
                         && !model.getPhone().isEmpty()) {
                     loadingDialog.isDismiss();
-                    startActivity(new Intent(CreateProfile.this, homeActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+                    startActivity(new Intent(CreateProfile.this, homeActivity.class)
+                            .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                            .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
                     finish();
                 } else loadingDialog.isDismiss();
             }
