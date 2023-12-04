@@ -1,9 +1,11 @@
 package com.example.pro1121_gr.activity;
 
+import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -12,6 +14,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.pro1121_gr.DAO.UserDAO;
 import com.example.pro1121_gr.Database.DBhelper;
+import com.example.pro1121_gr.DesignPattern.UserSingleton;
 import com.example.pro1121_gr.R;
 import com.example.pro1121_gr.databinding.ActivitySettingBinding;
 import com.example.pro1121_gr.function.Functions;
@@ -24,6 +27,8 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.messaging.FirebaseMessaging;
+
+import java.util.Objects;
 
 public class SettingActivity extends AppCompatActivity {
 
@@ -123,30 +128,35 @@ public class SettingActivity extends AppCompatActivity {
 //    }
 
 
+    @SuppressLint("LogNotTimber")
     private void setInformation() {
-        // xu ly avt
-        UserDAO.currentUserDetails().get().addOnCompleteListener(this, new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                    userModel = task.getResult().toObject(userModel.class);
-                    if (userModel != null) {
-                        binding.profile.fullName.setText(userModel.getUsername());
-                        // xu ly avt
-                        UserDAO.getCurrentOtherProfileImageStorageReference(userModel.getUserId())
-                                .getDownloadUrl().addOnCompleteListener(task1 -> {
-                                    if (task1.isSuccessful())
-                                        UserDAO.setAvatar(SettingActivity.this, task1.getResult(), binding.profile.itemAvatar);
-                                });
-                        if (userModel.getStatus() == 0){
-                            UserDAO.setOnline();
+        // gán avt và full name
+        try {
+            binding.profile.fullName.setText(UserSingleton.getInstance().getUser().getUsername());
+            UserDAO.setAvatar(SettingActivity.this, UserSingleton.getInstance().getUrlAVT(), binding.profile.itemAvatar);
+        } catch (Exception e){
+            Log.e(SettingActivity.class.getSimpleName(), Objects.requireNonNull(e.getMessage()));
+            UserDAO.currentUserDetails().get().addOnCompleteListener(this, new OnCompleteListener<DocumentSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                    if (task.isSuccessful()) {
+                        userModel = task.getResult().toObject(userModel.class);
+                        if (userModel != null) {
+                            binding.profile.fullName.setText(userModel.getUsername());
+                            // xu ly avt
+                            UserDAO.getCurrentOtherProfileImageStorageReference(userModel.getUserId())
+                                    .getDownloadUrl().addOnCompleteListener(task1 -> {
+                                        if (task1.isSuccessful())
+                                            UserDAO.setAvatar(SettingActivity.this, task1.getResult(), binding.profile.itemAvatar);
+                                    });
+                            if (userModel.getStatus() == 0){
+                                UserDAO.setOnline();
+                            }
                         }
                     }
                 }
-            }
-
-
-        });
+            });
+        }
     }
 
 

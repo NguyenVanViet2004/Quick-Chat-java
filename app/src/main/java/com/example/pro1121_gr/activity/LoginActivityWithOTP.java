@@ -116,7 +116,8 @@ public class LoginActivityWithOTP extends AppCompatActivity {
             isDismiss();
             if(task.isSuccessful()){
                 Intent intent = new Intent(LoginActivityWithOTP.this,CreateProfile.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 intent.putExtra("phone",phoneNumber);
                 intent.putExtra("phoneAndNoCodeCountry",phoneNumberNoCode);
                 startActivity(intent);
