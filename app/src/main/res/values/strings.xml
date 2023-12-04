@@ -5,6 +5,7 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="network_comeback">Network connection has returned</string>
     <string name="error_network">Internet connection is unstable or unavailable. Please check your connection.</string>
+    <string name="error_network_title">Network connection error!</string>
     <string name="bottom_nav_message">Messages</string>
     <string name="bottom_nav_contact">Contacts</string>
     <string name="bottom_nav_option">Options</string>
@@ -88,6 +89,8 @@
     <string name="time_used">Last 7 days of use</string>
     <string name="update_profile_status">Successfully updated!</string>
     <string name="update_profile_status_failed">Update information failed</string>
+    <string name="message_error_network">No network connection, please go to settings!</string>
+
 
 
 

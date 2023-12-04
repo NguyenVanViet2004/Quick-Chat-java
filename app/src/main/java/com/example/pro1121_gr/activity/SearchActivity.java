@@ -19,7 +19,6 @@ import com.example.pro1121_gr.function.Functions;
 import com.example.pro1121_gr.function.MyApplication;
 import com.example.pro1121_gr.model.userModel;
 import com.example.pro1121_gr.util.NetworkChangeReceiver;
-import com.example.pro1121_gr.util.FirebaseUtil;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.firebase.firestore.Query;
 

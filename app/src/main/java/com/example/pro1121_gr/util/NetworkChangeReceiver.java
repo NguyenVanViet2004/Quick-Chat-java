@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -14,6 +15,8 @@ import android.os.Build;
 import android.provider.Settings;
 import android.widget.Button;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AlertDialog;
 
 import com.example.pro1121_gr.R;
 
@@ -67,28 +70,16 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
     }
 
     private void showError(Activity activity){
-        android.view.LayoutInflater inflater = activity.getLayoutInflater();
-        android.view.View dialogView = inflater.inflate(R.layout.error_dialog, null);
-
-        // set dialog
-        Dialog builder = new Dialog(activity);
-        builder.setContentView(dialogView);
-        builder.setCancelable(false);
-        builder.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        builder.show();
-        isDialog = builder;
-
-        Button button = dialogView.findViewById(R.id.errorClose);
-        button.setOnClickListener(view -> {
-            builder.dismiss();
-            activity.finish();
-        });
-
-        Button setting = dialogView.findViewById(R.id.errorGoToSetting);
-        setting.setOnClickListener(view -> {
-            Intent intent = new Intent(Settings.ACTION_WIFI_SETTINGS);
-            activity.startActivity(intent);
-            activity.finish();
-        });
+       isDialog = new AlertDialog.Builder(activity).setIcon(R.drawable.baseline_error_24)
+                .setTitle(activity.getString(R.string.error_network_title))
+                .setMessage(activity.getString(R.string.message_error_network)).setCancelable(false)
+                .setPositiveButton(activity.getString(R.string.change_language_option), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        Intent intent = new Intent(Settings.ACTION_WIFI_SETTINGS);
+                        activity.startActivity(intent);
+                        activity.finish();
+                    }
+                }).show();
     }
 }

@@ -16,7 +16,6 @@ import com.example.pro1121_gr.activity.ChatActivity;
 import com.example.pro1121_gr.databinding.SearchUserBinding;
 import com.example.pro1121_gr.function.Functions;
 import com.example.pro1121_gr.model.userModel;
-import com.example.pro1121_gr.util.FirebaseUtil;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 

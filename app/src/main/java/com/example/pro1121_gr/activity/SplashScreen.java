@@ -13,7 +13,8 @@ import com.example.pro1121_gr.databinding.ActivitySplashScreenBinding;
 import com.example.pro1121_gr.function.Functions;
 import com.example.pro1121_gr.function.MyApplication;
 import com.example.pro1121_gr.model.userModel;
-import com.example.pro1121_gr.util.FirebaseUtil;
+import com.example.pro1121_gr.util.ExitAppEvent;
+import com.example.pro1121_gr.util.ServiceUtils;
 
 public class SplashScreen extends AppCompatActivity {
 
@@ -27,6 +28,15 @@ public class SplashScreen extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         MyApplication.applyNightMode();
+        if (ServiceUtils.isServiceRunning(this, ExitAppEvent.class)) {
+            // Dịch vụ đang chạy
+            Log.e(TAG, "Dịch vụ đang chạy " );
+        } else {
+            // Dịch vụ không đang chạy, bạn có thể khởi tạo nó
+            Log.e(TAG, "Dịch vụ không đang chạy " );
+            Intent serviceIntent = new Intent(this, ExitAppEvent.class);
+            startService(serviceIntent);
+        }
 
 
         if (UserDAO.isLoggedIn() && getIntent().getExtras() != null){

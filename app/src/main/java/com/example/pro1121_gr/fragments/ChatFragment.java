@@ -21,7 +21,6 @@ import com.example.pro1121_gr.adapter.ChatListAvatarAdapter;
 import com.example.pro1121_gr.adapter.chatListAdapter;
 import com.example.pro1121_gr.databinding.FragmentChatBinding;
 import com.example.pro1121_gr.model.chatRoomModel;
-import com.example.pro1121_gr.util.FirebaseUtil;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.firebase.firestore.Query;
 
