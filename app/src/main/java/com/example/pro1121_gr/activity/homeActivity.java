@@ -1,24 +1,34 @@
 package com.example.pro1121_gr.activity;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.example.pro1121_gr.DAO.ChatRoomsDAO;
 import com.example.pro1121_gr.DAO.UserDAO;
 import com.example.pro1121_gr.Database.DBhelper;
 import com.example.pro1121_gr.DesignPattern.UserSingleton;
 import com.example.pro1121_gr.R;
+import com.example.pro1121_gr.adapter.ChatListAvatarAdapter;
+import com.example.pro1121_gr.adapter.chatListAdapter;
 import com.example.pro1121_gr.databinding.ActivityHomeBinding;
 import com.example.pro1121_gr.fragments.ChatFragment;
 import com.example.pro1121_gr.function.MyApplication;
 import com.example.pro1121_gr.function.ReplaceFragment;
 import com.example.pro1121_gr.function.Functions;
+import com.example.pro1121_gr.model.chatRoomModel;
 import com.example.pro1121_gr.util.NetworkChangeReceiver;
+import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.util.Locale;
@@ -30,6 +40,8 @@ public class homeActivity extends AppCompatActivity {
     private ActivityHomeBinding binding;
     private NetworkChangeReceiver networkChangeReceiver;
     private boolean doubleBackToExitPressedOnce = false;
+    private chatListAdapter adapter;
+    private ChatListAvatarAdapter listAvatarAdapter;
 
 
     @Override
@@ -71,28 +83,48 @@ public class homeActivity extends AppCompatActivity {
 
     private void initView() {
         setSatus();
-        ReplaceFragment.replaceFragment(
-                this.getSupportFragmentManager(),
-                R.id.frame_layout,
-                new ChatFragment(),
-                false
-        );
-
+        setupClickEvents();
+        setLayoutChat();
         networkChangeReceiver = Functions.getNetworkChangeReceiver(this);
+    }
 
-        binding.bottomNavigation.setOnItemSelectedListener(item -> {
-            if (item.getItemId() == R.id.bottomNavMessage){
-                ReplaceFragment.replaceFragment(
-                        homeActivity.this.getSupportFragmentManager(),
-                        R.id.frame_layout,
-                        new ChatFragment(),
-                        false
-                );
-            } else {
-                startActivity(new Intent(homeActivity.this, SettingActivity.class));
+    private void setupClickEvents() {
+        binding.searchView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(homeActivity.this, SearchActivity.class).setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY));
             }
-            return true;
         });
+        binding.swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                setLayoutChat();
+                binding.swipeRefreshLayout.setRefreshing(false);
+            }
+        });
+
+        binding.setting.setOnClickListener(view -> {
+            startActivity(new Intent(homeActivity.this,SettingActivity.class));
+        });
+    }
+
+    private void setLayoutChat() {
+        Query query = ChatRoomsDAO.allChatroomCollectionReference()
+                .whereArrayContains("userIds", UserDAO.currentUserId())
+                .orderBy("lastMessageSenderId", Query.Direction.DESCENDING);
+
+        FirestoreRecyclerOptions<chatRoomModel> options =
+                new FirestoreRecyclerOptions.Builder<chatRoomModel>().setQuery(query, chatRoomModel.class).build();
+
+        adapter = new chatListAdapter(options,homeActivity.this);
+        listAvatarAdapter = new ChatListAvatarAdapter(options, homeActivity.this);
+
+        binding.rcvListChat.setLayoutManager(new LinearLayoutManager(homeActivity.this));
+        binding.rcvListChat.setAdapter(adapter);
+        binding.rcvListAvt.setLayoutManager(new LinearLayoutManager(homeActivity.this, LinearLayoutManager.HORIZONTAL, false));
+        binding.rcvListAvt.setAdapter(listAvatarAdapter);
+        adapter.startListening();
+        listAvatarAdapter.startListening();
     }
 
     private void setSatus(){
@@ -104,6 +136,29 @@ public class homeActivity extends AppCompatActivity {
             if (task.isSuccessful()) Log.e(homeActivity.class.getSimpleName(), "getFMCtoken: " + task.getResult() );
             UserDAO.currentUserDetails().update("fmctoken",task.getResult());
         });
+    }
+
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        if(adapter!=null) adapter.startListening();
+        if (listAvatarAdapter != null) listAvatarAdapter.startListening();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if(adapter!=null) adapter.stopListening();
+        if (listAvatarAdapter != null) listAvatarAdapter.stopListening();
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    @Override
+    public void onResume() {
+        super.onResume();
+        if(adapter!=null) adapter.notifyDataSetChanged();
+        if (listAvatarAdapter != null) listAvatarAdapter.notifyDataSetChanged();
     }
 
 
