@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.pro1121_gr.DAO.UserDAO;
 import com.example.pro1121_gr.Database.DBhelper;
+import com.example.pro1121_gr.DesignPattern.UserSingleton;
 import com.example.pro1121_gr.R;
 import com.example.pro1121_gr.databinding.ActivityHomeBinding;
 import com.example.pro1121_gr.fragments.ChatFragment;
@@ -38,6 +39,7 @@ public class homeActivity extends AppCompatActivity {
         binding = ActivityHomeBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         // Bật chế độ tối nếu được kích hoạt
+        UserSingleton.getInstance().getData(this);
         MyApplication.applyNightMode();
         Functions.getIdUser();
         getFMCtoken();
@@ -118,6 +120,7 @@ public class homeActivity extends AppCompatActivity {
     public void onBackPressed() {
         if (doubleBackToExitPressedOnce) {
             super.onBackPressed();
+            DBhelper.getInstance(this).endUsageTracking();
             FirebaseFirestore.getInstance().collection("users").document(Functions.getIdUser()).update("status",0);
             return;
         }
