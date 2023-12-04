@@ -5,6 +5,7 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="network_comeback">kết nối mạng đã quay trở lại</string>
     <string name="error_network">Kết nối internet không ổn định hoặc không có internet. Vui lòng kiểm tra lại kết nối.</string>
+    <string name="error_network_title">Lỗi kết nối mạng!</string>
     <string name="bottom_nav_message">Tin nhắn</string>
     <string name="bottom_nav_contact">Danh bạ</string>
     <string name="bottom_nav_option">Tùy chọn</string>
@@ -91,6 +92,7 @@
     <string name="time_used">Thời gian sử dụng 7 ngày gần nhất</string>
     <string name="update_profile_status">Cập nhật thông tin thành công!</string>
     <string name="update_profile_status_failed">Cập nhật thông tin thất bại</string>
+    <string name="message_error_network">Không có kết nối mạng, vui lòng đi đến cài đặt!</string>
 
 
 

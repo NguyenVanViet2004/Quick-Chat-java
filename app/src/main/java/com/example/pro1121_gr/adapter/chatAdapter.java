@@ -30,7 +30,6 @@ import com.example.pro1121_gr.databinding.BottomOptionDialogBinding;
 import com.example.pro1121_gr.function.Functions;
 import com.example.pro1121_gr.model.CustomTypefaceInfo;
 import com.example.pro1121_gr.model.chatMesseageModel;
-import com.example.pro1121_gr.util.FirebaseUtil;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 

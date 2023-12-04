@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -17,9 +16,7 @@ import com.example.pro1121_gr.fragments.ChatFragment;
 import com.example.pro1121_gr.function.MyApplication;
 import com.example.pro1121_gr.function.ReplaceFragment;
 import com.example.pro1121_gr.function.Functions;
-import com.example.pro1121_gr.util.ExitAppEvent;
 import com.example.pro1121_gr.util.NetworkChangeReceiver;
-import com.example.pro1121_gr.util.FirebaseUtil;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.messaging.FirebaseMessaging;
 
@@ -114,7 +111,7 @@ public class homeActivity extends AppCompatActivity {
         if (networkChangeReceiver != null) {
             unregisterReceiver(networkChangeReceiver);
         }
-        DBhelper.getInstance(this).endUsageTracking();
+        //DBhelper.getInstance(this).endUsageTracking();
     }
 
     @Override

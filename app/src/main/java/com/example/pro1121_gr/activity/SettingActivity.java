@@ -17,7 +17,6 @@ import com.example.pro1121_gr.databinding.ActivitySettingBinding;
 import com.example.pro1121_gr.function.Functions;
 import com.example.pro1121_gr.function.MyApplication;
 import com.example.pro1121_gr.model.userModel;
-import com.example.pro1121_gr.util.FirebaseUtil;
 import com.example.pro1121_gr.util.NetworkChangeReceiver;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;

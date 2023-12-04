@@ -18,7 +18,6 @@ import com.example.pro1121_gr.databinding.ActivityCreateProfileBinding;
 import com.example.pro1121_gr.function.LoadingDialog;
 import com.example.pro1121_gr.function.Functions;
 import com.example.pro1121_gr.model.userModel;
-import com.example.pro1121_gr.util.FirebaseUtil;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;

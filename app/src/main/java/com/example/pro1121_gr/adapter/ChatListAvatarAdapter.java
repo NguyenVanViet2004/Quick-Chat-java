@@ -13,18 +13,13 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.pro1121_gr.DAO.UserDAO;
 import com.example.pro1121_gr.R;
 import com.example.pro1121_gr.activity.ChatActivity;
-import com.example.pro1121_gr.activity.EditProfileActivity;
 import com.example.pro1121_gr.databinding.ItemListAvatarBinding;
 import com.example.pro1121_gr.function.Functions;
 import com.example.pro1121_gr.model.chatRoomModel;
 import com.example.pro1121_gr.model.userModel;
-import com.example.pro1121_gr.util.FirebaseUtil;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 
-import es.dmoral.toasty.Toasty;
 
 public class ChatListAvatarAdapter extends FirestoreRecyclerAdapter<chatRoomModel, ChatListAvatarAdapter.ChatListAvatarAdapterViewHolder> {
 
