@@ -22,7 +22,6 @@ public class ExitAppEvent extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.e(TAG, "Service started");
-        UserDAO.setOnline();
         return START_STICKY;
     }
 
@@ -48,8 +47,10 @@ public class ExitAppEvent extends Service {
     }
 
     private void stopService(){
-        DBhelper.getInstance(this).endUsageTracking();
-        UserDAO.setOffline();
+        if (UserDAO.currentUserId() != null && !UserDAO.currentUserId().equals("")){
+            DBhelper.getInstance(this).endUsageTracking();
+            UserDAO.setOffline();
+        }
         stopSelf();
     }
 }

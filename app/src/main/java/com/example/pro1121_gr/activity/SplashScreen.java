@@ -2,6 +2,7 @@ package com.example.pro1121_gr.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -21,12 +22,12 @@ public class SplashScreen extends AppCompatActivity {
     private final String TAG = SplashScreen.class.getSimpleName();
 
 
+    @SuppressLint("LogNotTimber")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ActivitySplashScreenBinding binding = ActivitySplashScreenBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-
         MyApplication.applyNightMode();
         if (ServiceUtils.isServiceRunning(this, ExitAppEvent.class)) {
             // Dịch vụ đang chạy

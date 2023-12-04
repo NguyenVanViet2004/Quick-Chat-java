@@ -1,10 +1,6 @@
 package com.example.pro1121_gr.activity;
 
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.content.Intent;
@@ -14,8 +10,14 @@ import android.util.Log;
 import android.view.View;
 import android.widget.DatePicker;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.example.pro1121_gr.DAO.UserDAO;
 import com.example.pro1121_gr.Database.DBhelper;
+import com.example.pro1121_gr.DesignPattern.UserSingleton;
 import com.example.pro1121_gr.R;
 import com.example.pro1121_gr.databinding.ActivityEditProfileBinding;
 import com.example.pro1121_gr.function.Functions;
@@ -28,6 +30,7 @@ import com.google.android.gms.tasks.Task;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
+import java.util.Objects;
 
 import es.dmoral.toasty.Toasty;
 import kotlin.Unit;
@@ -102,39 +105,53 @@ public class EditProfileActivity extends AppCompatActivity {
         UserDAO.currentUserDetails().set(userModel).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
-                if (task.isSuccessful()) Toasty.success(EditProfileActivity.this, R.string.update_profile_status, Toasty.LENGTH_LONG,true).show();
-                else Toasty.error(EditProfileActivity.this, R.string.update_profile_status_failed, Toasty.LENGTH_LONG, true).show();
-            }
-        });
-    }
-
-    private boolean editProfile(){
-        Functions.isEmpty(binding.fullName,0);
-        Functions.isEmpty(binding.birthday,1);
-        Functions.isEmpty(binding.phoneNumber,2);
-
-        if (Functions.isValidPhoneNumber(binding.phoneNumber.getText().toString())) return false;
-        else if(Functions.isValidDateFormat(binding.birthday.getText().toString())) return false;
-        else return binding.fullName.length() >= 5;
-    }
-
-    private void checkInformation(){
-        // get avt
-        UserDAO.getCurrentProfileImageStorageReference().getDownloadUrl().addOnCompleteListener(this, task -> {
-            if (task.isSuccessful()) UserDAO.setAvatar(EditProfileActivity.this,task.getResult(), binding.itemAvatar);
-            else Toasty.error(EditProfileActivity.this, R.string.error, Toasty.LENGTH_LONG, true).show();
-        });
-
-        UserDAO.currentUserDetails().get().addOnCompleteListener(EditProfileActivity.this, task -> {
-            if (task.isSuccessful()){
-                userModel = task.getResult().toObject(userModel.class);
-                if (userModel != null) {
-                    binding.fullName.setText(userModel.getUsername());
-                    binding.birthday.setText(userModel.getDate());
-                    binding.phoneNumber.setText(userModel.getPhone());
+                if (task.isSuccessful()) {
+                    Toasty.success(EditProfileActivity.this, R.string.update_profile_status, Toasty.LENGTH_LONG, true).show();
+                    UserSingleton.getInstance().getData(EditProfileActivity.this);
+                } else {
+                    Toasty.error(EditProfileActivity.this, R.string.update_profile_status_failed, Toasty.LENGTH_LONG, true).show();
                 }
             }
         });
+    }
+
+    private boolean editProfile() {
+        Functions.isEmpty(binding.fullName, 0);
+        Functions.isEmpty(binding.birthday, 1);
+        Functions.isEmpty(binding.phoneNumber, 2);
+
+        if (Functions.isValidPhoneNumber(binding.phoneNumber.getText().toString())) return false;
+        else if (Functions.isValidDateFormat(binding.birthday.getText().toString())) return false;
+        else return binding.fullName.length() >= 5;
+    }
+
+    @SuppressLint("LogNotTimber")
+    private void checkInformation() {
+        // get avt
+        try {
+            userModel = UserSingleton.getInstance().getUser();
+            UserDAO.setAvatar(EditProfileActivity.this, UserSingleton.getInstance().getUrlAVT(), binding.itemAvatar);
+        } catch (Exception e) {
+            Log.e(EditProfileActivity.class.getSimpleName(), Objects.requireNonNull(e.getMessage()));
+            UserDAO.getCurrentProfileImageStorageReference().getDownloadUrl().addOnCompleteListener(this, task -> {
+                if (task.isSuccessful())
+                    UserDAO.setAvatar(EditProfileActivity.this, task.getResult(), binding.itemAvatar);
+                else
+                    Toasty.error(EditProfileActivity.this, R.string.error, Toasty.LENGTH_LONG, true).show();
+            });
+
+            UserDAO.currentUserDetails().get().addOnCompleteListener(EditProfileActivity.this, task -> {
+                if (task.isSuccessful()) {
+                    userModel = task.getResult().toObject(userModel.class);
+                }
+            });
+        } finally {
+            if (userModel != null) {
+                binding.fullName.setText(userModel.getUsername());
+                binding.birthday.setText(userModel.getDate());
+                binding.phoneNumber.setText(userModel.getPhone());
+            }
+        }
     }
 
     private void registerImagePicker() {
