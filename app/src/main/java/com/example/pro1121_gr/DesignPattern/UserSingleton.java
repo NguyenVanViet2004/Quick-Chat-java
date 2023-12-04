@@ -30,6 +30,7 @@ public class UserSingleton {
                                 if (task1.isSuccessful())
                                     urlAVT = task1.getResult();
                             });
+                    Functions.startService(user.getUserId(), user.getUsername(), activity);
                 } else {
                     Functions.Toasty(activity,activity.getString(R.string.error), Functions.error);
                 }

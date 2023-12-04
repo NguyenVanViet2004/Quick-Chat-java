@@ -125,14 +125,14 @@ public class ChatActivity extends AppCompatActivity {
         binding = ActivityChatBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         // đăng ký sự kiện cuộc gọi voice call và video call
-        UserDAO.currentUserDetails().get().addOnCompleteListener(ChatActivity.this, task -> {
+        /*UserDAO.currentUserDetails().get().addOnCompleteListener(ChatActivity.this, task -> {
             if (task.isSuccessful()){
                 userModel MyUserModel = task.getResult().toObject(userModel.class);
                 if (MyUserModel != null) {
                     Functions.startService(MyUserModel.getUserId(), MyUserModel.getUsername(), this);
                 } else Functions.showSnackBar(binding.getRoot(), getString(R.string.error));
             } else Functions.showSnackBar(binding.getRoot(), getString(R.string.error));
-        });
+        });*/
         initView();
 
     }
@@ -749,7 +749,7 @@ public class ChatActivity extends AppCompatActivity {
         if (networkChangeReceiver != null) unregisterReceiver(networkChangeReceiver);
         if (downloadReceiver != null) unregisterReceiver(downloadReceiver);
         // stop service
-        ZegoUIKitPrebuiltCallInvitationService.unInit();
+        //ZegoUIKitPrebuiltCallInvitationService.unInit();
         DBhelper.getInstance(this).endUsageTracking();
     }
 
