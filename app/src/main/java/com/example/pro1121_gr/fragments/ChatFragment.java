@@ -13,13 +13,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.pro1121_gr.DAO.ChatRoomsDAO;
+import com.example.pro1121_gr.DAO.UserDAO;
 import com.example.pro1121_gr.function.MyApplication;
 import com.example.pro1121_gr.activity.SearchActivity;
 import com.example.pro1121_gr.adapter.ChatListAvatarAdapter;
 import com.example.pro1121_gr.adapter.chatListAdapter;
 import com.example.pro1121_gr.databinding.FragmentChatBinding;
 import com.example.pro1121_gr.model.chatRoomModel;
-import com.example.pro1121_gr.util.FirebaseUtil;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.firebase.firestore.Query;
 
@@ -61,8 +62,8 @@ public class ChatFragment extends Fragment {
     }
 
     private void setLayoutChat() {
-        Query query = FirebaseUtil.allChatroomCollectionReference()
-                .whereArrayContains("userIds", FirebaseUtil.currentUserId())
+        Query query = ChatRoomsDAO.allChatroomCollectionReference()
+                .whereArrayContains("userIds", UserDAO.currentUserId())
                 .orderBy("lastMessageSenderId", Query.Direction.DESCENDING);
 
         FirestoreRecyclerOptions<chatRoomModel> options =

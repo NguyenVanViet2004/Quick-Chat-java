@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.pro1121_gr.Database.DBhelper;
+import com.example.pro1121_gr.R;
 import com.example.pro1121_gr.databinding.ActivityUsageTimeStatisticsBinding;
 import com.example.pro1121_gr.function.Functions;
 import com.example.pro1121_gr.util.NetworkChangeReceiver;
@@ -79,7 +80,7 @@ public class UsageTimeStatisticsActivity extends AppCompatActivity {
     private void displayUsageBarChart() {
         List<BarEntry> entries = getUsageEntries();
 
-        BarDataSet dataSet = new BarDataSet(entries, "Thời gian sử dụng 7 ngày gần nhất");
+        BarDataSet dataSet = new BarDataSet(entries, getString(R.string.time_used));
         // Set color for each column
         dataSet.setColors(colors);
         BarData barData = new BarData(dataSet);
@@ -122,7 +123,7 @@ public class UsageTimeStatisticsActivity extends AppCompatActivity {
     private void displayUsagePieChart() {
         List<PieEntry> entries = getUsageEntriesForPieChart();
 
-        PieDataSet dataSet = new PieDataSet(entries, "Thời gian sử dụng");
+        PieDataSet dataSet = new PieDataSet(entries, getString(R.string.time_used));
         //Set color for each column
         dataSet.setColors(colors);
 

@@ -46,7 +46,6 @@
         android:focusable="false"
         android:padding="@dimen/_9sdp"
         android:text="@string/tim_kiem_home"
-        android:textColor="@color/black"
         android:textSize="@dimen/_15sdp"
         app:layout_constraintHorizontal_weight="1" />
 

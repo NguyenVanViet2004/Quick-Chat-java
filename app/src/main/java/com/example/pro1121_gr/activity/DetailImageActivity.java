@@ -5,7 +5,6 @@ import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
 import android.Manifest;
-import android.util.Log;
 import android.view.View;
 
 import com.bumptech.glide.Glide;

@@ -7,7 +7,6 @@ import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.Switch;
 
 import androidx.appcompat.app.AlertDialog;
@@ -132,14 +131,14 @@ public class ChangeLanguageActivity extends AppCompatActivity {
     }
 
     private void showDialog() {
-        new AlertDialog.Builder(this).setTitle("Chuyển đổi ngôn ngữ?").setMessage("Hệ thống sẽ khởi động lại để cập nhật thay đổi mới!")
-                .setPositiveButton("Đồng ý", new DialogInterface.OnClickListener() {
+        new AlertDialog.Builder(this).setTitle(R.string.change_language_titile).setMessage(R.string.change_language_message)
+                .setPositiveButton(R.string.change_language_option, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         restart();
                     }
                 })
-                .setNegativeButton("Để sau", null)
+                .setNegativeButton(R.string.change_language_option2, null)
                 .setIcon(R.drawable.icon_question).show();
     }
 
@@ -153,7 +152,7 @@ public class ChangeLanguageActivity extends AppCompatActivity {
             startActivity(intent);
             finish();
         } else {
-            Functions.showSnackBar(binding.getRoot(),"Thiết bị của bạn không hỗ trợ, vui lòng thoát thủ công!");
+            Functions.showSnackBar(binding.getRoot(),getString(R.string.change_language_errorReload));
         }
     }
 

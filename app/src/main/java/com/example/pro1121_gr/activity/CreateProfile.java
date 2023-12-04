@@ -3,6 +3,7 @@ package com.example.pro1121_gr.activity;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -11,12 +12,12 @@ import android.widget.EditText;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.pro1121_gr.DAO.UserDAO;
 import com.example.pro1121_gr.R;
 import com.example.pro1121_gr.databinding.ActivityCreateProfileBinding;
 import com.example.pro1121_gr.function.LoadingDialog;
 import com.example.pro1121_gr.function.Functions;
 import com.example.pro1121_gr.model.userModel;
-import com.example.pro1121_gr.util.FirebaseUtil;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
@@ -91,10 +92,10 @@ public class CreateProfile extends AppCompatActivity {
             model.setDate(date);
             model.setStatus(1);
         }else{
-            model = new userModel(phoneNumberNoCode,userName, Timestamp.now(),date, FirebaseUtil.currentUserId());
+            model = new userModel(phoneNumberNoCode,userName, Timestamp.now(),date, UserDAO.currentUserId());
         }
         loadingDialog.startLoading();
-        FirebaseUtil.currentUserDetails().set(model).addOnCompleteListener(new OnCompleteListener<Void>() {
+        UserDAO.currentUserDetails().set(model).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if(task.isSuccessful()){
@@ -105,7 +106,7 @@ public class CreateProfile extends AppCompatActivity {
                     finish();
                 }else{
                     loadingDialog.isDismiss();
-                    Functions.showSnackBar(binding.getRoot(), "Error, please try again!");
+                    Functions.showSnackBar(binding.getRoot(), getString(R.string.error));
                 }
             }
         });
@@ -113,14 +114,16 @@ public class CreateProfile extends AppCompatActivity {
 
     void getData() {
         loadingDialog.startLoading();
-        FirebaseUtil.currentUserDetails().get().addOnCompleteListener(task -> {
+        UserDAO.currentUserDetails().get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 model = task.getResult().toObject(userModel.class);
                 if (model != null && !model.getUsername().isEmpty()
                         && !model.getDate().isEmpty()
                         && !model.getPhone().isEmpty()) {
                     loadingDialog.isDismiss();
-                    startActivity(new Intent(CreateProfile.this, homeActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+                    startActivity(new Intent(CreateProfile.this, homeActivity.class)
+                            .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                            .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
                     finish();
                 } else loadingDialog.isDismiss();
             }
@@ -136,11 +139,12 @@ public class CreateProfile extends AppCompatActivity {
 
         DatePickerDialog datePickerDialog = new DatePickerDialog(this,new DatePickerDialog.OnDateSetListener() {
             @Override
-            public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
-                LocalDate selectedDate = LocalDate.of(year, month + 1, day);
+            public void onDateSet(DatePicker datePicker, int selectedYear, int selectedMonth, int selectedDay) {
+                LocalDate selectedDate = LocalDate.of(selectedYear, selectedMonth + 1, selectedDay);
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
                 String formattedDate = selectedDate.format(formatter);
                 binding.edtAge.setText(formattedDate);
+                Log.e("TAG", "onDateSet: "+formattedDate );
             }
         },
                 year, month, day

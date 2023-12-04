@@ -14,17 +14,14 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 
-import androidx.annotation.NonNull;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.example.pro1121_gr.DAO.UserDAO;
 import com.example.pro1121_gr.model.userModel;
-import com.example.pro1121_gr.util.FirebaseUtil;
 import com.example.pro1121_gr.util.NetworkChangeReceiver;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
-import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.Timestamp;
 import com.zegocloud.uikit.prebuilt.call.config.ZegoNotificationConfig;
 import com.zegocloud.uikit.prebuilt.call.invite.ZegoUIKitPrebuiltCallInvitationConfig;
 import com.zegocloud.uikit.prebuilt.call.invite.ZegoUIKitPrebuiltCallInvitationService;
@@ -50,7 +47,7 @@ public class Functions {
     private static String idUser = null;
 
     public static String getIdUser() {
-        if (idUser == null) idUser = FirebaseUtil.currentUserId();
+        if (idUser == null) idUser = UserDAO.currentUserId();
         return idUser;
     }
 
@@ -206,5 +203,9 @@ public class Functions {
             case 1: Toasty.success(context, message, Toasty.LENGTH_SHORT, true); break;
             case 2: Toasty.warning(context, message, Toasty.LENGTH_SHORT, true); break;
         }
+    }
+
+    public static String timestampToString(Timestamp timestamp){
+        return new SimpleDateFormat("HH:MM").format(timestamp.toDate());
     }
 }

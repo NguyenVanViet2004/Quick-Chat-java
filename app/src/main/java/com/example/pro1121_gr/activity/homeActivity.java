@@ -4,11 +4,11 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.pro1121_gr.DAO.UserDAO;
 import com.example.pro1121_gr.Database.DBhelper;
 import com.example.pro1121_gr.R;
 import com.example.pro1121_gr.databinding.ActivityHomeBinding;
@@ -17,7 +17,6 @@ import com.example.pro1121_gr.function.MyApplication;
 import com.example.pro1121_gr.function.ReplaceFragment;
 import com.example.pro1121_gr.function.Functions;
 import com.example.pro1121_gr.util.NetworkChangeReceiver;
-import com.example.pro1121_gr.util.FirebaseUtil;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.messaging.FirebaseMessaging;
 
@@ -95,13 +94,13 @@ public class homeActivity extends AppCompatActivity {
     }
 
     private void setSatus(){
-        FirebaseUtil.currentUserDetails().update("status",1);
+        UserDAO.currentUserDetails().update("status",1);
     }
 
     private void getFMCtoken() {
         FirebaseMessaging.getInstance().getToken().addOnCompleteListener(task -> {
             if (task.isSuccessful()) Log.e(homeActivity.class.getSimpleName(), "getFMCtoken: " + task.getResult() );
-            FirebaseUtil.currentUserDetails().update("fmctoken",task.getResult());
+            UserDAO.currentUserDetails().update("fmctoken",task.getResult());
         });
     }
 
@@ -112,7 +111,7 @@ public class homeActivity extends AppCompatActivity {
         if (networkChangeReceiver != null) {
             unregisterReceiver(networkChangeReceiver);
         }
-        DBhelper.getInstance(this).endUsageTracking();
+        //DBhelper.getInstance(this).endUsageTracking();
     }
 
     @Override

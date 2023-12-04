@@ -10,11 +10,10 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
-import java.util.concurrent.TimeUnit;
 
 public class DBhelper extends SQLiteOpenHelper {
     private static final String DatabaseName = "QuickChat";
-    private static final int DatabaseVersion = 11;
+    private static final int DatabaseVersion = 12;
     private static final String TABLE_USAGE = "usage_table";
     private static final String COLUMN_ID = "id";
     private static final String COLUMN_DATE = "date";
@@ -45,7 +44,6 @@ public class DBhelper extends SQLiteOpenHelper {
                 COLUMN_USAGE_TIME + " INTEGER" +
                 ")";
         sqLiteDatabase.execSQL(CREATE_TABLE_USAGE);
-        insertData(sqLiteDatabase);
     }
 
     @Override
@@ -57,14 +55,6 @@ public class DBhelper extends SQLiteOpenHelper {
         }
     }
 
-    private void insertData(SQLiteDatabase sqLiteDatabase){
-        sqLiteDatabase.execSQL("INSERT INTO " + TABLE_USAGE + " (" + COLUMN_DATE + ", " + COLUMN_USAGE_TIME + ") " +
-                "VALUES ('23/11/2023', " + TimeUnit.HOURS.toMinutes(1) + ")");
-        sqLiteDatabase.execSQL("INSERT INTO " + TABLE_USAGE + " (" + COLUMN_DATE + ", " + COLUMN_USAGE_TIME + ") " +
-                "VALUES ('24/11/2023', " + TimeUnit.HOURS.toMinutes(3) + ")");
-        sqLiteDatabase.execSQL("INSERT INTO " + TABLE_USAGE + " (" + COLUMN_DATE + ", " + COLUMN_USAGE_TIME + ") " +
-                "VALUES ('25/11/2023', " + TimeUnit.HOURS.toMinutes(2) + ")");
-    }
 
     // Thêm dữ liệu thời gian sử dụng mới
     public void addUsageInfo(String date, long usageTime) {

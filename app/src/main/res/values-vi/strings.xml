@@ -5,6 +5,7 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="network_comeback">kết nối mạng đã quay trở lại</string>
     <string name="error_network">Kết nối internet không ổn định hoặc không có internet. Vui lòng kiểm tra lại kết nối.</string>
+    <string name="error_network_title">Lỗi kết nối mạng!</string>
     <string name="bottom_nav_message">Tin nhắn</string>
     <string name="bottom_nav_contact">Danh bạ</string>
     <string name="bottom_nav_option">Tùy chọn</string>
@@ -75,6 +76,24 @@
     <string name="tim_kiem_o_day">Tìm kiếm ở đây</string>
     <string name="tim_kiem_search">Tìm kiếm</string>
     <string name="voiceRes">Thiết bị của bạn không hỗ trợ chức năng nhận diện giọng nói.</string>
+    <string name="change_language_titile">Chuyển đổi ngôn ngữ?</string>
+    <string name="change_language_message">Hệ thống sẽ khởi động lại để cập nhật thay đổi mới!</string>
+    <string name="change_language_option">Đồng ý</string>
+    <string name="change_language_option2">Để sau</string>
+    <string name="change_language_errorReload">Thiết bị của bạn không hỗ trợ, vui lòng thoát thủ công!</string>
+    <string name="error">Đã xảy ra lỗi, vui lòng thử lại!</string>
+    <string name="error_load_image">Lỗi xử lý ảnh</string>
+    <string name="download_successfully">Tải thành công!</string>
+    <string name="download_failed">Tải thất bại!</string>
+    <string name="get_location_failed">Không thể định vị!</string>
+    <string name="recall_message">Tin nhắn đã bị thu hồi!</string>
+    <string name="recall_succ">Thu hồi tin nhắn thành công!</string>
+    <string name="recall_failed">Thu hồi tin nhắn thất bại!</string>
+    <string name="time_used">Thời gian sử dụng 7 ngày gần nhất</string>
+    <string name="update_profile_status">Cập nhật thông tin thành công!</string>
+    <string name="update_profile_status_failed">Cập nhật thông tin thất bại</string>
+    <string name="message_error_network">Không có kết nối mạng, vui lòng đi đến cài đặt!</string>
+
 
 
 </resources>

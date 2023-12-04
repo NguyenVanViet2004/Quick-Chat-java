@@ -13,6 +13,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Environment;
 
+import com.example.pro1121_gr.R;
 import com.example.pro1121_gr.function.Functions;
 import com.example.pro1121_gr.function.RequestPermission;
 
@@ -31,10 +32,10 @@ public class DownloadReceiver extends BroadcastReceiver {
                     int status = cursor.getInt(statusIndex);
                     if (status == DownloadManager.STATUS_SUCCESSFUL) {
                         // Ảnh đã tải về thành công
-                        Functions.Toasty(context, "Download successful", Functions.success);
+                        Functions.Toasty(context, context.getString(R.string.download_successfully), Functions.success);
                     } else {
                         // Lỗi khi tải về ảnh
-                        Functions.Toasty(context, "Download failed", Functions.error);
+                        Functions.Toasty(context, context.getString(R.string.download_failed), Functions.error);
                     }
                 }
             }

@@ -14,17 +14,16 @@ import android.util.Log;
 import android.view.View;
 import android.widget.DatePicker;
 
+import com.example.pro1121_gr.DAO.UserDAO;
 import com.example.pro1121_gr.Database.DBhelper;
 import com.example.pro1121_gr.R;
 import com.example.pro1121_gr.databinding.ActivityEditProfileBinding;
 import com.example.pro1121_gr.function.Functions;
 import com.example.pro1121_gr.model.userModel;
 import com.example.pro1121_gr.util.NetworkChangeReceiver;
-import com.example.pro1121_gr.util.FirebaseUtil;
 import com.github.dhaval2404.imagepicker.ImagePicker;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -80,7 +79,7 @@ public class EditProfileActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if (selectedImageUri != null) {
-                    FirebaseUtil.getCurrentProfileImageStorageReference().putFile(selectedImageUri).addOnCompleteListener(task ->{
+                    UserDAO.getCurrentProfileImageStorageReference().putFile(selectedImageUri).addOnCompleteListener(task ->{
                         if (editProfile()) setInformation();
                     });
                 }else {
@@ -100,11 +99,11 @@ public class EditProfileActivity extends AppCompatActivity {
         userModel.setUsername(binding.fullName.getText().toString().trim());
         userModel.setPhone(binding.phoneNumber.getText().toString().trim());
         userModel.setDate(binding.birthday.getText().toString().trim());
-        FirebaseUtil.currentUserDetails().set(userModel).addOnCompleteListener(new OnCompleteListener<Void>() {
+        UserDAO.currentUserDetails().set(userModel).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
-                if (task.isSuccessful()) Toasty.success(EditProfileActivity.this, "Cập nhật thông tin thành công!", Toasty.LENGTH_LONG,true).show();
-                else Toasty.error(EditProfileActivity.this, "Cập nhật thông tin thất bại!", Toasty.LENGTH_LONG, true).show();
+                if (task.isSuccessful()) Toasty.success(EditProfileActivity.this, R.string.update_profile_status, Toasty.LENGTH_LONG,true).show();
+                else Toasty.error(EditProfileActivity.this, R.string.update_profile_status_failed, Toasty.LENGTH_LONG, true).show();
             }
         });
     }
@@ -121,12 +120,12 @@ public class EditProfileActivity extends AppCompatActivity {
 
     private void checkInformation(){
         // get avt
-        FirebaseUtil.getCurrentProfileImageStorageReference().getDownloadUrl().addOnCompleteListener(this, task -> {
-            if (task.isSuccessful()) FirebaseUtil.setAvatar(EditProfileActivity.this,task.getResult(), binding.itemAvatar);
-            else Toasty.error(EditProfileActivity.this, "Đã xảy ra lỗi!", Toasty.LENGTH_LONG, true).show();
+        UserDAO.getCurrentProfileImageStorageReference().getDownloadUrl().addOnCompleteListener(this, task -> {
+            if (task.isSuccessful()) UserDAO.setAvatar(EditProfileActivity.this,task.getResult(), binding.itemAvatar);
+            else Toasty.error(EditProfileActivity.this, R.string.error, Toasty.LENGTH_LONG, true).show();
         });
 
-        FirebaseUtil.currentUserDetails().get().addOnCompleteListener(EditProfileActivity.this, task -> {
+        UserDAO.currentUserDetails().get().addOnCompleteListener(EditProfileActivity.this, task -> {
             if (task.isSuccessful()){
                 userModel = task.getResult().toObject(userModel.class);
                 if (userModel != null) {
@@ -148,7 +147,7 @@ public class EditProfileActivity extends AppCompatActivity {
 
                 if (data != null && selectedImageUriTemp != null) {
                     selectedImageUri = selectedImageUriTemp;
-                    FirebaseUtil.setAvatar(EditProfileActivity.this, selectedImageUri, binding.itemAvatar);
+                    UserDAO.setAvatar(EditProfileActivity.this, selectedImageUri, binding.itemAvatar);
                 }
             }
         });
@@ -163,8 +162,8 @@ public class EditProfileActivity extends AppCompatActivity {
 
         DatePickerDialog datePickerDialog = new DatePickerDialog(this,new DatePickerDialog.OnDateSetListener() {
             @Override
-            public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
-                LocalDate selectedDate = LocalDate.of(year, month + 1, day);
+            public void onDateSet(DatePicker datePicker, int selectedYear, int selectedMonth, int selectedDay) {
+                LocalDate selectedDate = LocalDate.of(selectedYear, selectedMonth + 1, selectedDay);
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
                 String formattedDate = selectedDate.format(formatter);
                 binding.birthday.setText(formattedDate);

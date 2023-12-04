@@ -79,9 +79,7 @@ public class LoginActivityWithOTP extends AppCompatActivity {
         });
     }
     void sendOTP( String phoneNumber,boolean isResend){
-
         startResendTimer();
-
         PhoneAuthOptions.Builder builder =
                 PhoneAuthOptions.newBuilder(mAuth).setPhoneNumber(phoneNumber)
                         .setTimeout(timeoutSeconds, TimeUnit.SECONDS)
@@ -91,14 +89,11 @@ public class LoginActivityWithOTP extends AppCompatActivity {
                             public void onVerificationCompleted(@NonNull PhoneAuthCredential phoneAuthCredential) {
                                 signIn(phoneAuthCredential);
                             }
-
                             @Override
                             public void onVerificationFailed(@NonNull FirebaseException e) {
                                isDismiss();
                                 Functions.Toasty(LoginActivityWithOTP.this,"OTP verification failed!", Functions.error);
                             }
-
-
                             @Override
                             public void onCodeSent(@NonNull String s, @NonNull PhoneAuthProvider.ForceResendingToken forceResendingToken) {
                                 super.onCodeSent(s, forceResendingToken);
