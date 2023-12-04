@@ -138,6 +138,9 @@ public class SettingActivity extends AppCompatActivity {
                                     if (task1.isSuccessful())
                                         UserDAO.setAvatar(SettingActivity.this, task1.getResult(), binding.profile.itemAvatar);
                                 });
+                        if (userModel.getStatus() == 0){
+                            UserDAO.setOnline();
+                        }
                     }
                 }
             }
