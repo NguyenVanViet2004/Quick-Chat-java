@@ -23,6 +23,8 @@ import com.example.pro1121_gr.model.userModel;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 
+import java.util.Objects;
+
 public class chatListAdapter extends FirestoreRecyclerAdapter<chatRoomModel,chatListAdapter.chatListAdapterViewHolder> {
 
     private final Context context;
@@ -32,7 +34,7 @@ public class chatListAdapter extends FirestoreRecyclerAdapter<chatRoomModel,chat
         this.context = context;
     }
 
-    @SuppressLint("SetTextI18n")
+    @SuppressLint({"SetTextI18n", "LogNotTimber"})
     @Override
     protected void onBindViewHolder(@NonNull chatListAdapterViewHolder holder, int position, @NonNull chatRoomModel model) {
         UserDAO.getOtherUserFromChatroom(model.getUserIds()).get().addOnCompleteListener(task -> {
@@ -71,11 +73,12 @@ public class chatListAdapter extends FirestoreRecyclerAdapter<chatRoomModel,chat
                         if (otherUserModel != null) {
                             Functions.passUserModelAsIntent(intent,otherUserModel);
                         }else Functions.Toasty(context, context.getString(R.string.error), Functions.error);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
                         context.startActivity(intent);
                     });
                 }catch (Exception e){
-                    Log.e(chatListAdapter.class.getSimpleName(), e.getMessage() );
+                    Log.e(chatListAdapter.class.getSimpleName(), Objects.requireNonNull(e.getMessage()));
                 }
             }
         });

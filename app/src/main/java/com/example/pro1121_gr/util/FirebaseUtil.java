@@ -1,24 +1,5 @@
 package com.example.pro1121_gr.util;
 
-import android.content.Context;
-import android.net.Uri;
-import android.widget.ImageView;
-
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestOptions;
-import com.example.pro1121_gr.DAO.ChatRoomsDAO;
-import com.example.pro1121_gr.R;
-import com.google.firebase.Timestamp;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
-
-import java.text.SimpleDateFormat;
-import java.util.List;
-
 public class FirebaseUtil {
     /*public static String currentUserId(){
         return FirebaseAuth.getInstance().getUid();
