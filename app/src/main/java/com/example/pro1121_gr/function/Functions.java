@@ -17,7 +17,6 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
-import com.example.pro1121_gr.DAO.UserDAO;
 import com.example.pro1121_gr.model.userModel;
 import com.example.pro1121_gr.util.NetworkChangeReceiver;
 import com.google.android.material.snackbar.Snackbar;
@@ -43,17 +42,6 @@ public class Functions {
     public static final int error = 0;
     public static final int success = 1;
     public static final int warning = 2;
-
-    private static String idUser = null;
-
-    public static String getIdUser() {
-        if (idUser == null) idUser = UserDAO.currentUserId();
-        return idUser;
-    }
-
-    public static void setIdUser(String newId) {
-        idUser = newId;
-    }
 
 
 

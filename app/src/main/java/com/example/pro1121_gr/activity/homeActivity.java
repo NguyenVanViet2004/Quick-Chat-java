@@ -16,18 +16,14 @@ import com.example.pro1121_gr.DAO.ChatRoomsDAO;
 import com.example.pro1121_gr.DAO.UserDAO;
 import com.example.pro1121_gr.Database.DBhelper;
 import com.example.pro1121_gr.DesignPattern.UserSingleton;
-import com.example.pro1121_gr.R;
 import com.example.pro1121_gr.adapter.ChatListAvatarAdapter;
 import com.example.pro1121_gr.adapter.chatListAdapter;
 import com.example.pro1121_gr.databinding.ActivityHomeBinding;
-import com.example.pro1121_gr.fragments.ChatFragment;
 import com.example.pro1121_gr.function.MyApplication;
-import com.example.pro1121_gr.function.ReplaceFragment;
 import com.example.pro1121_gr.function.Functions;
 import com.example.pro1121_gr.model.chatRoomModel;
 import com.example.pro1121_gr.util.NetworkChangeReceiver;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
-import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.messaging.FirebaseMessaging;
 
@@ -53,7 +49,6 @@ public class homeActivity extends AppCompatActivity {
         // Bật chế độ tối nếu được kích hoạt
         UserSingleton.getInstance().getData(this);
         MyApplication.applyNightMode();
-        Functions.getIdUser();
         getFMCtoken();
         initView();
     }
@@ -176,7 +171,7 @@ public class homeActivity extends AppCompatActivity {
         if (doubleBackToExitPressedOnce) {
             super.onBackPressed();
             DBhelper.getInstance(this).endUsageTracking();
-            FirebaseFirestore.getInstance().collection("users").document(Functions.getIdUser()).update("status",0);
+            UserDAO.setOffline();
             return;
         }
         Toasty.warning(this,"Nhấn lần nữa để thoát", Toasty.LENGTH_LONG, true).show();

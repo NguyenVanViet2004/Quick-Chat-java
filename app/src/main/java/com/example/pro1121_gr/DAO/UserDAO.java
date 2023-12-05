@@ -2,13 +2,12 @@ package com.example.pro1121_gr.DAO;
 
 import android.content.Context;
 import android.net.Uri;
-import android.util.Log;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.example.pro1121_gr.DesignPattern.UserSingleton;
 import com.example.pro1121_gr.R;
-import com.example.pro1121_gr.function.Functions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
@@ -65,14 +64,14 @@ public class UserDAO {
     public static void setOnline(){
         FirebaseFirestore.getInstance()
                 .collection("users")
-                .document(Functions.getIdUser())
+                .document(UserSingleton.getInstance().getUser().getUserId())
                 .update("status",1);
     }
 
     public static void setOffline(){
         FirebaseFirestore.getInstance()
                 .collection("users")
-                .document(Functions.getIdUser())
+                .document(UserSingleton.getInstance().getUser().getUserId())
                 .update("status",0);
     }
 }

@@ -80,7 +80,6 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-import com.zegocloud.uikit.prebuilt.call.invite.ZegoUIKitPrebuiltCallInvitationService;
 
 import org.json.JSONObject;
 
@@ -159,10 +158,7 @@ public class ChatActivity extends AppCompatActivity {
     @SuppressLint("ClickableViewAccessibility")
     private void setUpCLickEvents(){
         binding.backFragmentMess.setOnClickListener(view -> {
-            startActivity(new Intent(ChatActivity.this,homeActivity.class)
-                    .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                    .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
-            finish();
+            onBackPressed();
         });
 
         binding.usernameMess.setText(userModel.getUsername().trim());
