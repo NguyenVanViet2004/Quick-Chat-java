@@ -16,6 +16,7 @@ import com.example.pro1121_gr.DAO.ChatRoomsDAO;
 import com.example.pro1121_gr.DAO.UserDAO;
 import com.example.pro1121_gr.Database.DBhelper;
 import com.example.pro1121_gr.DesignPattern.UserSingleton;
+import com.example.pro1121_gr.R;
 import com.example.pro1121_gr.adapter.ChatListAvatarAdapter;
 import com.example.pro1121_gr.adapter.chatListAdapter;
 import com.example.pro1121_gr.databinding.ActivityHomeBinding;
@@ -174,7 +175,7 @@ public class homeActivity extends AppCompatActivity {
             UserDAO.setOffline();
             return;
         }
-        Toasty.warning(this,"Nhấn lần nữa để thoát", Toasty.LENGTH_LONG, true).show();
+        Toasty.warning(this, R.string.double_back_To_exit_pressed_once, Toasty.LENGTH_LONG, true).show();
         this.doubleBackToExitPressedOnce = true;
 
 

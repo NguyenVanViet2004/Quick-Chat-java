@@ -45,4 +45,6 @@ public class UserSingleton {
     public Uri getUrlAVT(){
         return urlAVT;
     }
+
+    public void setUrlAVT(Uri newUrl) {urlAVT = Uri.parse(UserDAO.currentUserId());}
 }

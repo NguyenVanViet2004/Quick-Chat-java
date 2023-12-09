@@ -147,9 +147,9 @@ public class SettingActivity extends AppCompatActivity {
                                         if (task1.isSuccessful())
                                             UserDAO.setAvatar(SettingActivity.this, task1.getResult(), binding.profile.itemAvatar);
                                     });
-                            if (userModel.getStatus() == 0){
-                                UserDAO.setOnline();
-                            }
+                        }
+                        if (userModel.getStatus() == 0){
+                            UserDAO.setOnline();
                         }
                     }
                 }
@@ -160,11 +160,11 @@ public class SettingActivity extends AppCompatActivity {
 
         private void logOut () {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setTitle("Bạn có chắc chắn muốn đăng xuất không?");
+            builder.setTitle(R.string.log_out);
             builder.setIcon(R.drawable.baseline_warning_24);
 
             // Nút "Có"
-        builder.setPositiveButton("Có", new DialogInterface.OnClickListener() {
+        builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 UserDAO.setOffline();
@@ -173,6 +173,7 @@ public class SettingActivity extends AppCompatActivity {
 
                     if (task.isSuccessful()) {
                         UserDAO.logout();
+                        //UserSingleton.getInstance().setUrlAVT(Uri.parse(""));
                         // Thêm hành động chuyển hướng đến màn hình đăng nhập sau khi đăng xuất .
                         Intent intent = new Intent(MyApplication.getInstance(), LoginActivity.class);
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP); // Xóa các activity trên đỉnh ngăn xếp
@@ -187,7 +188,7 @@ public class SettingActivity extends AppCompatActivity {
         });
 
         // Nút "Không"
-        builder.setNegativeButton("Không", new DialogInterface.OnClickListener() {
+        builder.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
