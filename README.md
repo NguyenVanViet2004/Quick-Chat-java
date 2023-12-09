@@ -8,7 +8,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
 <!-- markdownlint-disable -->
 <table>
   <tr>
-    <td align="center"><a href="https://github.com/SharkVietnv35"><img src="https://avatars.githubusercontent.com/u/132866307?v=4" width="100px;" alt=""/><br /><sub><b>Nguyễn Văn Việt</b></sub></a><br /><a href="https://github.com/SharkVietnv35" title="Code">💻</a> <a href="https://github.com/SharkVietnv35/duAn1_MovieTicketBookingAPK" title="Documentation">📖</a> <a href="#maintenance-hoc081098" title="Ideas & Code">
+    <td align="center"><a href="https://github.com/SharkVietnv35"><img src="https://avatars.githubusercontent.com/u/132866307?v=4" width="100px;" alt=""/><br /><sub><b>Nguyễn Văn Việt</b></sub></a><br /><a href="https://github.com/SharkVietnv35" title="Code">💻</a> <a href="https://github.com/SharkVietnv35/Quick-Chat-java" title="Documentation">📖</a> <a href="#maintenance-hoc081098" title="Ideas & Code">
   </tr>
 </table>
 
