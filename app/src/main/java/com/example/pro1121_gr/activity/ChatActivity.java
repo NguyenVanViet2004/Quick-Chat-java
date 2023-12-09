@@ -405,7 +405,7 @@ public class ChatActivity extends AppCompatActivity {
         });
     }
 
-
+    @SuppressLint("LogNotTimber")
     private void callAPI(JSONObject jsonObject) {
         MediaType JSON = MediaType.get("application/json; charset=utf-8");
         OkHttpClient client = new OkHttpClient();
@@ -414,6 +414,7 @@ public class ChatActivity extends AppCompatActivity {
         Request request = new Request.Builder().url(url).post(body).header("Authorization", "Bearer AAAAzn2wU_4:APA91bGbYkKRd6E_tfTinPa_aBOnjjYLU39FJFubqWUUGOzV9uOEffB0gz_auOKjeJCqW7trohwb2aTSMFPcVVlTKD4NivbaubTDaKsHaWH3UMAom6pac6bMLfOA7ZhBQ1T1z1Tj1_vJ")
                 .build();
         client.newCall(request).enqueue(new Callback() {
+
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
                 Log.e(ChatActivity.class.getSimpleName(), "onFailure: " + e.getMessage());
@@ -442,6 +443,7 @@ public class ChatActivity extends AppCompatActivity {
         }
     }
 
+    @SuppressLint("LogNotTimber")
     private void getDataChatRoom() {
         try {
             // Lấy đối tượng userModel
@@ -607,6 +609,7 @@ public class ChatActivity extends AppCompatActivity {
     }
 
 
+    @SuppressLint("LogNotTimber")
     private void checkGPS() {
         LocationRequest locationRequest = LocationRequest.create();
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
@@ -640,6 +643,7 @@ public class ChatActivity extends AppCompatActivity {
         });
     }
 
+    @SuppressLint("LogNotTimber")
     private void getUserLocation() {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {

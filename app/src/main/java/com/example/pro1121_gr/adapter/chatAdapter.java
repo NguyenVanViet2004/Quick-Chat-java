@@ -243,11 +243,11 @@ public class chatAdapter extends FirestoreRecyclerAdapter<chatMesseageModel, cha
                 ChatRoomsDAO.getChatRoomReference(chatRoomID)
                         .collection("chats")
                         .document(documentId)
-                        .update("message", R.string.recall_message).addOnSuccessListener(aVoid -> {
+                        .update("message", context.getString(R.string.recall_message)).addOnSuccessListener(aVoid -> {
                             dialog.dismiss();
-                            Toasty.success(context, R.string.recall_succ, Toasty.LENGTH_LONG, true).show();
+                            Toasty.success(context, context.getString(R.string.recall_succ), Toasty.LENGTH_LONG, true).show();
                         }).addOnFailureListener(e -> {
-                            Toasty.error(context, R.string.recall_failed, Toasty.LENGTH_LONG, true).show();
+                            Toasty.error(context, context.getString(R.string.recall_failed), Toasty.LENGTH_LONG, true).show();
                         }));
 
         bottomOptionDialogBinding.copyText.setOnClickListener(view -> {

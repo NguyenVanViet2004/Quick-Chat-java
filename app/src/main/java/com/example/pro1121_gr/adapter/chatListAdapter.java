@@ -74,7 +74,7 @@ public class chatListAdapter extends FirestoreRecyclerAdapter<chatRoomModel,chat
                             Functions.passUserModelAsIntent(intent,otherUserModel);
                         }else Functions.Toasty(context, context.getString(R.string.error), Functions.error);
                         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+                        //intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
                         context.startActivity(intent);
                     });
                 }catch (Exception e){
