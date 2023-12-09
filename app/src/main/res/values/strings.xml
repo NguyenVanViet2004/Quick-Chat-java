@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">1-1 Chat App</string>
+    <string name="app_name">Quick chat</string>
     <string name="author">1-1 Chat App</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
@@ -90,6 +90,13 @@
     <string name="update_profile_status">Successfully updated!</string>
     <string name="update_profile_status_failed">Update information failed</string>
     <string name="message_error_network">No network connection, please go to settings!</string>
+    <string name="double_back_To_exit_pressed_once">Click again to exit</string>
+    <string name="log_out">Are you sure you want to sign out?</string>
+    <string name="yes">yes</string>
+    <string name="no">no</string>
+
+
+
 
 
 

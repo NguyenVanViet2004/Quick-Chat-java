@@ -17,7 +17,6 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
-import com.example.pro1121_gr.DAO.UserDAO;
 import com.example.pro1121_gr.model.userModel;
 import com.example.pro1121_gr.util.NetworkChangeReceiver;
 import com.google.android.material.snackbar.Snackbar;
@@ -43,17 +42,6 @@ public class Functions {
     public static final int error = 0;
     public static final int success = 1;
     public static final int warning = 2;
-
-    private static String idUser = null;
-
-    public static String getIdUser() {
-        if (idUser == null) idUser = UserDAO.currentUserId();
-        return idUser;
-    }
-
-    public static void setIdUser(String newId) {
-        idUser = newId;
-    }
 
 
 
@@ -168,9 +156,9 @@ public class Functions {
 
 
     public static void startService(String userIdCall, String userName2, Activity activity){
-        Application application = activity.getApplication(); // Android's application context
-        long appID = 189168233;   // yourAppID
-        String appSign = "57b5cefe54ad7738673c16a35e9b3a758bf7e116a0d6f9ee1b7ea1b7d1a8056e";  // yourAppSign
+        /*Application application = activity.getApplication(); // Android's application context
+        long appID = 1744192407;   // yourAppID
+        String appSign = "fe6c38ac810e6766bc80c59bfd1ade5a13807b92dfe07506539999f7ee39183a";  // yourAppSign
         String userID = userIdCall; // yourUserID, userID should only contain numbers, English characters, and '_'.
         String userName = userName2;   // yourUserName
 
@@ -181,6 +169,15 @@ public class Functions {
         notificationConfig.sound = "zego_uikit_sound_call";
         notificationConfig.channelID = "CallInvitation";
         notificationConfig.channelName = "CallInvitation";
+        ZegoUIKitPrebuiltCallInvitationService.init(activity.getApplication(), appID, appSign, userID, userName,callInvitationConfig);*/
+        Application application = activity.getApplication(); // Android's application context
+        long appID = 1744192407;   // yourAppID
+        String appSign ="fe6c38ac810e6766bc80c59bfd1ade5a13807b92dfe07506539999f7ee39183a";  // yourAppSign
+        String userID =userIdCall; // yourUserID, userID should only contain numbers, English characters, and '_'.
+        String userName =userName2;   // yourUserName
+
+        ZegoUIKitPrebuiltCallInvitationConfig callInvitationConfig = new ZegoUIKitPrebuiltCallInvitationConfig();
+
         ZegoUIKitPrebuiltCallInvitationService.init(activity.getApplication(), appID, appSign, userID, userName,callInvitationConfig);
     }
 

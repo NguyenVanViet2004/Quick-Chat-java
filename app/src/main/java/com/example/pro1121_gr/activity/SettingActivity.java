@@ -22,10 +22,8 @@ import com.example.pro1121_gr.function.MyApplication;
 import com.example.pro1121_gr.model.userModel;
 import com.example.pro1121_gr.util.NetworkChangeReceiver;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.util.Objects;
@@ -149,9 +147,9 @@ public class SettingActivity extends AppCompatActivity {
                                         if (task1.isSuccessful())
                                             UserDAO.setAvatar(SettingActivity.this, task1.getResult(), binding.profile.itemAvatar);
                                     });
-                            if (userModel.getStatus() == 0){
-                                UserDAO.setOnline();
-                            }
+                        }
+                        if (userModel.getStatus() == 0){
+                            UserDAO.setOnline();
                         }
                     }
                 }
@@ -162,24 +160,20 @@ public class SettingActivity extends AppCompatActivity {
 
         private void logOut () {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setTitle("Bạn có chắc chắn muốn đăng xuất không?");
+            builder.setTitle(R.string.log_out);
             builder.setIcon(R.drawable.baseline_warning_24);
 
             // Nút "Có"
-        builder.setPositiveButton("Có", new DialogInterface.OnClickListener() {
+        builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                FirebaseFirestore.getInstance().collection("users").document(Functions.getIdUser()).update("status", 0).addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void unused) {
-                        Functions.setIdUser("");
-                    }
-                });
+                UserDAO.setOffline();
                 // delete fcm token
                 FirebaseMessaging.getInstance().deleteToken().addOnCompleteListener(task -> {
 
                     if (task.isSuccessful()) {
                         UserDAO.logout();
+                        //UserSingleton.getInstance().setUrlAVT(Uri.parse(""));
                         // Thêm hành động chuyển hướng đến màn hình đăng nhập sau khi đăng xuất .
                         Intent intent = new Intent(MyApplication.getInstance(), LoginActivity.class);
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP); // Xóa các activity trên đỉnh ngăn xếp
@@ -194,7 +188,7 @@ public class SettingActivity extends AppCompatActivity {
         });
 
         // Nút "Không"
-        builder.setNegativeButton("Không", new DialogInterface.OnClickListener() {
+        builder.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();

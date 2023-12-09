@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">1-zu-1 Chat-App</string>
+    <string name="app_name">Quick chat</string>
     <string name="author">1-zu-1 Chat-App</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hallo leeres Fragment</string>
@@ -91,6 +91,15 @@
     <string name="update_profile_status">Erfolgreich aktualisiert!</string>
     <string name="update_profile_status_failed">Die Aktualisierung der Informationen ist fehlgeschlagen</string>
     <string name="message_error_network">Keine Netzwerkverbindung, bitte gehen Sie zu den Einstellungen!</string>
+    <string name="double_back_To_exit_pressed_once">Klicken Sie erneut, um den Vorgang zu beenden</string>
+    <string name="log_out">Sind Sie sicher, dass Sie sich abmelden möchten?</string>
+    <string name="yes">yes</string>
+    <string name="no">NEIN</string>
+
+
+
+
+
 
 
 

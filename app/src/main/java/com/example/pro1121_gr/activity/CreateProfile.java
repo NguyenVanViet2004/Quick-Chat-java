@@ -1,5 +1,6 @@
 package com.example.pro1121_gr.activity;
 
+import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -101,7 +102,8 @@ public class CreateProfile extends AppCompatActivity {
                 if(task.isSuccessful()){
                     loadingDialog.isDismiss();
                     Intent intent = new Intent(CreateProfile.this, homeActivity.class);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK & Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
+                            | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(intent);
                     finish();
                 }else{
@@ -122,8 +124,7 @@ public class CreateProfile extends AppCompatActivity {
                         && !model.getPhone().isEmpty()) {
                     loadingDialog.isDismiss();
                     startActivity(new Intent(CreateProfile.this, homeActivity.class)
-                            .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                            .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+                            .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK));
                     finish();
                 } else loadingDialog.isDismiss();
             }
@@ -138,13 +139,14 @@ public class CreateProfile extends AppCompatActivity {
         int day = calendar.get(Calendar.DAY_OF_MONTH);
 
         DatePickerDialog datePickerDialog = new DatePickerDialog(this,new DatePickerDialog.OnDateSetListener() {
+            @SuppressLint("LogNotTimber")
             @Override
             public void onDateSet(DatePicker datePicker, int selectedYear, int selectedMonth, int selectedDay) {
                 LocalDate selectedDate = LocalDate.of(selectedYear, selectedMonth + 1, selectedDay);
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
                 String formattedDate = selectedDate.format(formatter);
                 binding.edtAge.setText(formattedDate);
-                Log.e("TAG", "onDateSet: "+formattedDate );
+                Log.e(CreateProfile.class.getSimpleName(), "onDateSet: "+formattedDate );
             }
         },
                 year, month, day
