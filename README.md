@@ -1,4 +1,4 @@
-# Du-an-1
+# Quick-chat
 ## Contributors ✨
 
 Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/docs/en/emoji-key)):
